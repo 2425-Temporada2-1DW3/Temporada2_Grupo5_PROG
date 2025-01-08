@@ -1,7 +1,8 @@
 package com.logic;
 
-public class Jugador {
+public class Jugador  {
 
+	
 	private String nombre;
 	private int edad;
 	private String posicion;
@@ -11,6 +12,7 @@ public class Jugador {
 	private int peso;
 	private int idFoto;
 	private int idEquipo;
+	private Fecha FechaNac;
 	
 	public String getNombre() {
 		return nombre;
@@ -71,6 +73,7 @@ public class Jugador {
 		peso =70;
 		idFoto= 01;
 		idEquipo= 1;
+		FechaNac = new Fecha(1, 1, 2000);
 	}
 	//constructor copia 
 	public Jugador (Jugador j) {
@@ -83,9 +86,10 @@ public class Jugador {
 		peso= j.peso;
 		idFoto= j.idFoto;
 		idEquipo= j.idEquipo;
+		FechaNac = new Fecha(j.FechaNac);
 	}
 	//constructor personalizado 
-	public Jugador (String nom, int age, int dor, String position, String nacio, int height, int weight, int id) {
+	public Jugador (String nom, int age, int dor, String position, String nacio, int height, int weight, int id, int day, int month, int year) {
 		nombre= nom;
 		edad = age;
 		dorsal= dor;
@@ -94,7 +98,14 @@ public class Jugador {
 		altura = height;
 		peso =weight;
 		idFoto= id;
+		FechaNac = new Fecha(day,month,year);
 	}
+	 @Override
+	    public String toString() {
+	        return "Jugador [nombre=" + nombre + ", edad=" + edad + ", posicion=" + posicion + ", dorsal=" + dorsal
+	                + ", nacionalidad=" + nacionalidad + ", altura=" + altura + ", peso=" + peso + ", idFoto=" + idFoto
+	                + ", idEquipo=" + idEquipo + ", fechaNac=" + FechaNac + "]";
+	    }
 	//@ToDo
 	public void cambiarDeEquipo() {
 		
