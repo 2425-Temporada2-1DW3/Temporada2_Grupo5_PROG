@@ -15,6 +15,7 @@ public class Jugador  {
 	private int idFoto;
 	private int idEquipo;
 	private Fecha FechaNac;
+	private String dni;
 	
 	public String getNombre() {
 		return nombre;
@@ -66,6 +67,7 @@ public class Jugador  {
 	}
 	//constructor defecto 
 	public Jugador () {
+		dni= "00000000j";
 		nombre= "Jugador por defecto";
 		edad = 19;
 		dorsal= 1;
@@ -79,6 +81,7 @@ public class Jugador  {
 	}
 	//constructor copia 
 	public Jugador (Jugador j) {
+		dni= j.dni;
 		nombre= j.nombre;
 		edad = j.edad;
 		dorsal= j.dorsal;
@@ -90,9 +93,10 @@ public class Jugador  {
 		idEquipo= j.idEquipo;
 		FechaNac = new Fecha(j.FechaNac);
 	}
+	
 	@Override
 	public int hashCode() {
-		return Objects.hash(dorsal, edad, nombre);
+		return Objects.hash(dni);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -103,10 +107,11 @@ public class Jugador  {
 		if (getClass() != obj.getClass())
 			return false;
 		Jugador other = (Jugador) obj;
-		return dorsal == other.dorsal && edad == other.edad && Objects.equals(nombre, other.nombre);
+		return Objects.equals(dni, other.dni);
 	}
 	//constructor personalizado 
-	public Jugador (String nom, int age, int dor, String position, String nacio, int height, int weight, int id, int day, int month, int year) {
+	public Jugador (String dnI, String nom, int age, int dor, String position, String nacio, int height, int weight, int id, int day, int month, int year) {
+		dni= dnI;
 		nombre= nom;
 		edad = age;
 		dorsal= dor;
