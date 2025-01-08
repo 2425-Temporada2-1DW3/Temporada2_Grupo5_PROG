@@ -1,5 +1,7 @@
 package com.logic;
 
+import java.util.Objects;
+
 public class Jugador  {
 
 	
@@ -87,6 +89,21 @@ public class Jugador  {
 		idFoto= j.idFoto;
 		idEquipo= j.idEquipo;
 		FechaNac = new Fecha(j.FechaNac);
+	}
+	@Override
+	public int hashCode() {
+		return Objects.hash(dorsal, edad, nombre);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Jugador other = (Jugador) obj;
+		return dorsal == other.dorsal && edad == other.edad && Objects.equals(nombre, other.nombre);
 	}
 	//constructor personalizado 
 	public Jugador (String nom, int age, int dor, String position, String nacio, int height, int weight, int id, int day, int month, int year) {
