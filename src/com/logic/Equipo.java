@@ -72,6 +72,9 @@ public class Equipo {
 	public void addDerrotas() {
 		derrotas += 1;
 	}
+	public void addPuntosTotal(int puntos) {
+		puntosTotales+= puntos;
+	}
 	//getters-Setters 
 	public int getId() {
 		return id;
