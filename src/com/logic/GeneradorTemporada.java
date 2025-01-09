@@ -346,7 +346,7 @@ class JORNADAS {
 	}
 
 }
-
+/*
 class PARTIDO {
 
 	// ----Definición de Variables---//
@@ -463,7 +463,7 @@ class PARTIDO {
 	}
 
 }
-
+*/
 class EQUIPOS {
 
 	// ----Definición de Variables---//
