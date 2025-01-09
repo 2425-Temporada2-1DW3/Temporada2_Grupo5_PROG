@@ -1,6 +1,7 @@
 package com.logic;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Equipo {
 	private int id;
@@ -14,7 +15,27 @@ public class Equipo {
 	
 	
 	
-	
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Equipo other = (Equipo) obj;
+		return id == other.id;
+	}
+	@Override
+	public String toString() {
+		return "Equipo [id=" + id + ", Nombre=" + Nombre + ", listaJugador=" + listaJugador + ", fechaFundEq="
+				+ fechaFundEq + ", entrenador=" + entrenador + ", victorias=" + victorias + ", derrotas=" + derrotas
+				+ ", puntosTotales=" + puntosTotales + "]";
+	}
 	public Equipo() {
 		id= 1;
 		Nombre= "Equpo por defecto";
