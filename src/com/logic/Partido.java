@@ -15,7 +15,7 @@ public class Partido {
 	private int setsGanadorsLoc = 0;
 	private int setsGanadosVis = 0;
 
-	private int puntuajeUltimoSetLoc = 0;
+	private int puntuajeUltimoSetLoc = 0; /*Representan los goles/puntos anotados por equipo local*/
 	private int puntuajeUltimoSetVis = 0;
 	
 	private boolean resultadoCalculado = false;
