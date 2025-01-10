@@ -42,14 +42,6 @@ public class login extends JFrame implements ActionListener {
     private JTextField txtUser;
     private JPasswordField txtPass;
     private JButton btnLogin;
-<<<<<<< Updated upstream
-    private Usuario[] users = 	{
-    		new Usuario("Usuario", 0, "Usuario"), 
-    		new Usuario("Arbitro",1,"Arbitro") , 
-    		new Usuario("Admin",2,"Admin")  
-    };
-    private int userType;
-=======
     
     // Los usuarios usados para el login
     private Usuario[] users = 	{
@@ -59,7 +51,6 @@ public class login extends JFrame implements ActionListener {
     };
     
     private int userType;// no se usa aqui, solo esta definida para pasar el dato a la clase main
->>>>>>> Stashed changes
     
     
     
@@ -156,11 +147,7 @@ public class login extends JFrame implements ActionListener {
         lblTitulo.setFont(new Font("Century Gothic", Font.BOLD, 24));
         panel_6.add(lblTitulo);
         
-<<<<<<< Updated upstream
-        lblError = new JLabel();
-=======
         lblError = new JLabel(); // Creo el label sin nada porque solo se mostrara texto dentro de ello si hay un error
->>>>>>> Stashed changes
         panel_4.add(lblError, BorderLayout.CENTER);
         lblError.setForeground(new Color(255, 53, 53));
         lblError.setFont(new Font("Consolas", Font.PLAIN, 11));
@@ -177,10 +164,6 @@ public class login extends JFrame implements ActionListener {
         btnLogin.setBackground(new Color(50, 50, 50));
         panel_1.add(btnLogin, BorderLayout.EAST);
         
-<<<<<<< Updated upstream
-        // Creacion de los tres usuarios
-
-=======
         //  Esto Solo Sirve para mostrar los nombres y contraseñas del login, luego borraremos esto
         String listaDeUsuarios = "";
         JFrame secondFrame = new JFrame("Usuarios");  
@@ -194,22 +177,10 @@ public class login extends JFrame implements ActionListener {
 
         secondFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  
         secondFrame.setVisible(true);
->>>>>>> Stashed changes
   
 
     }
     private boolean userPassCheck(String u, String p) {
-<<<<<<< Updated upstream
-    	
-    	for (int i = 0; i < users.length; i++) {  
-    		
-        	if (u.equals(users[i].getUser()) && p.equals(users[i].getPassword()) ) {
-        		userType = users[i].getType();
-            	return true;
-        	} 
-    	}
-    	return false;
-=======
     	/* Una funcion que Checkea todo el array users[] y comprueva si el usuario y contraseña son correctos 
     	 *  Si el check es valido devuelve true, si no es, devuelve false*/
     	for (int i = 0; i < users.length; i++) {  
@@ -224,36 +195,12 @@ public class login extends JFrame implements ActionListener {
 
     	return false;
 
->>>>>>> Stashed changes
     }
     
     @Override
     public void actionPerformed(ActionEvent ae) {
         Object o = ae.getSource();
         
-<<<<<<< Updated upstream
-        String gui_user = txtUser.getText();
-        char[] gui_pass_char = txtPass.getPassword();
-        String gui_pass = new String(gui_pass_char);
-
-        if (o == btnLogin) {
-            if (gui_user.isBlank() && gui_pass.isBlank()) { 
-            	
-                lblError.setText("Por favor, introduzca su nombre de usuario y contraseña.");
-                
-            } else if (gui_user.isBlank()) { 
-            	
-                lblError.setText("El campo de nombre de usuario no puede estar vacío.");
-
-            } else if (gui_pass.isBlank()) { 
-            	
-                lblError.setText("El campo de contraseña no puede estar vacío.");
-
-            } else if (userPassCheck(gui_user, gui_pass)) { 
-            	
-                Point location = getLocation(); // Obtener la posición actual
-                main mainFrame = new main(userType); // Crear el nuevo frame
-=======
         /*gui == Graphical user interface
         * uso gui porque estas variables son valores de la interfaz
         * uso este nombre para no confundirlo con otras variables con nombres parecidos*/
@@ -280,17 +227,11 @@ public class login extends JFrame implements ActionListener {
             	
                 Point location = getLocation(); // Obtener la posición actual
                 main mainFrame = new main(userType); // Crear el nuevo frame y pasa la variable userType para saber que funcionalidad podra usar cada usuario
->>>>>>> Stashed changes
                 mainFrame.setLocation(location); // Posicionar el nuevo frame en la misma ubicación
                 mainFrame.setVisible(true); // Mostrar el nuevo frame
                 dispose(); // Cerrar el frame actual (login)
 
-<<<<<<< Updated upstream
-            } else { 
-            	
-=======
             } else { // Si usr y/o pass es incorrecta            	
->>>>>>> Stashed changes
                 lblError.setText("Nombre de usuario o contraseña incorrectos.");
                 
             }
