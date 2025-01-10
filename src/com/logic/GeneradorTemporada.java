@@ -1,4 +1,5 @@
-package com.logic;
+/*package com.logic;
+
 
 
 import java.util.ArrayList;
@@ -438,7 +439,7 @@ class PARTIDO {
 	}
 
 	public int getFecha() {
-		return Fecha;
+//		return Fecha;
 	}
 
 	public void MostrarPartido() {
@@ -553,4 +554,4 @@ class EQUIPOS {
 		return Posicion_Temporada;
 	}
 
-}}
+}} */
