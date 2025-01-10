@@ -21,6 +21,7 @@ public class Temporada implements Comparable<Temporada> {
 	public boolean isFinalizado() {
 		return finalizado;
 	}
+	
 
 	public void setFinalizado(boolean finalizado) {
 		this.finalizado = finalizado;
@@ -98,9 +99,20 @@ public class Temporada implements Comparable<Temporada> {
 
     @Override
     public String toString() {
-        return "Temporada [nombre=" + nombre + ", finalizado=" + finalizado + ", iniciado=" + iniciado
-                + ", cantidadEquipos=" + cantidadEquipos + ", cantidadJornadas=" + cantidadJornadas + ", id_temporada="
-                + id_temporada + "]";
+    	String string = " ";
+    	
+    	if (finalizado && iniciado) {
+    		string = "Temporada " + nombre + ", finalizado: si"  + ", iniciado: si" 
+                    + ", cantidad Equipos: " + cantidadEquipos + ", cantidadJornadas:" + cantidadJornadas;
+    	} else if(!finalizado && iniciado) {
+    		string = "Temporada " + nombre + ", iniciado: si"  + ", finalizado: no"  
+                    + ", cantidadEquipos: " + cantidadEquipos + ", cantidadJornadas:" + cantidadJornadas;
+    	}else if(!finalizado && !iniciado) {
+    		string = "Temporada " + nombre + ", iniciado: no"  + ", finalizado: no"  
+                    + ", cantidadEquipos: " + cantidadEquipos + ", cantidadJornadas:" + cantidadJornadas;
+    	}
+		 return string;
+        
     }
 
     // Equals & hashCode
