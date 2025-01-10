@@ -42,12 +42,15 @@ public class login extends JFrame implements ActionListener {
     private JTextField txtUser;
     private JPasswordField txtPass;
     private JButton btnLogin;
+    
+    // Los usuarios usados para el login
     private Usuario[] users = 	{
-    		new Usuario("Usuario", 0, "Usuario"), 
-    		new Usuario("Arbitro",1,"Arbitro") , 
-    		new Usuario("Admin",2,"Admin")  
+    		new Usuario("Unai2006", 0, "sapo"), 
+    		new Usuario("TxemaDeMiguel",2,"alturron") , 
+    		new Usuario("MikelResa",1,"soyunpro2006")  
     };
-    private int userType;
+    
+    private int userType;// no se usa aqui, solo esta definida para pasar el dato a la clase main
     
     
     
@@ -74,6 +77,8 @@ public class login extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 400, 300);
         setResizable(false);
+        setTitle("Login de la Federacion de Voleivol");
+
         contentPane = new JPanel();
         contentPane.setBackground(new Color(50, 50, 50));
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -142,12 +147,12 @@ public class login extends JFrame implements ActionListener {
         lblTitulo.setFont(new Font("Century Gothic", Font.BOLD, 24));
         panel_6.add(lblTitulo);
         
-        lblError = new JLabel();
+        lblError = new JLabel(); // Creo el label sin nada porque solo se mostrara texto dentro de ello si hay un error
         panel_4.add(lblError, BorderLayout.CENTER);
         lblError.setForeground(new Color(255, 53, 53));
         lblError.setFont(new Font("Consolas", Font.PLAIN, 11));
 
-        panel_1 = new JPanel();
+        panel_1 = new JPanel(); 
         panel_1.setBackground(new Color(50, 50, 50));
         contentPane.add(panel_1, BorderLayout.SOUTH);
         panel_1.setLayout(new BorderLayout(0, 0));
@@ -159,54 +164,74 @@ public class login extends JFrame implements ActionListener {
         btnLogin.setBackground(new Color(50, 50, 50));
         panel_1.add(btnLogin, BorderLayout.EAST);
         
-        // Creacion de los tres usuarios
+        //  Esto Solo Sirve para mostrar los nombres y contraseñas del login, luego borraremos esto
+        String listaDeUsuarios = "";
+        JFrame secondFrame = new JFrame("Usuarios");  
+        secondFrame.setSize(1200, 60);  
+        secondFrame.setLocationRelativeTo(null);  
+    	for (int i = 0; i < users.length; i++) {  
+    		listaDeUsuarios = listaDeUsuarios + "  |  " + users[i];
+    	}
+        JLabel label = new JLabel(listaDeUsuarios);  
+        secondFrame.add(label);  
 
+        secondFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  
+        secondFrame.setVisible(true);
   
 
     }
     private boolean userPassCheck(String u, String p) {
-    	
+    	/* Una funcion que Checkea todo el array users[] y comprueva si el usuario y contraseña son correctos 
+    	 *  Si el check es valido devuelve true, si no es, devuelve false*/
     	for (int i = 0; i < users.length; i++) {  
     		
-        	if (u.equals(users[i].getUser()) && p.equals(users[i].getPassword()) ) {
-        		userType = users[i].getType();
+        	if (users[i].checkUser(u, p) ) {
+        		userType = users[i].getType(); // coje el tipo de usuario para luego usarse en la clase main
             	return true;
         	} 
+
     	}
+		System.out.println("falsificacion");
+
     	return false;
+
     }
     
     @Override
     public void actionPerformed(ActionEvent ae) {
         Object o = ae.getSource();
         
+        /*gui == Graphical user interface
+        * uso gui porque estas variables son valores de la interfaz
+        * uso este nombre para no confundirlo con otras variables con nombres parecidos*/
         String gui_user = txtUser.getText();
-        char[] gui_pass_char = txtPass.getPassword();
+        
+		/*txtPass.getText() esta obsoleta y se recomienda usar .getPassword()
+		*pero devuelve un array de caracteres por lo que tengo que convertirlo a un String de nuevo*/
+        char[] gui_pass_char = txtPass.getPassword(); 
         String gui_pass = new String(gui_pass_char);
 
         if (o == btnLogin) {
-            if (gui_user.isBlank() && gui_pass.isBlank()) { 
-            	
+        	// Uso un if anidado para no repetir la condicion  o == btnLogin y si se necesitaran mas actionlisteners se entendera mas facilmente
+        	
+            if 		  (gui_user.isBlank() && gui_pass.isBlank()) { // 2 Campos Vacios
                 lblError.setText("Por favor, introduzca su nombre de usuario y contraseña.");
                 
-            } else if (gui_user.isBlank()) { 
-            	
+            } else if (gui_user.isBlank()) { // Usuario Vacio      	
                 lblError.setText("El campo de nombre de usuario no puede estar vacío.");
 
-            } else if (gui_pass.isBlank()) { 
-            	
-                lblError.setText("El campo de contraseña no puede estar vacío.");
+            } else if (gui_pass.isBlank()) {  // Contraseña Vacia
+            	lblError.setText("El campo de contraseña no puede estar vacío.");
 
-            } else if (userPassCheck(gui_user, gui_pass)) { 
+            } else if (userPassCheck(gui_user, gui_pass)) { // Si usr y pass esta correcta
             	
                 Point location = getLocation(); // Obtener la posición actual
-                main mainFrame = new main(userType); // Crear el nuevo frame
+                main mainFrame = new main(userType); // Crear el nuevo frame y pasa la variable userType para saber que funcionalidad podra usar cada usuario
                 mainFrame.setLocation(location); // Posicionar el nuevo frame en la misma ubicación
                 mainFrame.setVisible(true); // Mostrar el nuevo frame
                 dispose(); // Cerrar el frame actual (login)
 
-            } else { 
-            	
+            } else { // Si usr y/o pass es incorrecta            	
                 lblError.setText("Nombre de usuario o contraseña incorrectos.");
                 
             }
