@@ -346,15 +346,14 @@ class JORNADAS {
 	}
 
 }
-/*
+
 class PARTIDO {
 
 	// ----Definición de Variables---//
 
 	private int id_partido = 0;
-	private int Fecha = 0;
 	private boolean estado = false;
-	private String NombreEstadio = "";
+
 	private int id_equipo_local = 0;
 	private int id_equipo_visitante = 0;
 	private int SetsGanadosEquipoLocal = 0;
@@ -463,7 +462,7 @@ class PARTIDO {
 	}
 
 }
-*/
+
 class EQUIPOS {
 
 	// ----Definición de Variables---//
