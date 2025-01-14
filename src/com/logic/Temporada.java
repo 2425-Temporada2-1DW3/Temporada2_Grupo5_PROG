@@ -1,30 +1,75 @@
 package com.logic;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Temporada implements Comparable<Temporada> {
+	
+    private int id_temporada;
     private String nombre;
-    private boolean finalizado;
+    
     private boolean iniciado;
+    private boolean finalizado;
+    
     private int cantidadEquipos;
     private int cantidadJornadas;
-    private int id_temporada;
+    
+    private ArrayList <Equipo> listEquipos;
+    private ArrayList <Jornada> listJornadas;
 
-    public String getNombre() {
+
+	public Temporada() {
+        nombre = "Temporada";
+        finalizado = false;
+        iniciado = false;
+        cantidadEquipos = 6;
+        cantidadJornadas = 10;
+        id_temporada = 0;
+        listEquipos = new ArrayList<Equipo>();
+        listJornadas = new ArrayList<Jornada>();
+       
+    }
+
+    // Copia
+    public Temporada(Temporada r) {
+        nombre = r.nombre;
+        finalizado = r.finalizado;
+        iniciado = r.iniciado;
+        cantidadEquipos = r.cantidadEquipos;
+        cantidadJornadas = r.cantidadJornadas;
+        id_temporada = r.id_temporada;
+        listEquipos = r.listEquipos;
+        listJornadas = r.listJornadas;
+    }
+
+    // Personalizado
+    public Temporada(int id, String nom, int cantEq, int cantJor) {
+        id_temporada = id;
+        nombre = nom;
+        cantidadEquipos = cantEq;
+        cantidadJornadas = cantJor;
+        iniciado = false;
+        finalizado = false;
+        listEquipos = new ArrayList<Equipo>();
+        listJornadas = new ArrayList<Jornada>();
+    }
+
+	// Getters y setters
+
+    public int getId_temporada() {
+		return id_temporada;
+	}
+
+	public void setId_temporada(int id_temporada) {
+		this.id_temporada = id_temporada;
+	}
+
+	public String getNombre() {
 		return nombre;
 	}
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
-	}
-
-	public boolean isFinalizado() {
-		return finalizado;
-	}
-	
-
-	public void setFinalizado(boolean finalizado) {
-		this.finalizado = finalizado;
 	}
 
 	public boolean isIniciado() {
@@ -33,6 +78,14 @@ public class Temporada implements Comparable<Temporada> {
 
 	public void setIniciado(boolean iniciado) {
 		this.iniciado = iniciado;
+	}
+
+	public boolean isFinalizado() {
+		return finalizado;
+	}
+
+	public void setFinalizado(boolean finalizado) {
+		this.finalizado = finalizado;
 	}
 
 	public int getCantidadEquipos() {
@@ -51,53 +104,23 @@ public class Temporada implements Comparable<Temporada> {
 		this.cantidadJornadas = cantidadJornadas;
 	}
 
-	public Temporada() {
-        nombre = "Temporada Por defecto";
-        finalizado = false;
-        iniciado = false;
-        cantidadEquipos = 6;
-        cantidadJornadas = 10;
-        id_temporada = 0;
-    }
+	public ArrayList<Equipo> getListEquipos() {
+		return listEquipos;
+	}
 
-    // Copia
-    public Temporada(Temporada r) {
-        nombre = r.nombre;
-        finalizado = r.finalizado;
-        iniciado = r.iniciado;
-        cantidadEquipos = r.cantidadEquipos;
-        cantidadJornadas = r.cantidadJornadas;
-        id_temporada = r.id_temporada;
-    }
+	public void setListEquipos(ArrayList<Equipo> listEquipos) {
+		this.listEquipos = listEquipos;
+	}
 
-    // Personalizado
-    public Temporada(int id, String nom, int cantEq, int cantJor) {
-        id_temporada = id;
-        nombre = nom;
-        cantidadEquipos = cantEq;
-        cantidadJornadas = cantJor;
-        iniciado = false;
-        finalizado = false;
-    }
+	public ArrayList<Jornada> getListJornadas() {
+		return listJornadas;
+	}
 
-    public void finalizarTemporada() {
-        if (!finalizado && !iniciado) {
-            System.out.println("La temporada no está iniciada");
-        } else if (iniciado && !finalizado) {
-            finalizado = true;
-            System.out.println("La temporada se ha finalizado");
-        }
-    }
+	public void setListJornadas(ArrayList<Jornada> listJornadas) {
+		this.listJornadas = listJornadas;
+	}
 
-    public void iniciarTemporada() {
-        if (iniciado) {
-            System.out.println("La temporada está iniciada");
-        } else {
-            iniciado = true;
-        }
-    }
-
-    @Override
+	@Override
     public String toString() {
     	String string = " ";
     	
