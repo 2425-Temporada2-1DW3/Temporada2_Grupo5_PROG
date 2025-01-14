@@ -84,3 +84,4 @@ public class Jornada implements Comparable<Jornada>, Serializable{ /**
 			// TODO Auto-generated method stub
 			return 0;
 		}
+}
