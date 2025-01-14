@@ -54,7 +54,7 @@ public class main extends JFrame implements ActionListener {
 
 
 	/**
-	 * Create the frame.
+	 * Create the frame. 
 	 */
     public main(int userType) {
     	// Logica de texto de Titulo
