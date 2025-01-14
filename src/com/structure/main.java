@@ -3,9 +3,13 @@ package com.structure;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.BorderLayout;
@@ -25,7 +29,7 @@ public class main extends JFrame implements ActionListener {
     private JButton btnMenuInicio = new JButton("INICIO");
     private JButton btnMenuTemporadas = new JButton("TEMPORADAS");
     private JButton btnMenuJugadores = new JButton("JUGADORES");
-    private JButton btnMenuUsuarios = new JButton("USUARIOS");
+    private JButton btnMenuUsuarios = new JButton("GESTION USUARIOS");
     private JButton btnMenuPartidos = new JButton("PARTIDOS");
     private JButton btnMenuSalir = new JButton("CERRAR SESION");
     JButton[] buttons = {btnMenuInicio, btnMenuTemporadas, btnMenuJugadores, btnMenuUsuarios, btnMenuPartidos,btnMenuSalir};
@@ -42,7 +46,7 @@ public class main extends JFrame implements ActionListener {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    int userType = 0; // Tipo de usuario por defecto si no recibe un valor (
+                    int userType = 2; // Tipo de usuario por defecto si no recibe un valor (
                     main frame = new main(userType); // Pasa usertype a la main
                     frame.setVisible(true);
                 } catch (Exception e) {
@@ -98,18 +102,31 @@ public class main extends JFrame implements ActionListener {
 		
 		
 		// Generar los 5 Botones de menu
-		
-		for (JButton button : buttons) {
-		    button.setFont(new Font("SansSerif", Font.BOLD, 16));
-		    button.addActionListener(this);
-		    button.setForeground(colortxt);
-		    button.setBackground(colorbg);
-		    LayoutPanel.add(button);
+		if (userType == 2) {
+			for (JButton button : buttons) {
+				buttonCreate(button);
+			}
+		}else if (userType == 1){
+			buttonCreate(btnMenuInicio);
+			buttonCreate(btnMenuTemporadas);
+			buttonCreate(btnMenuPartidos);
+			buttonCreate(btnMenuSalir);
+
+		}else {
+			buttonCreate(btnMenuSalir);
+
 		}
+
 		
 
 	}
-
+    public void buttonCreate(JButton button) {
+	    button.setFont(new Font("SansSerif", Font.BOLD, 16));
+	    button.addActionListener(this);
+	    button.setForeground(colortxt);
+	    button.setBackground(colorbg);
+	    LayoutPanel.add(button);
+    }
     public void switchPanel(JPanel panel) {
     	LayoutPanel_1.removeAll();
     	LayoutPanel_1.add(panel, BorderLayout.CENTER);
@@ -141,6 +158,32 @@ public class main extends JFrame implements ActionListener {
         } else if  (o == btnMenuPartidos) {
         	switchPanel(new PanelPartidos(colorbg,colortxt,userType));
         	btnMenuPartidos.setEnabled(false);        	
+        	
+        } else if (o == btnMenuSalir) {
+        	UIManager.put("Panel.background", colorbg);
+        	UIManager.put("OptionPane.background", colorbg);
+        	UIManager.put("OptionPane.messageForeground", colortxt);
+        	UIManager.put("Button.background", colorbg);
+        	UIManager.put("Button.foreground", colortxt);
+
+            int result = JOptionPane.showConfirmDialog(
+            		
+                    main.this,
+                    "Desea Cerrar Sesion?",
+                    "Cerrar Sesion",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            // Check user's choice
+            if (result == JOptionPane.YES_OPTION) {
+                Point location = getLocation(); // Obtener la posición actual
+                login loginFrame = new login(); // Crear el nuevo frame y pasa la variable userType para saber que funcionalidad podra usar cada usuario
+                loginFrame.setLocation(location); // Posicionar el nuevo frame en la misma ubicación
+                loginFrame.setVisible(true); // Mostrar el nuevo frame
+                dispose(); // Cerrar el frame actual (login)
+            }
+
         	
         }
 	}

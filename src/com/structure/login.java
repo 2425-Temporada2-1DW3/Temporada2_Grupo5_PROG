@@ -45,9 +45,9 @@ public class login extends JFrame implements ActionListener {
     
     // Los usuarios usados para el login
     private Usuario[] users = 	{
-    		new Usuario("Unai2006", 0, "sapo"), 
-    		new Usuario("TxemaDeMiguel",2,"alturron") , 
-    		new Usuario("MikelResa",1,"soyunpro2006")  
+    		new Usuario("user", 0, "user"), 
+    		new Usuario("admin",2,"admin") , 
+    		new Usuario("arbitro",1,"arbitro")  
     };
     
     private int userType;// no se usa aqui, solo esta definida para pasar el dato a la clase main
@@ -164,20 +164,7 @@ public class login extends JFrame implements ActionListener {
         btnLogin.setBackground(new Color(50, 50, 50));
         panel_1.add(btnLogin, BorderLayout.EAST);
         
-        //  Esto Solo Sirve para mostrar los nombres y contraseñas del login, luego borraremos esto
-        String listaDeUsuarios = "";
-        JFrame secondFrame = new JFrame("Usuarios");  
-        secondFrame.setSize(1200, 60);  
-        secondFrame.setLocationRelativeTo(null);  
-    	for (int i = 0; i < users.length; i++) {  
-    		listaDeUsuarios = listaDeUsuarios + "  |  " + users[i];
-    	}
-        JLabel label = new JLabel(listaDeUsuarios);  
-        secondFrame.add(label);  
 
-        secondFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  
-        secondFrame.setVisible(true);
-  
 
     }
     private boolean userPassCheck(String u, String p) {
