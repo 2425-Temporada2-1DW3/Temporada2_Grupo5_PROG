@@ -37,7 +37,7 @@ public class main extends JFrame implements ActionListener {
 	private JPanel contentPane = new JPanel();
 	private JPanel LayoutPanel = new JPanel();
 	private JPanel LayoutPanel_1 = new JPanel();
-
+	public static boolean changes= false;
 
 	/**
 	 * Launch the application.
@@ -132,60 +132,75 @@ public class main extends JFrame implements ActionListener {
     	LayoutPanel_1.add(panel, BorderLayout.CENTER);
         revalidate();
         repaint();
+        
 		for (JButton button : buttons) {
 		    button.setEnabled(true);
 		}
     }
+    public int panelDeOpcion(String mensaje, String titulo) {
+    	UIManager.put("Panel.background", colorbg);
+    	UIManager.put("OptionPane.background", colorbg);
+    	UIManager.put("OptionPane.messageForeground", colortxt);
+    	UIManager.put("Button.background", colorbg);
+    	UIManager.put("Button.foreground", colortxt);
+
+        int result = JOptionPane.showConfirmDialog(
+        		
+                main.this,
+                mensaje,
+                titulo,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+        return result;
+    }
 	@Override
     public void actionPerformed(ActionEvent ae) {
         Object o = ae.getSource();
-        if (o == btnMenuInicio) {
-        	switchPanel(new PanelInicio(colorbg,colortxt,userType));
-        	btnMenuInicio.setEnabled(false);
-
-        } else if  (o == btnMenuTemporadas) {
-        	switchPanel(new PanelTemporadas(colorbg,colortxt,userType));
-        	btnMenuTemporadas.setEnabled(false);
-
-        } else if  (o == btnMenuJugadores) {
-        	switchPanel(new PanelJugadores(colorbg,colortxt,userType));
-        	btnMenuJugadores.setEnabled(false);
-        	
-        } else if  (o == btnMenuUsuarios) {
-        	switchPanel(new PanelUsuarios(colorbg,colortxt,userType));
-        	btnMenuUsuarios.setEnabled(false);
-        	
-        } else if  (o == btnMenuPartidos) {
-        	switchPanel(new PanelPartidos(colorbg,colortxt,userType));
-        	btnMenuPartidos.setEnabled(false);        	
-        	
-        } else if (o == btnMenuSalir) {
-        	UIManager.put("Panel.background", colorbg);
-        	UIManager.put("OptionPane.background", colorbg);
-        	UIManager.put("OptionPane.messageForeground", colortxt);
-        	UIManager.put("Button.background", colorbg);
-        	UIManager.put("Button.foreground", colortxt);
-
-            int result = JOptionPane.showConfirmDialog(
-            		
-                    main.this,
-                    "Desea Cerrar Sesion?",
-                    "Cerrar Sesion",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.WARNING_MESSAGE
-            );
-
+        if (changes) {
+        	int resultado =panelDeOpcion( "Hay Datos Sin Guardar, Quieres salir?","Datos Sin Guardar");
             // Check user's choice
-            if (result == JOptionPane.YES_OPTION) {
-                Point location = getLocation(); // Obtener la posición actual
-                login loginFrame = new login(); // Crear el nuevo frame y pasa la variable userType para saber que funcionalidad podra usar cada usuario
-                loginFrame.setLocation(location); // Posicionar el nuevo frame en la misma ubicación
-                loginFrame.setVisible(true); // Mostrar el nuevo frame
-                dispose(); // Cerrar el frame actual (login)
+            if (resultado == JOptionPane.YES_OPTION) {
+            	changes = false;
             }
 
-        	
         }
+        if (!changes){
+            if (o == btnMenuInicio) {
+            	switchPanel(new PanelInicio(colorbg,colortxt,userType));
+            	btnMenuInicio.setEnabled(false);
+
+            } else if  (o == btnMenuTemporadas) {
+            	switchPanel(new PanelTemporadas(colorbg,colortxt,userType));
+            	btnMenuTemporadas.setEnabled(false);
+
+            } else if  (o == btnMenuJugadores) {
+            	switchPanel(new PanelJugadores(colorbg,colortxt,userType));
+            	btnMenuJugadores.setEnabled(false);
+            	
+            } else if  (o == btnMenuUsuarios) {
+            	switchPanel(new PanelUsuarios(colorbg,colortxt,userType));
+            	btnMenuUsuarios.setEnabled(false);
+            	
+            } else if  (o == btnMenuPartidos) {
+            	switchPanel(new PanelPartidos(colorbg,colortxt,userType));
+            	btnMenuPartidos.setEnabled(false);        	
+            	
+            } else if (o == btnMenuSalir) {
+            	int resultado = panelDeOpcion("Desea Cerrar Sesion?","Cerrar Sesion");
+                // Check user's choice
+                if (resultado == JOptionPane.YES_OPTION) {
+                    Point location = getLocation(); // Obtener la posición actual
+                    login loginFrame = new login(); // Crear el nuevo frame y pasa la variable userType para saber que funcionalidad podra usar cada usuario
+                    loginFrame.setLocation(location); // Posicionar el nuevo frame en la misma ubicación
+                    loginFrame.setVisible(true); // Mostrar el nuevo frame
+                    dispose(); // Cerrar el frame actual (login)
+                }
+
+            	
+            }
+        }
+
 	}
 
 }
