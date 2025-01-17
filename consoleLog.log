@@ -1,0 +1,9 @@
+INFO: 17/1/2025 A las 9:25:28: Aplicacion Abierta en login.java.
+INFO: 17/1/2025 A las 9:25:28: en login.java, datos de usuarios cargados.
+INFO: 17/1/2025 A las 9:25:39: en login.java, Usuario ha intentado iniciar sesion sin poner nombre de usuario o contraseña.
+INFO: 17/1/2025 A las 9:25:44: en login.java, Usuario ha intentado iniciar sesion sin poner nombre de usuario.
+INFO: 17/1/2025 A las 9:25:57: en login.java, Usuario: 'a' Ha intentado iniciar sesion pero no ha puesto contraseña.
+INFO: 17/1/2025 A las 9:26:4: en login.java, Usuario: 'a' Ha intentado iniciar sesion pero su usuario or contraseña es incorrecta.
+INFO: 17/1/2025 A las 9:26:13: en login.java, Usuario: 'admin' Ha iniciado sesion como Administrador.
+INFO: 17/1/2025 A las 9:26:59: Aplicacion Abierta en login.java.
+ERROR: 17/1/2025 A las 9:26:59: en login.java, Error en el archivo usuario.ser, clase usuario no encontrada: invalid stream header: 74752070.

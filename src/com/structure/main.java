@@ -5,6 +5,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+
+import com.logic.Log;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -38,6 +41,7 @@ public class main extends JFrame implements ActionListener {
 	private JPanel LayoutPanel = new JPanel();
 	private JPanel LayoutPanel_1 = new JPanel();
 	public static boolean changes= false;
+	Log log = new Log();
 
 	/**
 	 * Launch the application.

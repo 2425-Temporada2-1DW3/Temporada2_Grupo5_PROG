@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.logic.Log;
 import com.logic.Usuario;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -46,6 +48,8 @@ public class login extends JFrame implements ActionListener {
     private JButton btnLogin;
     private ArrayList<Usuario> users; // Cambiar a ArrayList
     private int userType;
+	private Log log = new Log();
+	private String logData;
 
     /**
      * Launch the application.
@@ -71,6 +75,9 @@ public class login extends JFrame implements ActionListener {
         setBounds(100, 100, 400, 300);
         setResizable(false);
         setTitle("Login de la Federacion de Voleivol");
+        
+        logData = "Aplicacion Abierta en login.java";
+        log.Log(logData, 0);
 
         contentPane = new JPanel();
         contentPane.setBackground(new Color(50, 50, 50));
@@ -184,19 +191,48 @@ public class login extends JFrame implements ActionListener {
         if (o == btnLogin) {
             if (gui_user.isBlank() && gui_pass.isBlank()) {
                 lblError.setText("Por favor, introduzca su nombre de usuario y contraseña.");
+                // Crear Entrada De log
+            	logData = "en login.java, Usuario ha intentado iniciar sesion sin poner nombre de usuario o contraseña" ;
+
             } else if (gui_user.isBlank()) {
                 lblError.setText("El campo de nombre de usuario no puede estar vacío.");
+                // Crear Entrada De log
+            	logData = "en login.java, Usuario ha intentado iniciar sesion sin poner nombre de usuario" ;
+
             } else if (gui_pass.isBlank()) {
                 lblError.setText("El campo de contraseña no puede estar vacío.");
+                // Crear Entrada De log
+            	logData = "en login.java, Usuario: '"+gui_user +"' Ha intentado iniciar sesion pero no ha puesto contraseña" ;
+           
             } else if (userPassCheck(gui_user, gui_pass)) {
+            	
+            	// Logica Para Crear Una entrada de log
+            	String userTypeName ;
+                if (userType == 0 ) {
+                	userTypeName = "Usuario";
+                } else if (userType == 1) {
+                	userTypeName = "Entrenador";
+                } else {
+                	userTypeName = "Administrador";
+                }                     
+            	
+            	logData = "en login.java, Usuario: '"+gui_user +"' Ha iniciado sesion como " + userTypeName ;
+            	 
+            	// Crea la ventana de main
                 Point location = getLocation(); 
                 main mainFrame = new main(userType);
                 mainFrame.setLocation(location);
                 mainFrame.setVisible(true);
                 dispose();
+                
             } else {
                 lblError.setText("Nombre de usuario o contraseña incorrectos.");
+                // Crear Entrada De log
+            	logData = "en login.java, Usuario: '"+gui_user +"' Ha intentado iniciar sesion pero su usuario or contraseña es incorrecta" ;
+           
             }
+        	log.Log(logData, 0); // Se envia la entrada de log al final de la condicion
+
         }
     }
 
@@ -207,13 +243,20 @@ public class login extends JFrame implements ActionListener {
                     Usuario user = (Usuario) ois.readObject();
                     users.add(user); // Agregamos el usuario al ArrayList
                 } catch (EOFException ex) {
+                	logData = "en login.java, datos de usuarios cargados";
+                    log.Log(logData, 0);
+
                     break; // Fin del archivo
                 }
             }
         } catch (FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "No se encontró el archivo de usuarios. Se creará uno nuevo al guardar cambios.", "Error", JOptionPane.ERROR_MESSAGE);
+        	logData = "en login.java, Archivo usuario.ser no existe, no se pueden cargar usuarios";
+            log.Log(logData, 2);
+
         } catch (IOException | ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "Error al cargar usuarios: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        	logData = "en login.java, Error en el archivo usuario.ser, clase usuario no encontrada: "+ex.getMessage();
+            log.Log(logData, 2);
+
         }
     }
 }
