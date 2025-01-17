@@ -1,6 +1,9 @@
 package com.logic;
 
-public class Usuario {
+import java.io.Serializable;
+
+public class Usuario implements Serializable  {
+	private static final long serialVersionUID = 1L;
     private String user;
     private int type; // 0 = Usuario normal, 1 = Arbitro, 2 = Admin
     private String pass;
@@ -62,8 +65,19 @@ public class Usuario {
 
 	@Override
 	public String toString() {
-		return "usr: "+ user + ", tipo: " + type + ", pass: " + pass;
+		String tipo ="";
+		switch(type){
+		case 0:
+			tipo = "Usuario";
+			break;
+		case 1:
+			tipo = "Arbitro";
+		break;
+		case 2:
+			tipo = "Administrador";
+		
 	}
+		return "Nobre de usuario: "+ user + ", Privilegios de usuario: " + tipo + ", Contraseña de Usuario: " + pass;
     
     
-}
+}}
