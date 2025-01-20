@@ -21,17 +21,16 @@ public class Temporada implements Comparable<Temporada> {
 		return nombre;
 	}
 
+	public void setId_temporada(int id_temporada) {
+		this.id_temporada = id_temporada;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
-	}
-
-	public boolean isFinalizado() {
-		return finalizado;
-	}
-	
-
-	public void setFinalizado(boolean finalizado) {
-		this.finalizado = finalizado;
 	}
 
 	public boolean isIniciado() {
@@ -40,6 +39,14 @@ public class Temporada implements Comparable<Temporada> {
 
 	public void setIniciado(boolean iniciado) {
 		this.iniciado = iniciado;
+	}
+
+	public boolean isFinalizado() {
+		return finalizado;
+	}
+
+	public void setFinalizado(boolean finalizado) {
+		this.finalizado = finalizado;
 	}
 
 	public int getCantidadEquipos() {
@@ -106,24 +113,15 @@ public class Temporada implements Comparable<Temporada> {
         listJornadas = new ArrayList<>(); // Inicializar la lista de jornadas
     }
 
-    public void finalizarTemporada() {
-        if (!finalizado && !iniciado) {
-            System.out.println("La temporada no está iniciada");
-        } else if (iniciado && !finalizado) {
-            finalizado = true;
-            System.out.println("La temporada se ha finalizado");
-        }
-    }
+	public ArrayList<Jornada> getListJornadas() {
+		return listJornadas;
+	}
 
-    public void iniciarTemporada() {
-        if (iniciado) {
-            System.out.println("La temporada está iniciada");
-        } else {
-            iniciado = true;
-        }
-    }
+	public void setListJornadas(ArrayList<Jornada> listJornadas) {
+		this.listJornadas = listJornadas;
+	}
 
-    @Override
+	@Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("========== Información de la Temporada ==========\n");
