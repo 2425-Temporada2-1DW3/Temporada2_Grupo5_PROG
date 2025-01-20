@@ -22,7 +22,7 @@ public class gestionEquiposTemporada extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
-    private JComboBox<Temporada> seasonSelector; 
+    private JComboBox<Temporada> seasonSelector;
     private JTable dataTable;
     private JButton saveButton;
     private ArrayList<Temporada> temporadas;
@@ -86,28 +86,53 @@ public class gestionEquiposTemporada extends JPanel {
 
     private void guardarCambios() {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-        boolean allFieldsFilled = true;  // Variable para verificar si todos los campos están rellenos
+        Temporada temporadaSeleccionada = (Temporada) seasonSelector.getSelectedItem();
 
-        // Verificamos si todos los campos de la tabla están completos
-        for (int i = 0; i < model.getRowCount(); i++) {
-            String equipo = (String) model.getValueAt(i, 0);
-            Integer fundacion = (Integer) model.getValueAt(i, 1);
-            String manager = (String) model.getValueAt(i, 2);
+        if (temporadaSeleccionada != null) {
+            boolean allFieldsFilled = true;
 
-            if (equipo == null || equipo.isEmpty() || fundacion == null || manager == null || manager.isEmpty()) {
-                allFieldsFilled = false;  // Si algún campo está vacío, no llamamos al método de guardar
-                break;  // Salimos del bucle si encontramos un campo vacío
+            ArrayList<Equipo> equiposDeTemporada = temporadaSeleccionada.getListEquipos();
+
+            // Actualizar objetos Equipo con los datos de la tabla
+            for (int i = 0; i < model.getRowCount(); i++) {
+                String equipoNombre = (String) model.getValueAt(i, 0);
+                Integer anioFundacion = (Integer) model.getValueAt(i, 1);
+                String entrenador = (String) model.getValueAt(i, 2);
+
+                if (equipoNombre == null || equipoNombre.isEmpty() ||
+                    anioFundacion == null || entrenador == null || entrenador.isEmpty()) {
+                    allFieldsFilled = false;
+                    break;
+                }
+
+                // Actualizar el equipo correspondiente
+                Equipo equipo = equiposDeTemporada.get(i);
+                equipo.setNombre(equipoNombre);
+                equipo.setFechaFundEq(anioFundacion);
+                equipo.setEntrenador(entrenador);
+            }
+
+            if (allFieldsFilled) {
+                // Guardar los cambios en el archivo
+                actualizarArchivo();
+
+                // Construir mensaje con datos actualizados
+                StringBuilder mensaje = new StringBuilder("Datos guardados correctamente:\n");
+                for (Equipo equipo : equiposDeTemporada) {
+                    mensaje.append("Nombre: ").append(equipo.getNombre())
+                           .append(", Año Fundación: ").append(equipo.getFechaFundEq())
+                           .append(", Entrenador: ").append(equipo.getEntrenador())
+                           .append("\n");
+                }
+
+                // Mostrar mensaje en un cuadro de diálogo
+                JOptionPane.showMessageDialog(this, mensaje.toString(), "Información", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Todos los campos deben estar completos.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
         }
-
-        if (allFieldsFilled) {
-            // Si todos los campos están rellenados, se guardan los cambios y se actualiza el archivo
-            actualizarArchivo();
-            JOptionPane.showMessageDialog(this, "Cambios guardados correctamente en el sistema.", "Información", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "Todos los campos deben estar completos.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-        }
     }
+
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Gestión de Equipos por Temporada");
@@ -129,7 +154,6 @@ public class gestionEquiposTemporada extends JPanel {
         }
     }
 
-    // Método para cargar las temporadas desde un archivo
     private void cargarTemporadasDesdeArchivo() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("Temporada.ser"))) {
             while (true) {
@@ -137,7 +161,7 @@ public class gestionEquiposTemporada extends JPanel {
                     Temporada temp = (Temporada) ois.readObject();
                     temporadas.add(temp);
                 } catch (EOFException ex) {
-                    break; // Fin del archivo
+                    break;
                 }
             }
         } catch (FileNotFoundException ex) {
@@ -148,23 +172,20 @@ public class gestionEquiposTemporada extends JPanel {
     }
 
     private void actualizarComboBox() {
-        // Limpia el JComboBox y agrega las temporadas disponibles
         seasonSelector.removeAllItems();
         for (Temporada temporada : temporadas) {
-            seasonSelector.addItem(temporada);  // Añadir temporada al JComboBox
+            seasonSelector.addItem(temporada);
         }
 
-        // Si hay temporadas, selecciona la primera y actualiza la tabla con los equipos
         if (!temporadas.isEmpty()) {
-            seasonSelector.setSelectedIndex(0);  // Selecciona la primera temporada por defecto
-            actualizarTablaConEquipos();  // Cargar los equipos de la temporada seleccionada
+            seasonSelector.setSelectedIndex(0);
+            actualizarTablaConEquipos();
         }
 
-        // Listener para actualizar la tabla al cambiar la selección de temporada
         seasonSelector.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                actualizarTablaConEquipos();  // Cargar equipos cuando cambie la selección
+                actualizarTablaConEquipos();
             }
         });
     }
@@ -173,48 +194,34 @@ public class gestionEquiposTemporada extends JPanel {
         Temporada temporadaSeleccionada = (Temporada) seasonSelector.getSelectedItem();
 
         if (temporadaSeleccionada != null) {
-            // Obtener los equipos de la temporada seleccionada
             ArrayList<Equipo> equiposDeTemporada = temporadaSeleccionada.getListEquipos();
-            
-            // Si hay equipos en la temporada, actualiza la tabla
-            if (!equiposDeTemporada.isEmpty()) {
-                String[] columnNames = {"Nombre Equipo", "Año Fundación", "Entrenador"};
-                Object[][] data = new Object[equiposDeTemporada.size()][3];  // Creamos el arreglo de datos
 
-                // Cargar los datos de los equipos en el arreglo
-                for (int i = 0; i < equiposDeTemporada.size(); i++) {
-                    Equipo equipo = equiposDeTemporada.get(i);
-                    data[i][0] = equipo.getNombre();  // Nombre del equipo
-                    data[i][1] = equipo.getFechaFundEq();  // Año de fundación del equipo (Integer)
-                    data[i][2] = equipo.getEntrenador();  // Nombre del entrenador
-                }
+            String[] columnNames = {"Nombre Equipo", "Año Fundación", "Entrenador"};
+            Object[][] data = new Object[equiposDeTemporada.size()][3];
 
-                // Actualizar el modelo de la tabla con los nuevos datos
-                DefaultTableModel tableModel = new DefaultTableModel(data, columnNames) {
-                    @Override
-                    public Class<?> getColumnClass(int columnIndex) {
-                        switch (columnIndex) {
-                            case 0:
-                            case 2:
-                                return String.class;
-                            case 1:
-                                return Integer.class;  // Año de fundación como Integer
-                            default:
-                                return Object.class;
-                        }
-                    }
-                };
-
-                // Establecer el modelo actualizado en la tabla
-                dataTable.setModel(tableModel);
-            } else {
-                // Si no hay equipos para la temporada seleccionada
-                JOptionPane.showMessageDialog(this, "No hay equipos para esta temporada.", "Información", JOptionPane.INFORMATION_MESSAGE);
+            for (int i = 0; i < equiposDeTemporada.size(); i++) {
+                Equipo equipo = equiposDeTemporada.get(i);
+                data[i][0] = equipo.getNombre();
+                data[i][1] = equipo.getFechaFundEq();
+                data[i][2] = equipo.getEntrenador();
             }
+
+            DefaultTableModel tableModel = new DefaultTableModel(data, columnNames) {
+                @Override
+                public Class<?> getColumnClass(int columnIndex) {
+                    switch (columnIndex) {
+                        case 0:
+                        case 2:
+                            return String.class;
+                        case 1:
+                            return Integer.class;
+                        default:
+                            return Object.class;
+                    }
+                }
+            };
+
+            dataTable.setModel(tableModel);
         }
     }
-
-
-   
-    
 }
