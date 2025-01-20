@@ -84,10 +84,11 @@ public class GestionTemporada {
 
 	private void crearTemporada() {
 		try {
+//			GeneradorTemporada generador = new GeneradorTemporada();
 			int id = idTemp; // Generar un ID único para la temporada
 	        String nombre = txtNombre.getText(); // Obtener el nombre de la temporada desde el input
 	        int cantidadEquipos = Integer.parseInt(txtCantidadEquipos.getText()); // Convertir el texto en número
-
+//	        int cantidadJornadas = 30; // Fijar el número de jornadas
 
 	        // Crear una nueva instancia de Temporada
 	        Temporada nueva = new Temporada(id, nombre, cantidadEquipos);
@@ -100,7 +101,7 @@ public class GestionTemporada {
 
 	        // Incrementar el ID para la próxima temporada
 	        idTemp++;
-	        
+//	        generador.GenerarTemporada(id, cantidadEquipos);
 	        // Mostrar mensaje de éxito
 	        JOptionPane.showMessageDialog(frame, "Temporada creada exitosamente.", "Éxito",
 	                JOptionPane.INFORMATION_MESSAGE);
@@ -110,8 +111,6 @@ public class GestionTemporada {
 	                JOptionPane.ERROR_MESSAGE);
 	    }
 	}
-	
-	
 	private void iniciarTemporada() {
 		boolean error = false;
 		int counter = 0;
