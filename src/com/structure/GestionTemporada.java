@@ -6,6 +6,8 @@ import javax.swing.*;
 import com.logic.Temporada;
 
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import com.logic.GeneradorTemporada;
 
 public class GestionTemporada {
 
@@ -13,6 +15,7 @@ public class GestionTemporada {
 	private JTextField txtNombre;
 	private JTextField txtCantidadEquipos;
 	private JList<Temporada> jListTemporada;
+	private ArrayList <Temporada> listTemporadas = new ArrayList<Temporada>();
 	private DefaultListModel<Temporada> dlm = new DefaultListModel<>();
 
 	public static void main(String[] args) {
@@ -81,24 +84,33 @@ public class GestionTemporada {
 
 	private void crearTemporada() {
 		try {
-			int id = idTemp;
-			String nombre = txtNombre.getText();
-			int cantidadEquipos = Integer.parseInt(txtCantidadEquipos.getText());
-			int cantidadJornadas = 30;
+//			GeneradorTemporada generador = new GeneradorTemporada();
+			int id = idTemp; // Generar un ID único para la temporada
+	        String nombre = txtNombre.getText(); // Obtener el nombre de la temporada desde el input
+	        int cantidadEquipos = Integer.parseInt(txtCantidadEquipos.getText()); // Convertir el texto en número
+//	        int cantidadJornadas = 30; // Fijar el número de jornadas
 
-			Temporada nueva = new Temporada(id, nombre, cantidadEquipos, cantidadJornadas);
+	        // Crear una nueva instancia de Temporada
+	        Temporada nueva = new Temporada(id, nombre, cantidadEquipos);
 
-			dlm.addElement(nueva); // Agregar a la lista
-			idTemp++;
+	        // Agregar la nueva temporada a la lista
+	        listTemporadas.add(nueva);
 
-			JOptionPane.showMessageDialog(frame, "Temporada creada exitosamente.", "Éxito",
-					JOptionPane.INFORMATION_MESSAGE);
-		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(frame, "Por favor, introduce valores válidos.", "Error",
-					JOptionPane.ERROR_MESSAGE);
-		}
+	        // Agregar al modelo (si usas DefaultListModel para actualizar un JList, por ejemplo)
+	        dlm.addElement(nueva);
+
+	        // Incrementar el ID para la próxima temporada
+	        idTemp++;
+//	        generador.GenerarTemporada(id, cantidadEquipos);
+	        // Mostrar mensaje de éxito
+	        JOptionPane.showMessageDialog(frame, "Temporada creada exitosamente.", "Éxito",
+	                JOptionPane.INFORMATION_MESSAGE);
+	    } catch (NumberFormatException e) {
+	        // Manejar errores de conversión
+	        JOptionPane.showMessageDialog(frame, "Por favor, introduce valores válidos.", "Error",
+	                JOptionPane.ERROR_MESSAGE);
+	    }
 	}
-
 	private void iniciarTemporada() {
 		boolean error = false;
 		int counter = 0;
@@ -132,6 +144,13 @@ public class GestionTemporada {
 			if (!error) {
 				dlm.getElementAt(seleccion).setIniciado(true);
 				dlm.set(seleccion, temporadaSeleccionada);
+				
+				// Obtener el ID de la temporada seleccionada
+	            int idTemporada = temporadaSeleccionada.getIdTemporada();
+	            System.out.println("Temporada iniciada. ID: " + idTemporada);
+
+	            // Aquí puedes llamar a otro método con el ID, si es necesario
+//	            GenerarAlgoritmo(idTemporada);
 			}
 		}
 

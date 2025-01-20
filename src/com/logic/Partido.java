@@ -46,6 +46,13 @@ public class Partido {
 	    this.resultadoCalculado = p.resultadoCalculado;
 	}
 	
+	//Constructor para GeneradorTemporada
+	public void CrearPartido(int idPart, int idLoc, int idVis) {
+		this.id = idPart;
+		this.equipoLoc = idLoc;
+		this.equipoVis = idVis;
+	}
+	
 	// Constructor Custom
 	public Partido(int p, int el, int ev, int sgl, int sgv, int pusl, int pusv, boolean rc, boolean j) {
 
@@ -133,7 +140,11 @@ public class Partido {
 	public void setResultadoCalculado(boolean resultadoCalculado) {
 		this.resultadoCalculado = resultadoCalculado;
 	}
-
+	
+	public void MostrarPartido() {
+		System.out.println("PartidoID: " + id + " " + equipoLoc + " - " + equipoVis);
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -152,14 +163,29 @@ public class Partido {
 		return id == other.id;
 	}
 
+//	@Override
+//	public String toString() {
+//		return "Partido [id=" + id + ", jugado=" + jugado + ", equipoLoc=" + equipoLoc + ", equipoVis=" + equipoVis
+//				+ ", setsGanadorsLoc=" + setsGanadorsLoc + ", setsGanadosVis=" + setsGanadosVis
+//				+ ", puntuajeUltimoSetLoc=" + puntuajeUltimoSetLoc + ", puntuajeUltimoSetVis=" + puntuajeUltimoSetVis
+//				+ ", resultadoCalculado=" + resultadoCalculado + "]";
+//	}
+	
 	@Override
 	public String toString() {
-		return "Partido [id=" + id + ", jugado=" + jugado + ", equipoLoc=" + equipoLoc + ", equipoVis=" + equipoVis
-				+ ", setsGanadorsLoc=" + setsGanadorsLoc + ", setsGanadosVis=" + setsGanadosVis
-				+ ", puntuajeUltimoSetLoc=" + puntuajeUltimoSetLoc + ", puntuajeUltimoSetVis=" + puntuajeUltimoSetVis
-				+ ", resultadoCalculado=" + resultadoCalculado + "]";
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("ID Partido: ").append(id).append("\n");
+	    sb.append("Jugado: ").append(jugado ? "Sí" : "No").append("\n");
+	    sb.append("Equipo Local: ").append(equipoLoc+1).append("\n");
+	    sb.append("Equipo Visitante: ").append(equipoVis+1).append("\n");
+	    sb.append("Sets Ganados (Local): ").append(setsGanadorsLoc).append("\n");
+	    sb.append("Sets Ganados (Visitante): ").append(setsGanadosVis).append("\n");
+	    sb.append("Puntuaje Último Set (Local): ").append(puntuajeUltimoSetLoc).append("\n");
+	    sb.append("Puntuaje Último Set (Visitante): ").append(puntuajeUltimoSetVis).append("\n");
+	    sb.append("Resultado Calculado: ").append(resultadoCalculado ? "Sí" : "No").append("\n");
+	    sb.append("-------------------------------------------\n");
+	    return sb.toString();
 	}
-	
 	
 
 }

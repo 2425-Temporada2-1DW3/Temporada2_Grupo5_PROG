@@ -6,7 +6,7 @@ import java.util.Objects;
 public class Equipo {
 	private int id;
 	private String Nombre;
-	private ArrayList<Jugador> listaJugador ;
+	private ArrayList<Jugador> listJugadores ;
 	private int fechaFundEq;
 	private String entrenador;
 	private int victorias;
@@ -32,14 +32,34 @@ public class Equipo {
 	}
 	@Override
 	public String toString() {
-		return "Equipo [id=" + id + ", Nombre=" + Nombre + ", listaJugador=" + listaJugador + ", fechaFundEq="
-				+ fechaFundEq + ", entrenador=" + entrenador + ", victorias=" + victorias + ", derrotas=" + derrotas
-				+ ", puntosTotales=" + puntosTotales + "]";
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("========== Información del Equipo ==========\n");
+	    sb.append("ID: ").append(id).append("\n");
+	    sb.append("Nombre: ").append(Nombre).append("\n");
+	    sb.append("Fecha de Fundación: ").append(fechaFundEq).append("\n");
+	    sb.append("Entrenador: ").append(entrenador != null ? entrenador : "No asignado").append("\n");
+	    sb.append("Victorias: ").append(victorias).append("\n");
+	    sb.append("Derrotas: ").append(derrotas).append("\n");
+	    sb.append("Puntos Totales: ").append(puntosTotales).append("\n");
+
+	    // Mostrar jugadores si hay en la lista
+	    if (listJugadores != null && !listJugadores.isEmpty()) {
+	        sb.append("Lista de Jugadores:\n");
+	        for (int i = 0; i < listJugadores.size(); i++) {
+	            sb.append("  Jugador ").append(i + 1).append(": ").append(listJugadores.get(i).toString()).append("\n");
+	        }
+	    } else {
+	        sb.append("Lista de Jugadores: No hay jugadores registrados.\n");
+	    }
+
+	    sb.append("-------------------------------------------\n");
+	    return sb.toString();
 	}
+
 	public Equipo() {
 		id= 1;
 		Nombre= "Equpo por defecto";
-		listaJugador = new ArrayList<Jugador>();
+		listJugadores = new ArrayList<Jugador>();
 		fechaFundEq= 1800;
 		entrenador = " ";
 		victorias= 0;
@@ -49,17 +69,21 @@ public class Equipo {
 	public Equipo (Equipo e) {
 		id= e.id;
 		Nombre= e.Nombre;
-		listaJugador = new ArrayList<Jugador>(e.listaJugador);
+		listJugadores = new ArrayList<Jugador>(e.listJugadores);
 		fechaFundEq= e.fechaFundEq;
 		entrenador = e.entrenador;
 		victorias= e.victorias;
 		derrotas = e.derrotas;
 		puntosTotales=e.puntosTotales;
 	}
+	public Equipo (int ide, String nom) {
+		this.id= ide;
+		this.Nombre= nom;
+	}
 	public Equipo (int ide, String nom, int fecha, String coach, int win, int lose, int total) {
 		id= ide;
 		Nombre= nom;
-		listaJugador = new ArrayList<Jugador>();
+		listJugadores = new ArrayList<Jugador>();
 		fechaFundEq= fecha;
 		entrenador = coach;
 		victorias= win;
@@ -89,10 +113,10 @@ public class Equipo {
 		Nombre = nombre;
 	}
 	public ArrayList<Jugador> getListaJUgador() {
-		return listaJugador;
+		return listJugadores;
 	}
 	public void setListaJUgador(ArrayList<Jugador> listaJUgador) {
-		this.listaJugador = listaJUgador;
+		this.listJugadores = listaJUgador;
 	}
 	public int getFechaFundEq() {
 		return fechaFundEq;
