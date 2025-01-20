@@ -1,9 +1,10 @@
 package com.logic;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Partido {
-
+public class Partido implements Serializable{
+	private static final long serialVersionUID = 1L;
 	// ----Definición de Variables---//
 
 	private int id = 0;
