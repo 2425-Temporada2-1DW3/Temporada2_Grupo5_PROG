@@ -7,6 +7,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import com.structure.main;
 import java.io.*;
+import java.util.ArrayList;
 
 import com.logic.Usuario;
 
@@ -33,6 +34,8 @@ public class PanelUsuarios extends JPanel implements ActionListener {
      * Create the panel.
      */
     public PanelUsuarios(Color colorbg, Color colortxt, int userType) {
+    	
+
     	
         this.userType = userType;
         this.colorbg = colorbg;
@@ -133,9 +136,28 @@ public class PanelUsuarios extends JPanel implements ActionListener {
                     Usuario selectedUser = userList.getSelectedValue();
                     if (selectedUser != null) {
                         // Cargar los datos del usuario en los campos
-                        txtUsername.setText(selectedUser.getUser());
-                        txtPassword.setText(selectedUser.getPass());
-                        cmbUserType.setSelectedIndex(selectedUser.getType());
+                    	
+                    	if (selectedUser.getType() ==4 && userType == 4) {
+                    		// Seleciono superusuario y soy superusuario
+                        	btnModify.setEnabled(true);
+                            txtUsername.setText(selectedUser.getUser());
+                            txtPassword.setText(selectedUser.getPass());
+                        } else if (selectedUser.getType() ==4){
+                        	// Seleciono superusuario y no soy superusuario
+                        	btnModify.setEnabled(false);
+                        	cmbUserType.setEnabled(false);
+                            txtUsername.setText("");
+                            txtPassword.setText("");
+                        } else {
+                        	// Seleciono cualquier otra cosa
+                        	
+                        	btnModify.setEnabled(true);
+                        	cmbUserType.setEnabled(true);
+                            txtUsername.setText(selectedUser.getUser());
+                            txtPassword.setText(selectedUser.getPass());
+                            cmbUserType.setSelectedIndex(selectedUser.getType());
+
+                        }
                         
                     }
                 }
@@ -208,6 +230,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 		
 	}
 	private void crearUsuario() {
+		
         String username = txtUsername.getText().trim();
         int userType = cmbUserType.getSelectedIndex();
         char[] passwordChars = txtPassword.getPassword();
@@ -224,7 +247,10 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 	}
 	private void eliminarUsuario() {
 		 int selectedIndex = userList.getSelectedIndex();
-         if (selectedIndex != -1) {
+		 if(listModel.elementAt(selectedIndex).getType() == 4) {
+             JOptionPane.showMessageDialog(null, "El Superusuario no se puede eliminar.");
+
+		 } else if (selectedIndex != -1) {
              listModel.remove(selectedIndex);
              main.changes=true;
          } else {
@@ -241,8 +267,26 @@ public class PanelUsuarios extends JPanel implements ActionListener {
                     JOptionPane.YES_NO_OPTION
             );
             if (confirmation == JOptionPane.YES_OPTION) {
-                listModel.clear();
-                main.changes=true;
+                Usuario superuser = null;
+                
+                // Iterate through the list and find the superuser
+                for (int i = 0; i < listModel.size(); i++) {
+                    if (listModel.get(i).getType() == 4) {
+                        superuser = listModel.get(i);
+                        break;  // Exit the loop as we found the superuser
+                    }else {
+                        main.changes = true;
+                	}
+                }
+                
+                // Clear the list
+                listModel.removeAllElements();
+                
+                // If there was a superuser, add it back
+                if (superuser != null) {
+                    listModel.addElement(superuser);
+                
+                
             }
         } else {
             JOptionPane.showMessageDialog(null, "No hay usuarios para eliminar.");

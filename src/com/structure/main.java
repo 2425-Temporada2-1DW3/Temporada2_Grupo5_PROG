@@ -102,7 +102,7 @@ public class main extends JFrame implements ActionListener {
 		
 		
 		// Generar los 5 Botones de menu
-		if (userType == 2) {
+		if (userType == 2 || userType == 4) {
 			for (JButton button : buttons) {
 				buttonCreate(button);
 			}
