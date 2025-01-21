@@ -61,7 +61,6 @@ public class main extends JFrame implements ActionListener {
 	 * Create the frame. 
 	 */
     public main(int userType) {
-    	// Logica de texto de Titulo
         this.userType = userType; // coje la variable de la clase login y la pasa a una variable definida en la clase main
         
 
@@ -97,15 +96,14 @@ public class main extends JFrame implements ActionListener {
 			for (JButton button : buttons) {
 				buttonCreate(button);
 			}
-		}else if (userType == 1){
+		} else if (userType == 1){
 			buttonCreate(btnMenuInicio);
 			buttonCreate(btnMenuTemporadas);
 			buttonCreate(btnMenuPartidos);
 			buttonCreate(btnMenuSalir);
 
-		}else {
+		} else {
 			buttonCreate(btnMenuSalir);
-
 		}
 		
 		// Cambia el titulo de la pagina y carga el menu apropiado para cada tipo de usuario
@@ -118,28 +116,26 @@ public class main extends JFrame implements ActionListener {
         	userTypeName = "Entrenadores";
         	switchPanel(new PanelPartidos(colorbg,colortxt,userType));
         	btnMenuPartidos.setEnabled(false);
-
+        	
         } else {
         	userTypeName = "Administradores";
         	switchPanel(new PanelUsuarios(colorbg,colortxt,userType));
         	btnMenuUsuarios.setEnabled(false);
-
-
+        	
         }
-        
         setTitle("Portal de "+ userTypeName +" la Federacion de Voleivol");
-        
-		
-
 	}
     
-    public void buttonCreate(JButton button) {
+    // Funcion para crear todos los botones del menu
+    public void buttonCreate(JButton button) { 
 	    button.setFont(new Font("SansSerif", Font.BOLD, 16));
 	    button.addActionListener(this);
 	    button.setForeground(colortxt);
 	    button.setBackground(colorbg);
 	    LayoutPanel.add(button);
     }
+    
+    
     public void switchPanel(JPanel panel) {
     	LayoutPanel_1.removeAll();
     	LayoutPanel_1.add(panel, BorderLayout.CENTER);
