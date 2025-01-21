@@ -1,10 +1,11 @@
 package com.logic;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Jugador  {
+public class Jugador implements Serializable {
 
-	
+	private static final long serialVersionUID = 1L;
 	private String nombre;
 	private int edad;
 	private String posicion;

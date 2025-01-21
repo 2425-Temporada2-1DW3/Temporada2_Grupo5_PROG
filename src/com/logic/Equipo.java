@@ -1,9 +1,11 @@
 package com.logic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Equipo {
+public class Equipo implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private String Nombre;
 	private ArrayList<Jugador> listJugadores ;
