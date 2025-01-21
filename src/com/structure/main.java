@@ -61,19 +61,9 @@ public class main extends JFrame implements ActionListener {
 	 * Create the frame. 
 	 */
     public main(int userType) {
-    	// Logica de texto de Titulo
         this.userType = userType; // coje la variable de la clase login y la pasa a una variable definida en la clase main
         
-        if (userType == 0 ) {
-        	userTypeName = "Usuarios";
-        } else if (userType == 1) {
-        	userTypeName = "Entrenadores";
-        } else {
-        	userTypeName = "Administradores";
-        }
-        
-        setTitle("Portal de "+ userTypeName +" la Federacion de Voleivol");
-        
+
         // Cosas por defecto del Jframe
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -106,27 +96,46 @@ public class main extends JFrame implements ActionListener {
 			for (JButton button : buttons) {
 				buttonCreate(button);
 			}
-		}else if (userType == 1){
+		} else if (userType == 1){
 			buttonCreate(btnMenuInicio);
 			buttonCreate(btnMenuTemporadas);
 			buttonCreate(btnMenuPartidos);
 			buttonCreate(btnMenuSalir);
 
-		}else {
+		} else {
 			buttonCreate(btnMenuSalir);
-
 		}
-
 		
+		// Cambia el titulo de la pagina y carga el menu apropiado para cada tipo de usuario
+        if (userType == 0 ) {
+        	userTypeName = "Usuarios";
+        	switchPanel(new PanelInicio(colorbg,colortxt,userType));
+        	btnMenuInicio.setEnabled(false);
 
+        } else if (userType == 1) {
+        	userTypeName = "Entrenadores";
+        	switchPanel(new PanelPartidos(colorbg,colortxt,userType));
+        	btnMenuPartidos.setEnabled(false);
+        	
+        } else {
+        	userTypeName = "Administradores";
+        	switchPanel(new PanelUsuarios(colorbg,colortxt,userType));
+        	btnMenuUsuarios.setEnabled(false);
+        	
+        }
+        setTitle("Portal de "+ userTypeName +" la Federacion de Voleivol");
 	}
-    public void buttonCreate(JButton button) {
+    
+    // Funcion para crear todos los botones del menu
+    public void buttonCreate(JButton button) { 
 	    button.setFont(new Font("SansSerif", Font.BOLD, 16));
 	    button.addActionListener(this);
 	    button.setForeground(colortxt);
 	    button.setBackground(colorbg);
 	    LayoutPanel.add(button);
     }
+    
+    
     public void switchPanel(JPanel panel) {
     	LayoutPanel_1.removeAll();
     	LayoutPanel_1.add(panel, BorderLayout.CENTER);
@@ -137,6 +146,7 @@ public class main extends JFrame implements ActionListener {
 		    button.setEnabled(true);
 		}
     }
+    
     public int panelDeOpcion(String mensaje, String titulo) {
     	UIManager.put("Panel.background", colorbg);
     	UIManager.put("OptionPane.background", colorbg);
