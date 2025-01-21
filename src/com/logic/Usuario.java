@@ -66,18 +66,26 @@ public class Usuario implements Serializable  {
 	@Override
 	public String toString() {
 		String tipo ="";
+		String userString = user;
+		String passString = pass;
+		
 		switch(type){
 		case 0:
 			tipo = "Usuario";
 			break;
 		case 1:
 			tipo = "Arbitro";
-		break;
+			break;
 		case 2:
 			tipo = "Administrador";
-		
-	}
-		return "Nobre de usuario: "+ user + ", Privilegios de usuario: " + tipo + ", Contraseña de Usuario: " + pass;
+			break;
+		case 4:
+			tipo = "Superusuario";
+			userString = user.replaceAll(".", "*");
+			passString = pass.replaceAll(".", "*");
+		}
+
+		return "Nobre de usuario: "+ userString + ", Privilegios de usuario: " + tipo + ", Contraseña de Usuario: " + passString;
     
     
 }}
