@@ -64,16 +64,7 @@ public class main extends JFrame implements ActionListener {
     	// Logica de texto de Titulo
         this.userType = userType; // coje la variable de la clase login y la pasa a una variable definida en la clase main
         
-        if (userType == 0 ) {
-        	userTypeName = "Usuarios";
-        } else if (userType == 1) {
-        	userTypeName = "Entrenadores";
-        } else {
-        	userTypeName = "Administradores";
-        }
-        
-        setTitle("Portal de "+ userTypeName +" la Federacion de Voleivol");
-        
+
         // Cosas por defecto del Jframe
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -116,10 +107,32 @@ public class main extends JFrame implements ActionListener {
 			buttonCreate(btnMenuSalir);
 
 		}
+		
+		// Cambia el titulo de la pagina y carga el menu apropiado para cada tipo de usuario
+        if (userType == 0 ) {
+        	userTypeName = "Usuarios";
+        	switchPanel(new PanelInicio(colorbg,colortxt,userType));
+        	btnMenuInicio.setEnabled(false);
 
+        } else if (userType == 1) {
+        	userTypeName = "Entrenadores";
+        	switchPanel(new PanelPartidos(colorbg,colortxt,userType));
+        	btnMenuPartidos.setEnabled(false);
+
+        } else {
+        	userTypeName = "Administradores";
+        	switchPanel(new PanelUsuarios(colorbg,colortxt,userType));
+        	btnMenuUsuarios.setEnabled(false);
+
+
+        }
+        
+        setTitle("Portal de "+ userTypeName +" la Federacion de Voleivol");
+        
 		
 
 	}
+    
     public void buttonCreate(JButton button) {
 	    button.setFont(new Font("SansSerif", Font.BOLD, 16));
 	    button.addActionListener(this);
@@ -137,6 +150,7 @@ public class main extends JFrame implements ActionListener {
 		    button.setEnabled(true);
 		}
     }
+    
     public int panelDeOpcion(String mensaje, String titulo) {
     	UIManager.put("Panel.background", colorbg);
     	UIManager.put("OptionPane.background", colorbg);
