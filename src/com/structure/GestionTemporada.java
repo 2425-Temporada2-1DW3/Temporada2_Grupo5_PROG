@@ -355,6 +355,7 @@ public class GestionTemporada {
 	        // Mostrar mensaje de éxito
 	        JOptionPane.showMessageDialog(frame, "Temporada creada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 	        main.changes=true;
+	        actualizarArchivo();
 	    } catch (NumberFormatException e) {
 	        // Manejar errores de conversión
 	        JOptionPane.showMessageDialog(frame, "Por favor, introduce valores válidos.", "Error", JOptionPane.ERROR_MESSAGE);

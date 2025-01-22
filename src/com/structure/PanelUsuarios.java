@@ -291,6 +291,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
         } else {
             JOptionPane.showMessageDialog(null, "No hay usuarios para eliminar.");
         }
+		}
 	}
 	
 	private void actualizarArchivo() {
