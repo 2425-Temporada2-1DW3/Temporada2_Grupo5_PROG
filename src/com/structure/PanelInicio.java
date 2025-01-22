@@ -1,6 +1,7 @@
 package com.structure;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import java.awt.Color;
 
@@ -25,8 +26,10 @@ import java.awt.event.ActionListener;
 import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,7 +66,6 @@ public class PanelInicio extends JPanel implements ActionListener {
 	private JLabel partidoELoc2;
 	private JTextField partido3LocPoints;
 	private JPanel panel_12;
-	private ScrollPane scrollPane;
 	private JTable table;
 	private JPanel panel_13;
 	private JPanel panel_14;
@@ -88,7 +90,8 @@ public class PanelInicio extends JPanel implements ActionListener {
 	private int jornadaSelect;
 	private JButton btnSave;
 	private ArrayList<Partido> partidos;
-
+	private JButton btnUpdateApp;
+	private DefaultTableModel modelClasificacion;
 	/**
 	 * Create the panel.
 	 */
@@ -238,19 +241,31 @@ public class PanelInicio extends JPanel implements ActionListener {
 		btnSave = new JButton("Finalizar Jornada");
 		btnSave.addActionListener(this);
 		panel_12.add(btnSave);
+		
+		btnUpdateApp = new JButton("Aplicar cambios en el sistema");
+		btnUpdateApp.addActionListener(this);
+		panel_12.add(btnUpdateApp);
 
 		panel_2 = new JPanel();
 		add(panel_2, BorderLayout.EAST);
 
-		scrollPane = new ScrollPane();
+		table = new JTable();
+		modelClasificacion = new DefaultTableModel();
+		modelClasificacion.addColumn("posicion");
+		modelClasificacion.addColumn("equipo");
+		modelClasificacion.addColumn("puntuacion");
+		
+		
+
+		table.setModel(modelClasificacion);
+
+		// Agregar JScrollPane
+		JScrollPane scrollPane = new JScrollPane(table);
 		panel_2.add(scrollPane);
 
-		table = new JTable();
-		panel_2.add(table);
-
 		SwichDatosJornada();
-
-		// Codigo Temporal
+		actualizarClasificacion();
+	
 
 	}
 
@@ -405,7 +420,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 				partido.setPuntuajeUltimoSetVis(puntuacionVis);
 				partido.setJugado(true);
 			}
-			
+			main.changes=true;
 
 		}
 		System.out.println(partidos);
@@ -417,7 +432,34 @@ public class PanelInicio extends JPanel implements ActionListener {
 		model.setRowCount(0);
 
 	}
-
+	private void guardarDatos() {
+		if (main.changes== true) {
+    		try (FileOutputStream fos = new FileOutputStream("Temporada.ser");
+                    ObjectOutputStream oos = new ObjectOutputStream(fos)){
+        		int length =listTemporadas.size();
+        		int counter = 0;
+        		while (counter <length) {
+        			oos.writeObject(listTemporadas.get(counter));
+        			counter ++;
+        		}
+        		JOptionPane.showMessageDialog(null, "cambios guardados.");
+        		main.changes=false;
+    			
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+    	}
+	}
+	private void actualizarClasificacion() {
+		for (int counter=0; nombre.size() >counter; counter++) {
+			 modelClasificacion.addRow(new Object[]{
+				        counter + 1, // Posición
+				        nombre.get(counter).getNombre(), // Nombre del equipo
+				        0 // Puntuación inicial
+				    });
+		}
+	}
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		Object o = ae.getSource();
@@ -480,6 +522,8 @@ public class PanelInicio extends JPanel implements ActionListener {
 			}
 				
 
+		}else if(o==btnUpdateApp) {
+			guardarDatos();
 		}
 
 	}
