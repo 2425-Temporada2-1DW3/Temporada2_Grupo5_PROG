@@ -264,7 +264,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 		panel_2.add(scrollPane);
 
 		SwichDatosJornada();
-		actualizarClasificacion();
+		cargarTabla();
 	
 
 	}
@@ -427,11 +427,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 
 	}
 
-	private void iniciarTabla() {
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		model.setRowCount(0);
-
-	}
+	
 	private void guardarDatos() {
 		if (main.changes== true) {
     		try (FileOutputStream fos = new FileOutputStream("Temporada.ser");
@@ -451,7 +447,7 @@ public class PanelInicio extends JPanel implements ActionListener {
     		}
     	}
 	}
-	private void actualizarClasificacion() {
+	private void cargarTabla() {
 		for (int counter=0; nombre.size() >counter; counter++) {
 			 modelClasificacion.addRow(new Object[]{
 				        counter + 1, // Posición
