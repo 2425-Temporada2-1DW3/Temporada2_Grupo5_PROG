@@ -1,6 +1,7 @@
 package com.logic;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Usuario implements Serializable  {
 	private static final long serialVersionUID = 1L;
@@ -64,6 +65,23 @@ public class Usuario implements Serializable  {
 	}
 
 	@Override
+	public int hashCode() {
+		return Objects.hash(pass, type, user);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Usuario other = (Usuario) obj;
+		return Objects.equals(pass, other.pass) && type == other.type && Objects.equals(user, other.user);
+	}
+
+	@Override
 	public String toString() {
 		String tipo ="";
 		String userString = user;
@@ -85,7 +103,7 @@ public class Usuario implements Serializable  {
 			passString = pass.replaceAll(".", "*");
 		}
 
-		return "Nobre de usuario: "+ userString + ", Privilegios de usuario: " + tipo + ", Contraseña de Usuario: " + passString;
+		return "Nombre de usuario: "+ userString + ", Privilegios de usuario: " + tipo + ", Contraseña de Usuario: " + passString;
     
     
 }}

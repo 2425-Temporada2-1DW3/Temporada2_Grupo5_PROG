@@ -11,14 +11,19 @@ public class PanelPartidos extends JPanel {
 	private int userType;
 	private Color colorbg;
 	private Color colortxt;
+	private String userName;
+	private main parentFrame;
+
 	/**
 	 * Create the panel.
 	 */
-	public PanelPartidos(Color colorbg, Color colortxt, int userType) {
+	public PanelPartidos(main parentFrame) {
 		// guarda los valores fuera de esta funcion por si se necesitan acceder en otro sitio
-		this.userType = userType;
-		this.colorbg = colorbg;
-		this.colortxt = colortxt;
+		this.parentFrame = parentFrame;
+	    userType = parentFrame.userType;
+	    colorbg = parentFrame.colorbg;
+	    colortxt = parentFrame.colortxt;
+	    userName = parentFrame.userName;
 
 		// Cambia color del Jpanel
 		setBackground(colorbg);
