@@ -13,11 +13,12 @@ public class Partido implements Serializable{
 	private int equipoLoc = 0;
 	private int equipoVis = 0;
 	
-	private int setsGanadorsLoc = 0;
-	private int setsGanadosVis = 0;
+	private boolean ganadorLoc = false;
+	private boolean ganadorVis = false;
 
-	private int puntuajeUltimoSetLoc = 0; /*Representan los goles/puntos anotados por equipo local*/
-	private int puntuajeUltimoSetVis = 0;
+	private int puntuajeLoc = 0; /*Representan los goles/puntos anotados por equipo local*/
+	private int puntuajeVis = 0;
+	
 	
 	private boolean resultadoCalculado = false;
 
@@ -27,10 +28,10 @@ public class Partido implements Serializable{
 		this.jugado = false;
 		this.equipoLoc = 0;
 		this.equipoVis = 0;
-		this.setsGanadorsLoc = 0;
-		this.setsGanadosVis = 0;
-		this.puntuajeUltimoSetLoc = 0;
-		this.puntuajeUltimoSetVis = 0;
+		this.ganadorLoc = false;
+		this.ganadorVis = false;
+		this.puntuajeLoc = 0;
+		this.puntuajeVis = 0;
 		this.resultadoCalculado = false;
 	}
 	
@@ -40,10 +41,10 @@ public class Partido implements Serializable{
 	    this.jugado = p.jugado;
 	    this.equipoLoc = p.equipoLoc;
 	    this.equipoVis = p.equipoVis;
-	    this.setsGanadorsLoc = p.setsGanadorsLoc;
-	    this.setsGanadosVis = p.setsGanadosVis;
-	    this.puntuajeUltimoSetLoc = p.puntuajeUltimoSetLoc;
-	    this.puntuajeUltimoSetVis = p.puntuajeUltimoSetVis;
+	    this.ganadorLoc = p.ganadorLoc;
+	    this.ganadorVis = p.ganadorVis;
+	    this.puntuajeLoc = p.puntuajeLoc;
+	    this.puntuajeVis = p.puntuajeVis;
 	    this.resultadoCalculado = p.resultadoCalculado;
 	}
 	
@@ -55,16 +56,16 @@ public class Partido implements Serializable{
 	}
 	
 	// Constructor Custom
-	public Partido(int p, int el, int ev, int sgl, int sgv, int pusl, int pusv, boolean rc, boolean j) {
+	public Partido(int p, int el, int ev, boolean sgl, boolean sgv, int pusl, int pusv, boolean rc, boolean j) {
 
 		this.id = p;
 		this.jugado = j;
 		this.equipoLoc = el;
 		this.equipoVis = ev;
-		this.setsGanadorsLoc = sgl;
-		this.setsGanadosVis = sgv;
-		this.puntuajeUltimoSetLoc = pusl;
-		this.puntuajeUltimoSetVis = pusv;
+		this.ganadorLoc = sgl;
+		this.ganadorVis = sgv;
+		this.puntuajeLoc = pusl;
+		this.puntuajeVis = pusv;
 		this.resultadoCalculado = rc;
 
 	}
@@ -102,36 +103,28 @@ public class Partido implements Serializable{
 		this.equipoVis = equipoVis;
 	}
 
-	public int getSetsGanadorsLoc() {
-		return setsGanadorsLoc;
+	
+	public void setGanadorLoc(boolean ganadorLocal) {
+		this.ganadorLoc=ganadorLocal;
+	}
+	public void setGanadorVis(boolean ganadorVisitante) {
+		this.ganadorVis=ganadorVisitante;
 	}
 
-	public void setSetsGanadorsLoc(int setsGanadorsLoc) {
-		this.setsGanadorsLoc = setsGanadorsLoc;
+	public int getpuntuajeLoc() {
+		return puntuajeLoc;
 	}
 
-	public int getSetsGanadosVis() {
-		return setsGanadosVis;
+	public void setpuntuajeLoc(int puntuajeLoc) {
+		this.puntuajeLoc = puntuajeLoc;
 	}
 
-	public void setSetsGanadosVis(int setsGanadosVis) {
-		this.setsGanadosVis = setsGanadosVis;
+	public int getpuntuajeVis() {
+		return puntuajeVis;
 	}
 
-	public int getPuntuajeUltimoSetLoc() {
-		return puntuajeUltimoSetLoc;
-	}
-
-	public void setPuntuajeUltimoSetLoc(int puntuajeUltimoSetLoc) {
-		this.puntuajeUltimoSetLoc = puntuajeUltimoSetLoc;
-	}
-
-	public int getPuntuajeUltimoSetVis() {
-		return puntuajeUltimoSetVis;
-	}
-
-	public void setPuntuajeUltimoSetVis(int puntuajeUltimoSetVis) {
-		this.puntuajeUltimoSetVis = puntuajeUltimoSetVis;
+	public void setpuntuajeVis(int puntuajeVis) {
+		this.puntuajeVis = puntuajeVis;
 	}
 
 	public boolean isResultadoCalculado() {
@@ -167,8 +160,8 @@ public class Partido implements Serializable{
 //	@Override
 //	public String toString() {
 //		return "Partido [id=" + id + ", jugado=" + jugado + ", equipoLoc=" + equipoLoc + ", equipoVis=" + equipoVis
-//				+ ", setsGanadorsLoc=" + setsGanadorsLoc + ", setsGanadosVis=" + setsGanadosVis
-//				+ ", puntuajeUltimoSetLoc=" + puntuajeUltimoSetLoc + ", puntuajeUltimoSetVis=" + puntuajeUltimoSetVis
+//				+ ", ganadorLoc=" + ganadorLoc + ", ganadorVis=" + ganadorVis
+//				+ ", puntuajeLoc=" + puntuajeLoc + ", puntuajeVis=" + puntuajeVis
 //				+ ", resultadoCalculado=" + resultadoCalculado + "]";
 //	}
 	
@@ -179,10 +172,10 @@ public class Partido implements Serializable{
 	    sb.append("Jugado: ").append(jugado ? "Sí" : "No").append("\n");
 	    sb.append("Equipo Local: ").append(equipoLoc+1).append("\n");
 	    sb.append("Equipo Visitante: ").append(equipoVis+1).append("\n");
-	    sb.append("Sets Ganados (Local): ").append(setsGanadorsLoc).append("\n");
-	    sb.append("Sets Ganados (Visitante): ").append(setsGanadosVis).append("\n");
-	    sb.append("Puntuaje Último Set (Local): ").append(puntuajeUltimoSetLoc).append("\n");
-	    sb.append("Puntuaje Último Set (Visitante): ").append(puntuajeUltimoSetVis).append("\n");
+	    sb.append("Sets Ganados (Local): ").append(ganadorLoc).append("\n");
+	    sb.append("Sets Ganados (Visitante): ").append(ganadorVis).append("\n");
+	    sb.append("Puntuaje Último Set (Local): ").append(puntuajeLoc).append("\n");
+	    sb.append("Puntuaje Último Set (Visitante): ").append(puntuajeVis).append("\n");
 	    sb.append("Resultado Calculado: ").append(resultadoCalculado ? "Sí" : "No").append("\n");
 	    sb.append("-------------------------------------------\n");
 	    return sb.toString();

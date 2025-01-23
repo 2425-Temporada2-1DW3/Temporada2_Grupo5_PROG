@@ -53,7 +53,6 @@ public class PanelInicio extends JPanel implements ActionListener {
 	private JPanel panel_4;
 	private JPanel panel_5;
 	private JPanel panel_6;
-	private JComboBox<Temporada> comboBox;
 	private JPanel panel_7;
 	private JLabel partidoELoc0;
 	private JTextField partido1LocPoints;
@@ -72,15 +71,12 @@ public class PanelInicio extends JPanel implements ActionListener {
 	private JButton prevButton;
 	private JLabel numJornada;
 	private JButton nextButton;
-	private ArrayList<Temporada> listTemporadas;
-	private ArrayList<Jornada> listJornadas;
 	private JLabel partidoEVis0;
 	private JTextField Partido1VisPoints;
 	private JLabel partidoEVis1;
 	private JTextField partido2VisPoints;
 	private JLabel partidoEVis2;
 	private JTextField Partido3;
-	private ArrayList<Equipo> nombre;
 	private JTextField pointsEVis1;
 	private JTextField pointsELoc1;
 	private JTextField pointsELoc0;
@@ -89,9 +85,15 @@ public class PanelInicio extends JPanel implements ActionListener {
 	private JTextField pointsEVis2;
 	private int jornadaSelect;
 	private JButton btnSave;
-	private ArrayList<Partido> partidos;
 	private JButton btnUpdateApp;
 	private DefaultTableModel modelClasificacion;
+	private ArrayList<Partido> partidos;
+	private ArrayList<Temporada> listTemporadas;
+	private ArrayList<Jornada> listJornadas;
+	private ArrayList<Equipo> nombre;
+	private JComboBox<Temporada> comboBox;
+	private Temporada TemporadaSeleccionada;
+	
 	/**
 	 * Create the panel.
 	 */
@@ -250,10 +252,14 @@ public class PanelInicio extends JPanel implements ActionListener {
 		add(panel_2, BorderLayout.EAST);
 
 		table = new JTable();
+		table.setEnabled(false);
 		modelClasificacion = new DefaultTableModel();
 		modelClasificacion.addColumn("posicion");
 		modelClasificacion.addColumn("equipo");
-		modelClasificacion.addColumn("puntuacion");
+		modelClasificacion.addColumn("puntuacion total");
+		modelClasificacion.addColumn("PJ");
+		modelClasificacion.addColumn("PG");
+		modelClasificacion.addColumn("PP");
 		
 		
 
@@ -265,6 +271,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 
 		SwichDatosJornada();
 		cargarTabla();
+		TemporadasIniciadas();
 	
 
 	}
@@ -305,12 +312,13 @@ public class PanelInicio extends JPanel implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				actualizarTemporada();
 				SwichDatosJornada();
+				TemporadasIniciadas();
 			}
 		});
 	}
 
 	private void actualizarTemporada() {
-		Temporada TemporadaSeleccionada = (Temporada) comboBox.getSelectedItem();
+		TemporadaSeleccionada = (Temporada) comboBox.getSelectedItem();
 		if (TemporadaSeleccionada != null) {
 			listJornadas = TemporadaSeleccionada.getListJornadas();
 			nombre = TemporadaSeleccionada.getListEquipos();
@@ -346,18 +354,19 @@ public class PanelInicio extends JPanel implements ActionListener {
 			}
 			//edita el valor de el textField si esta jugado
 			if(textFieldMap.containsKey(pointsLoc)) {
+				TemporadaSeleccionada = (Temporada) comboBox.getSelectedItem();
 				if(partido.isJugado()) {
 					//valores de el local
-					if (partido.getPuntuajeUltimoSetLoc() == -1) {
+					if (partido.getpuntuajeLoc() == -1) {
 						textFieldMap.get(pointsLoc).setText("");
 					}else {
-						textFieldMap.get(pointsLoc).setText(String.valueOf(partido.getPuntuajeUltimoSetLoc()));
+						textFieldMap.get(pointsLoc).setText(String.valueOf(partido.getpuntuajeLoc()));
 					}
 					// valores de el visitante
-					if (partido.getPuntuajeUltimoSetVis() == -1) {
+					if (partido.getpuntuajeVis() == -1) {
 						textFieldMap.get(pointsVis).setText("");
 					}else {
-						textFieldMap.get(pointsVis).setText(String.valueOf(partido.getPuntuajeUltimoSetVis()));
+						textFieldMap.get(pointsVis).setText(String.valueOf(partido.getpuntuajeVis()));
 					}
 				}else {
 					textFieldMap.get(pointsLoc).setText("");
@@ -380,6 +389,13 @@ public class PanelInicio extends JPanel implements ActionListener {
 					textFieldMap.get(pointsVis).setEditable(true);
 				}
 			}
+			if( TemporadaSeleccionada.isFinalizado()|| TemporadaSeleccionada.isIniciado()==false) {
+				textFieldMap.get(pointsLoc).setEditable(false);
+				textFieldMap.get(pointsVis).setEditable(false);
+			} else {
+				textFieldMap.get(pointsLoc).setEditable(true);
+				textFieldMap.get(pointsVis).setEditable(true);
+			}
 		}
 		
 			
@@ -388,43 +404,125 @@ public class PanelInicio extends JPanel implements ActionListener {
 	
 
 	private void ActualizarPuntuaciones() {
+		//variables para almacenar los id de el map
 		String locales;
 		String visitantes;
+		String localesNom ;
+		String visitanteNom;
+		//variables para almacenar los puntos de el partido
 		int puntuacionLoc;
 		int puntuacionVis;
 		Partido partido;
+		//cada vez que se ejecuta el for pasa al siguiente partido 
 		for (int counter = 0; counter < partidos.size(); counter++) {
+			//id de los map
 			locales = "pointsELoc" + counter;
 			visitantes = "pointsEVis" + counter;
+			localesNom ="partidoELoc" + counter;
+			visitanteNom ="partidoEVis"+ counter;
+			//rescatamos el partido de el array
 			partido = partidos.get(counter);
-
+			//rescatamos el id de el equipo local
+			int idLocal = partido.getEquipoLoc();
+			//guardamos el nombre de el equipo local
+			localesNom = nombre.get(idLocal).getNombre();
+			//rescatamos el id de el equipo Visitante
+			int idVisitante = partido.getEquipoVis();
+			//guardamos el nombre de el equipo visitante
+			visitanteNom = nombre.get(idVisitante).getNombre();
+			//verifiacamos que contenga la id y que este vacio para asignarle un valor nulo 
 			if (textFieldMap.containsKey(locales) && textFieldMap.get(locales).getText().isEmpty()) {
 				puntuacionLoc = -1;
 
-				partido.setPuntuajeUltimoSetLoc(puntuacionLoc);
+				partido.setpuntuajeLoc(puntuacionLoc);
 
 			} else {
+				//guardamos la puntuacion si es valida
 				puntuacionLoc = Integer.parseInt(textFieldMap.get(locales).getText());
 
-				partido.setPuntuajeUltimoSetLoc(puntuacionLoc);
+				partido.setpuntuajeLoc(puntuacionLoc);
 			}
-			
+			//verifiacamos que contenga la id y que este vacio para asignarle un valor nulo 
 			if (textFieldMap.containsKey(visitantes) && textFieldMap.get(visitantes).getText().isEmpty()) {
 				puntuacionVis = -1;
 
-				partido.setPuntuajeUltimoSetVis(puntuacionVis);
+				partido.setpuntuajeVis(puntuacionVis);
 
 			}else {
+				//guardamos la puntuacion si es valida
 				puntuacionVis = Integer.parseInt(textFieldMap.get(visitantes).getText());
 
-				partido.setPuntuajeUltimoSetVis(puntuacionVis);
+				partido.setpuntuajeVis(puntuacionVis);
 				partido.setJugado(true);
 			}
+			
+			//sistema para añadir los diferentes puntuajes
+			if(puntuacionLoc < puntuacionVis) {
+				//asignamos quien ha ganado el partido en el objeto de partido 
+				partido.setGanadorVis(true);
+				
+				//recorremos la lista de equipos de la temporada buscando el nombre
+				for(int contador =0; contador< nombre.size(); contador++) {
+					//comparacion para ver que coincide el nombre
+					if (localesNom.equals(nombre.get(contador).getNombre())) {
+						//funcion para que agrege el total de partidos perdidos
+						nombre.get(contador).incrementarPartidosPerdido();
+						//funcion para que agrege el total de partidos 
+						nombre.get(contador).incrementarPartidosTotales();
+						nombre.get(contador).addPuntosTotal(1);
+					}
+				}
+				for(int contador =0; contador< nombre.size(); contador++) {
+					if (visitanteNom.equals(nombre.get(contador).getNombre())) {
+						//funcion para que agrege el total de partidos Ganados
+						nombre.get(contador).incrementarPartidosGanados();
+						//funcion para que agrege el total de partidos 
+						nombre.get(contador).incrementarPartidosTotales();
+						nombre.get(contador).addPuntosTotal(3);
+					}
+				}
+				
+				//este codigo implementa lo mismo que el de arriba invertido
+			} else {
+			
+				partido.setGanadorLoc(true);
+				
+				
+				
+				for(int contador =0; contador< nombre.size(); contador++) {
+					if (localesNom.equals(nombre.get(contador).getNombre())) {
+						nombre.get(contador).incrementarPartidosGanados();
+						nombre.get(contador).incrementarPartidosTotales();
+						nombre.get(contador).addPuntosTotal(3);
+					}
+				}
+				for(int contador =0; contador< nombre.size(); contador++) {
+					if (visitanteNom.equals(nombre.get(contador).getNombre())) {
+						nombre.get(contador).incrementarPartidosPerdido();
+						nombre.get(contador).incrementarPartidosTotales();
+						nombre.get(contador).addPuntosTotal(1);
+					}
+				}
+				
+			}
+			
 			main.changes=true;
 
 		}
-		System.out.println(partidos);
+		//System.out.println(partidos);
+		System.out.println(nombre);
 
+	}
+	private void TemporadasIniciadas() {
+		TemporadaSeleccionada = (Temporada) comboBox.getSelectedItem();
+		if(TemporadaSeleccionada.isIniciado()== false || (TemporadaSeleccionada.isIniciado() && TemporadaSeleccionada.isFinalizado())) {
+			btnSave.setVisible(false);
+			btnUpdateApp.setVisible(false);
+		}else {
+			btnSave.setVisible(true);
+			btnUpdateApp.setVisible(true);
+		}
+		
 	}
 
 	
@@ -456,6 +554,9 @@ public class PanelInicio extends JPanel implements ActionListener {
 				    });
 		}
 	}
+	private void actualizarTabla(){
+		
+	}
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		Object o = ae.getSource();
@@ -485,8 +586,8 @@ public class PanelInicio extends JPanel implements ActionListener {
 			}
 
 		} else if (o == btnSave) {
-			if (pointsELoc0.getText().isEmpty() && pointsEVis0.getText().isEmpty()){
-				 JOptionPane.showMessageDialog(panel, "Selecciona añada datos a almenos un partido para guardar los cambios", "Error", JOptionPane.ERROR_MESSAGE);
+			if (pointsELoc0.getText().isEmpty() && pointsEVis0.getText().isEmpty()&& pointsELoc1.getText().isEmpty() && pointsEVis1.getText().isEmpty()&& pointsELoc2.getText().isEmpty() && pointsEVis2.getText().isEmpty()){
+				 JOptionPane.showMessageDialog(panel, "no puede haber ningun campo vacio", "Error", JOptionPane.ERROR_MESSAGE);
 			}else {
 				if (userType < 2) {
 					int seleccion = JOptionPane.showConfirmDialog(null,
