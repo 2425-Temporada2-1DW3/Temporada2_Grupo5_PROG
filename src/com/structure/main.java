@@ -1,4 +1,4 @@
-package com.structure;
+package com.structure; 
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
