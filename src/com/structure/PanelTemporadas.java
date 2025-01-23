@@ -273,7 +273,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 
 	        // Mostrar mensaje de éxito
 			parentFrame.mensaje("Temporada creada exitosamente.");
-	        main.changes=true;
+	        parentFrame.changes = true;
 	    } catch (NumberFormatException e) {
 	        // Manejar errores de conversión
 			parentFrame.mensaje("Por favor, introduce valores válidos.");
@@ -317,7 +317,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	        // Actualizar el estado de la temporada en el modelo
 	        Temporada temporada = listTemporadas.get(seleccion);
 	        temporada.setIniciado(true);
-	        main.changes=true;
+	        parentFrame.changes = true;
 	        // Notificar al modelo del cambio
 	        modeloTabla.fireTableRowsUpdated(seleccion, seleccion);
 
@@ -364,7 +364,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 
 	        // Mostrar mensaje de éxito
 	        parentFrame.mensaje("Temporada finalizada correctamente.");
-	        main.changes=true;
+	        parentFrame.changes = true;
 	    }
 	}
 	
@@ -423,7 +423,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	}
 	
 	private void actualizarArchivo() {
-    	if (main.changes== true) {
+    	if (parentFrame.changes== true) {
     		try (FileOutputStream fos = new FileOutputStream("Temporada.ser");
                     ObjectOutputStream oos = new ObjectOutputStream(fos)){
         		int length =listTemporadas.size();
@@ -433,7 +433,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
         			counter ++;
         		}
         		parentFrame.mensaje("Cambios guardados.");
-        		main.changes=false;
+        		parentFrame.changes = false;
     			
     		} catch (IOException e) {
     			// TODO Auto-generated catch block

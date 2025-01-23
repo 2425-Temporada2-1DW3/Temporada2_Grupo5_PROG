@@ -28,7 +28,7 @@ public class main extends JFrame implements ActionListener {
     private int userType; 
     private String userName;
 	private Log log = new Log();
-	public static boolean changes= false;
+	public boolean changes= false;
 
     private String userTypeName;// No usar para comparaciones, solo para mostrar el tipo de usuario visualmente si es necesitado
    
@@ -187,6 +187,9 @@ public class main extends JFrame implements ActionListener {
         repaint();
     }
     
+    public void cambios(boolean cambios) {
+    	changes = cambios;
+    }
     
     public void formatearPanelDeOpcion() {
     	UIManager.put("Panel.background", colorbg);

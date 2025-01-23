@@ -265,32 +265,51 @@ public class PanelUsuarios extends JPanel implements ActionListener {
         int userType = cmbUserType.getSelectedIndex();
         char[] passwordChars = txtPassword.getPassword();
         String pass = new String(passwordChars);
-        if (!username.isEmpty() && !pass.isEmpty()) {
+        
+        if (username.isEmpty() || pass.isEmpty()) {
+            parentFrame.mensaje("Por favor, ingrese un nombre de usuario válido.");
+            return;
+        }
+
+        // Check if the user already exists
+        boolean userExists = false;
+        for (int i = 0; i < listModel.size(); i++) {
+            Usuario existingUser = listModel.getElementAt(i);
+            if (existingUser.getUser().equalsIgnoreCase(username)) {
+                userExists = true;
+                break;
+            }
+        }
+
+        if (userExists) {
+            parentFrame.mensaje("El usuario ya existe. Por favor, elija otro nombre de usuario.");
+        } else {
+            // Create a new user
             Usuario user = new Usuario(username, userType, pass);
             listModel.addElement(user);
             txtUsername.setText("");
             txtPassword.setText("");
-            main.changes=true;
-        } else {
-            JOptionPane.showMessageDialog(null, "Por favor, ingrese un nombre de usuario válido.");
+            parentFrame.changes = true;
+            parentFrame.mensaje("Usuario creado exitosamente.");
         }
+        
 	}
 	private void eliminarUsuario() {
 		 int selectedIndex = userList.getSelectedIndex();
 		 if(listModel.elementAt(selectedIndex).getType() == 4) {
-             JOptionPane.showMessageDialog(null, "El Superusuario no se puede eliminar.");
-
+			 parentFrame.mensaje("El Superusuario no se puede eliminar.");
+ 
 		 } else if (selectedIndex != -1) {
              listModel.remove(selectedIndex);
-             main.changes=true;
+             parentFrame.changes = true;
          } else {
-             JOptionPane.showMessageDialog(null, "Por favor, seleccione un usuario para eliminar.");
+        	 parentFrame.mensaje("Por favor, seleccione un usuario para eliminar.");
          }
 	}
 	
 	private void eliminarTodosUsuarios() {
 		if (!listModel.isEmpty()) {
-			
+			parentFrame.formatearPanelDeOpcion();
 			int confirmation = JOptionPane.showConfirmDialog(null,
 					"¿Está seguro de que desea eliminar todos los usuarios?", "Confirmación",
 					JOptionPane.YES_NO_OPTION);
@@ -304,7 +323,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 						superuser = listModel.get(i);
 						break; // Exit the loop as we found the superuser
 					} else {
-						main.changes = true;
+						parentFrame.changes = true;
 					}
 				}
 
@@ -317,13 +336,13 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 
 				}
 			} else {
-				JOptionPane.showMessageDialog(null, "No hay usuarios para eliminar.");
+				parentFrame.mensaje("No hay usuarios para eliminar.");
 			}
 		}
 	}
 	
 	private void actualizarArchivo() {
-    	if (main.changes== true) {
+    	if (parentFrame.changes == true) {
     		try (FileOutputStream fos = new FileOutputStream("usuario.ser");
                     ObjectOutputStream oos = new ObjectOutputStream(fos)){
         		int length =listModel.getSize();
@@ -332,8 +351,8 @@ public class PanelUsuarios extends JPanel implements ActionListener {
         			oos.writeObject(listModel.getElementAt(counter));
         			counter ++;
         		}
-        		JOptionPane.showMessageDialog(null, "cambios guardados.");
-        		main.changes=false;
+        		parentFrame.mensaje("Cambios guardados.");
+        		parentFrame.changes = false;
     			
     		} catch (IOException e) {
     			// TODO Auto-generated catch block
@@ -341,11 +360,11 @@ public class PanelUsuarios extends JPanel implements ActionListener {
     		}
     	}
     	else {
-    		JOptionPane.showMessageDialog(null, "Error: No hay cambios", "Error", JOptionPane.ERROR_MESSAGE);
-
+    		parentFrame.mensaje("Error: No hay cambios");
     	}
     	
     }
+	
 	private void cargarUsuarios() {
 		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("usuario.ser"))) {
             while (true) {
@@ -357,47 +376,67 @@ public class PanelUsuarios extends JPanel implements ActionListener {
                 }
             }
         } catch (FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "No se encontró el archivo de usuarios. Se creará uno nuevo al guardar cambios.", "Error", JOptionPane.ERROR_MESSAGE);
+    		parentFrame.mensaje("No se encontró el archivo de usuarios. Se creará uno nuevo al guardar cambios.");
         } catch (IOException | ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "Error al cargar usuarios: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        	parentFrame.mensaje("Error al cargar usuarios: " + ex.getMessage());
         }
 	}
+	
 	private void modificarUsuario() {
 	    // Obtener el índice del usuario seleccionado en la lista
 	    int selectedIndex = userList.getSelectedIndex();
-	    
+	
 	    // Verificar si hay un usuario seleccionado
-	    if (selectedIndex != -1) {
-	        // Obtener el usuario seleccionado
-	        Usuario selectedUser = listModel.getElementAt(selectedIndex);
-
-	        // Obtener los nuevos valores desde los campos de texto
-	        String newUsername = txtUsername.getText().trim();
-	        char[] newPasswordChars = txtPassword.getPassword();
-	        String newPass = new String(newPasswordChars);
-	        int newUserType = cmbUserType.getSelectedIndex();
-
-	        // Validar que los campos no estén vacíos
-	        if (!newUsername.isEmpty() && !newPass.isEmpty()) {
-	            // Modificar los atributos del usuario seleccionado
-	            selectedUser.setUser(newUsername);
-	            selectedUser.setPass(newPass);
-	            selectedUser.setType(newUserType);
-
-	            // Actualizar el modelo de la lista con el nuevo objeto Usuario
-	            listModel.setElementAt(selectedUser, selectedIndex);
-
-	            // Opcional: actualizar la vista
-	            userList.repaint();  // Esto forzará a la lista a repintarse, aunque generalmente no es necesario.
-	            actualizarArchivo();
-	            // Mostrar un mensaje de éxito
-	            JOptionPane.showMessageDialog(null, "Usuario modificado correctamente.");
-	        } else {
-	            JOptionPane.showMessageDialog(null, "Por favor, ingrese un nombre de usuario y contraseña válidos.", "Error", JOptionPane.ERROR_MESSAGE);
-	        }
-	    } else {
-	        JOptionPane.showMessageDialog(null, "Por favor, seleccione un usuario para modificar.", "Error", JOptionPane.ERROR_MESSAGE);
+	    if (selectedIndex == -1) {
+	        parentFrame.mensaje("Por favor, seleccione un usuario para modificar.");
+	        return;
 	    }
+	
+	    // Obtener el usuario seleccionado
+	    Usuario selectedUser = listModel.getElementAt(selectedIndex);
+	
+	    // Obtener los nuevos valores desde los campos de texto
+	    String newUsername = txtUsername.getText().trim();
+	    char[] newPasswordChars = txtPassword.getPassword();
+	    String newPass = new String(newPasswordChars);
+	    int newUserType = cmbUserType.getSelectedIndex();
+	    
+	    // Validar los nuevos valores ingresados
+	    if (newUsername.isEmpty() && newPass.isEmpty()) {
+	        parentFrame.mensaje("Por favor, ingrese un nombre de usuario y contraseña válidos.");
+	        return;
+	    } else if (newUsername.isEmpty()) {
+	        parentFrame.mensaje("Por favor, ingrese un nombre de usuario válido.");
+	        return;
+	    } else if (newPass.isEmpty()) {
+	        parentFrame.mensaje("Por favor, ingrese una contraseña válida.");
+	        return;
+	    }
+	    Usuario selectedUserChanges = new Usuario (newUsername,newUserType,newPass);
+	    
+	    if (selectedUser.equals(selectedUserChanges)) {
+	        parentFrame.mensaje("Error :  No hay cambios.");
+	        return;	
+	    }
+	    // Modificar los atributos del usuario seleccionado
+	    selectedUser.setUser(newUsername); 
+	    selectedUser.setPass(newPass);
+	    selectedUser.setType(newUserType);
+	
+	    // Actualizar el modelo de la lista con el usuario modificado
+	    listModel.setElementAt(selectedUser, selectedIndex);
+	
+	    // Opcional: actualizar la vista
+	    userList.repaint();
+	
+	    // Marcar cambios como realizados
+	    parentFrame.changes = true;
+	
+	    // Actualizar archivo persistente, si corresponde
+	    actualizarArchivo();
+	
+	    // Mostrar un mensaje de éxito
+	    parentFrame.mensaje("Usuario modificado correctamente.");
 	}
 
 }
