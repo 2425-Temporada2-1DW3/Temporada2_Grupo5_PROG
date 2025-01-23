@@ -1,5 +1,5 @@
 package com.structure; 
-
+ 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
