@@ -71,13 +71,13 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	/**
 	 * Create the panel.
 	 */
-	public PanelTemporadas(Color colorbg, Color colortxt, int userType, String userName, main parentFrame) {
+	public PanelTemporadas(main parentFrame) {
 		// guarda los valores fuera de esta funcion por si se necesitan acceder en otro sitio
-		this.userType = userType;
-		this.colorbg = colorbg;
-		this.colortxt = colortxt;
-		this.userName = userName;
-	    this.parentFrame = parentFrame;
+		this.parentFrame = parentFrame;
+	    userType = parentFrame.userType;
+	    colorbg = parentFrame.colorbg;
+	    colortxt = parentFrame.colortxt;
+	    userName = parentFrame.userName;
 
 
         // Configuración del panel principal
@@ -124,7 +124,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 
 
         // Botón Crear Temporada
-        buttonFormat(btnCrearTemporada);
+        parentFrame.formatearBoton(btnCrearTemporada);
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.gridwidth = 1;
@@ -132,19 +132,19 @@ public class PanelTemporadas extends JPanel implements ActionListener {
         this.add(btnCrearTemporada, gbc);
 
         // Botón Añadir Equipo
-        buttonFormat(btnAnadirEquipo);
+        parentFrame.formatearBoton(btnAnadirEquipo);
         gbc.gridx = 1;
         gbc.gridy = 2;
         this.add(btnAnadirEquipo, gbc);
 
         // Botón Iniciar Temporada
-        buttonFormat(btnIniciarTemporada);
+        parentFrame.formatearBoton(btnIniciarTemporada);
         gbc.gridx = 2;
         gbc.gridy = 2;
         this.add(btnIniciarTemporada, gbc);
 
         // Botón Finalizar Temporada
-        buttonFormat(btnFinalizarTemporada);
+        parentFrame.formatearBoton(btnFinalizarTemporada);
         gbc.gridx = 3;
         gbc.gridy = 2;
         this.add(btnFinalizarTemporada, gbc);
@@ -184,13 +184,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
         cargarTemporadasDesdeArchivo();
     }
 
-    public void buttonFormat(JButton button) { 
-	    button.setFont(new Font("SansSerif", Font.BOLD, 16));
-	    button.addActionListener(this);
-	    button.setForeground(colortxt);
-	    button.setBackground(colorbg);
-    }
-    
+
 	public class TemporadaTableModel extends AbstractTableModel {
 	    private ArrayList<Temporada> listaTemporadas;  // Tu ArrayList de Temporada
 	    private String[] columnNames = { "ID", "Nombre", "Iniciado", "Finalizado",
@@ -272,12 +266,13 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	        ((TemporadaTableModel) tableTemporadas.getModel()).fireTableRowsInserted(listTemporadas.size() - 1, listTemporadas.size() - 1);
 
 	        // Mostrar mensaje de éxito
-			parentFrame.mensaje("Temporada creada exitosamente.");
+			parentFrame.mensaje("Temporada creada exitosamente.",2);
 	        parentFrame.changes = true;
 	    } catch (NumberFormatException e) {
 	        // Manejar errores de conversión
-			parentFrame.mensaje("Por favor, introduce valores válidos.");
+			parentFrame.mensaje("Por favor, introduce valores válidos.",0);
 	    }
+	    actualizarArchivo();
 	}
 
 	private void iniciarTemporada() {
@@ -288,7 +283,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 
 	    if (seleccion == -1) {
 	        // Si no hay ninguna fila seleccionada, mostrar mensaje de error
-			parentFrame.mensaje("Error, no hay ninguna temporada seleccionada");
+			parentFrame.mensaje("No hay ninguna temporada seleccionada",0);
 
 	        return;
 	    }
@@ -305,7 +300,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	        boolean isFinalizado = (boolean) modeloTabla.getValueAt(i, 3); // Supongamos que "finalizado" está en la columna 3
 
 	        if (isIniciado && !isFinalizado) {
-				parentFrame.mensaje("Error, una temporada ya está iniciada");
+				parentFrame.mensaje("Una temporada ya está iniciada",0);
 
 	            error = true;
 	            break;
@@ -323,7 +318,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 
 	        // Mostrar mensaje de éxito
 	        
-			parentFrame.mensaje("Temporada iniciada correctamente.");
+			parentFrame.mensaje("Temporada iniciada correctamente.",2);
 
 
 	        // Imprimir el ID de la temporada iniciada (puedes usarlo según sea necesario)
@@ -332,6 +327,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	        // Aquí puedes llamar a otro método con el ID, si es necesario
 	        // GenerarAlgoritmo(idTemporada);
 	    }
+	    actualizarArchivo();
 	}
 
 	private void finalizarTemporada() {
@@ -340,7 +336,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 
 	    if (seleccion == -1) {
 	        // Si no hay ninguna fila seleccionada, mostrar mensaje de error
-			parentFrame.mensaje("Error, no hay ninguna temporada seleccionada");
+			parentFrame.mensaje("No hay ninguna temporada seleccionada",0);
 
 
 	        return;
@@ -350,10 +346,10 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	    Temporada temporadaSeleccionada = listTemporadas.get(seleccion);
 
 	    if (!temporadaSeleccionada.isIniciado()) {
-	    	parentFrame.mensaje("Error, la temporada no está iniciada");
+	    	parentFrame.mensaje("La temporada no está iniciada",0);
 
 	    } else if (temporadaSeleccionada.isFinalizado()) {
-	    	parentFrame.mensaje("Error, la temporada ya está finalizada");
+	    	parentFrame.mensaje("La temporada ya está finalizada",0);
 
 	    } else {
 	        // Marcar la temporada como finalizada
@@ -363,9 +359,10 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	        ((TemporadaTableModel) tableTemporadas.getModel()).fireTableRowsUpdated(seleccion, seleccion);
 
 	        // Mostrar mensaje de éxito
-	        parentFrame.mensaje("Temporada finalizada correctamente.");
+	        parentFrame.mensaje("Temporada finalizada correctamente.",2);
 	        parentFrame.changes = true;
 	    }
+	    actualizarArchivo();
 	}
 	
 	private void anadirEquipo() {
@@ -373,7 +370,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	    int seleccion = tableTemporadas.getSelectedRow();
 
 	    if (seleccion == -1) {
-	    	parentFrame.mensaje("Selecciona una temporada antes de añadir un equipo.");
+	    	parentFrame.mensaje("Selecciona una temporada antes de añadir un equipo.",1);
 	        return;
 	    }
 
@@ -410,16 +407,17 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	            Equipo nuevoEquipo = new Equipo(idEquipo, nombreEquipo);
 	            temporadaSeleccionada.getListEquipos().add(nuevoEquipo);
 
-	            parentFrame.mensaje("Equipo añadido exitosamente.");
+	            parentFrame.mensaje("Equipo añadido exitosamente.",2);
 
 	            // Actualizar la tabla
 	            ((TemporadaTableModel) tableTemporadas.getModel()).fireTableRowsUpdated(seleccion, seleccion);
 	        } catch (NumberFormatException e) {
-	        	parentFrame.mensaje("El ID del equipo debe ser un número válido.");
+	        	parentFrame.mensaje("El ID del equipo debe ser un número válido.",1);
 	        } catch (IllegalArgumentException e) {
-	        	parentFrame.mensaje(e.getMessage());
+	        	parentFrame.mensaje(e.getMessage(),0);
 	        }
 	    }
+	    actualizarArchivo();
 	}
 	
 	private void actualizarArchivo() {
@@ -432,7 +430,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
         			oos.writeObject(listTemporadas.get(counter));
         			counter ++;
         		}
-        		parentFrame.mensaje("Cambios guardados.");
+        		parentFrame.mensaje("Cambios guardados.",2);
         		parentFrame.changes = false;
     			
     		} catch (IOException e) {
@@ -452,9 +450,9 @@ public class PanelTemporadas extends JPanel implements ActionListener {
                 }
             }
         } catch (FileNotFoundException ex) {
-        	parentFrame.mensaje("No se encontró el archivo de usuarios. Se creará uno nuevo al guardar cambios.");
+        	parentFrame.mensaje("No se encontró el archivo de usuarios. Se creará uno nuevo al guardar cambios.",1);
         } catch (IOException | ClassNotFoundException ex) {
-        	parentFrame.mensaje("Error al cargar usuarios: " + ex.getMessage());
+        	parentFrame.mensaje("Error al cargar usuarios: " + ex.getMessage(),0);
         }
     }
    

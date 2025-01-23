@@ -103,7 +103,7 @@ public class Usuario implements Serializable  {
 			passString = pass.replaceAll(".", "*");
 		}
 
-		return "Nobre de usuario: "+ userString + ", Privilegios de usuario: " + tipo + ", Contraseña de Usuario: " + passString;
+		return "Nombre de usuario: "+ userString + ", Privilegios de usuario: " + tipo + ", Contraseña de Usuario: " + passString;
     
     
 }}

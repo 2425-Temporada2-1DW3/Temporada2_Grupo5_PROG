@@ -25,15 +25,18 @@ import java.awt.FlowLayout;
 public class main extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-    private int userType; 
-    private String userName;
+	public int userType; 
+    public String userName;
 	private Log log = new Log();
 	public boolean changes= false;
 
     private String userTypeName;// No usar para comparaciones, solo para mostrar el tipo de usuario visualmente si es necesitado
    
-    private Color colorbg = new Color(50, 50, 50);
-    private Color colortxt = new Color(220, 220, 220);
+    public Color colorbg = new Color(50, 50, 50);
+    public Color colortxt = new Color(220, 220, 220);
+    public Color colorRed = new Color(255, 53, 53);
+    public Color colorGreen = new Color(0, 153, 51);
+    public Color colorYellow = new Color(225, 177, 45);
     
     private JButton btnMenuInicio = new JButton("CLASIFICACIÓN");
     private JButton btnMenuTemporadas = new JButton("TEMPORADAS");
@@ -55,8 +58,8 @@ public class main extends JFrame implements ActionListener {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    int userType = 2; // Tipo de usuario por defecto si no recibe un valor (
-                    String userName = "Usuario"; // Nombre de usuario por defecto
+                    int userType = 4; // Tipo de usuario por defecto si no recibe un valor (
+                    String userName = "Anonimo"; // Nombre de usuario por defecto
                     
                     main frame = new main(userType,userName); // Pasa usertype y username a la main
                     frame.setVisible(true);
@@ -97,7 +100,6 @@ public class main extends JFrame implements ActionListener {
 		LayoutPanel_1.setLayout(new BorderLayout(0, 0));
 		
 		// Para monstar mensajes de error
-        lblMensaje.setForeground(new Color(255, 53, 53));
         lblMensaje.setFont(new Font("Consolas", Font.PLAIN, 13));
 
 		
@@ -124,16 +126,26 @@ public class main extends JFrame implements ActionListener {
         	btnMenuInicio.setEnabled(false);
 
         } else if (userType == 1) {
-        	userTypeName = "Entrenadores";
-        	switchPanel(PanelPartidos.class);
-        	
-        } else {
-        	userTypeName = "Administradores";
+        	userTypeName = "Árbitro";
+        	switchPanel(PanelInicio.class);
+        	btnMenuInicio.setEnabled(false);
+
+        } else if (userType == 2){
+        	userTypeName = "Gestor";
         	switchPanel(PanelUsuarios.class);
         	btnMenuUsuarios.setEnabled(false);
         	
+        } else if (userType == 4) {
+        	userTypeName = "Director";
+        	switchPanel(PanelUsuarios.class);
+        	btnMenuUsuarios.setEnabled(false);
         }
-        setTitle("Portal de "+ userTypeName +" la Federacion de Voleivol");
+        setTitle("Federación de Voleibol - Portal de Gestión | Usuario: " + userName + " | Rol: " + userTypeName);
+        if (userType == 0) {
+            setTitle("Federación de Voleibol - Portal de Información | Usuario: " + userName);
+
+        }
+        mensaje("Bienvenido, "+userName+".",2);
 	}
     
     // Funcion para crear todos los botones del menu
@@ -145,15 +157,16 @@ public class main extends JFrame implements ActionListener {
 	    LayoutPanel.add(button);
     }
        
-    private void switchPanel(Class<? extends JPanel> panelClass) {
+    public void switchPanel(Class<? extends JPanel> panelClass) {
         try {
-            JPanel panel = panelClass.getConstructor(Color.class, Color.class, int.class, String.class, main.class)
-                    					.newInstance(colorbg,     colortxt,    userType,  userName,     this);
+            JPanel panel = panelClass.getConstructor(main.class)
+                    					.newInstance(this);
             
             LayoutPanel_1.removeAll();
             LayoutPanel_1.add(lblMensaje, BorderLayout.NORTH);
             LayoutPanel_1.add(panel, BorderLayout.CENTER);
-
+            lblMensaje.setText("");
+            
             revalidate();
             repaint();
 
@@ -181,8 +194,22 @@ public class main extends JFrame implements ActionListener {
         return result;
     }
 	   
-    public void mensaje(String mensaje) {
+    public void mensaje(String mensaje, int color) {
+        if (color == 0) {
+            lblMensaje.setForeground(colorRed);
+            mensaje = "Error : " + mensaje;
+            
+        } else if (color == 1) {
+            lblMensaje.setForeground(colorYellow);
+            mensaje = "Aviso : " + mensaje;
+
+        	
+        } else if (color ==2) {
+            lblMensaje.setForeground(colorGreen);
+
+        }
         lblMensaje.setText(mensaje);
+
         revalidate();
         repaint();
     }
@@ -199,6 +226,12 @@ public class main extends JFrame implements ActionListener {
     	UIManager.put("Button.foreground", colortxt);
     	
     	
+    }
+    public void formatearBoton(JButton button) { 
+	    button.setFont(new Font("SansSerif", Font.BOLD, 16));
+	    button.addActionListener(this);
+	    button.setForeground(colortxt);
+	    button.setBackground(colorbg);
     }
     
     public void formatearTabla(JTable table) {

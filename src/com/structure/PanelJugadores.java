@@ -17,13 +17,13 @@ public class PanelJugadores extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public PanelJugadores(Color colorbg, Color colortxt, int userType, String userName, main parentFrame) {
+	public PanelJugadores(main parentFrame) {
 		// guarda los valores fuera de esta funcion por si se necesitan acceder en otro sitio
-		this.userType = userType;
-		this.colorbg = colorbg;
-		this.colortxt = colortxt;
-		this.userName = userName;
-	    this.parentFrame = parentFrame;
+		this.parentFrame = parentFrame;
+	    userType = parentFrame.userType;
+	    colorbg = parentFrame.colorbg;
+	    colortxt = parentFrame.colortxt;
+	    userName = parentFrame.userName;
 
 		// Cambia color del Jpanel
 		setBackground(colorbg);
