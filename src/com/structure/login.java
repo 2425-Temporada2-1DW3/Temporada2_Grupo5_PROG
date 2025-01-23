@@ -190,7 +190,7 @@ public class login extends JFrame implements ActionListener {
                 lblError.setText("El campo de contraseña no puede estar vacío.");
             } else if (userPassCheck(gui_user, gui_pass)) {
                 Point location = getLocation(); 
-                main mainFrame = new main(userType);
+                main mainFrame = new main(userType,gui_user);
                 mainFrame.setLocation(location);
                 mainFrame.setVisible(true);
                 dispose();

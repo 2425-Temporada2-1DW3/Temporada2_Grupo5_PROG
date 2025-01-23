@@ -14,9 +14,6 @@ import com.logic.Usuario;
 public class PanelUsuarios extends JPanel implements ActionListener {
 
     private static final long serialVersionUID = 1L;
-    private int userType;
-    private Color colorbg;
-    private Color colortxt;
 
     private DefaultListModel<Usuario> listModel;
     private JList<Usuario> userList;
@@ -28,26 +25,35 @@ public class PanelUsuarios extends JPanel implements ActionListener {
     private JButton btnDelete ;
     private JButton btnCreate;
     private JButton btnModify;
-   
-   
-    /**
-     * Create the panel.
-     */
-    public PanelUsuarios(Color colorbg, Color colortxt, int userType) {
-    	
+    
+    private JLabel lblTitle = new JLabel("Gestión de Usuarios");
+    private JLabel lblUsername = new JLabel("Usuario:");
 
-    	
-        this.userType = userType;
-        this.colorbg = colorbg;
-        this.colortxt = colortxt;
+	private int userType;
+	private Color colorbg;
+	private Color colortxt;
+	private String userName;
+	private main parentFrame;
+
+	/**
+	 * Create the panel.
+	 */
+	public PanelUsuarios(Color colorbg, Color colortxt, int userType, String userName, main parentFrame) {
+		// guarda los valores fuera de esta funcion por si se necesitan acceder en otro sitio
+		this.userType = userType;
+		this.colorbg = colorbg;
+		this.colortxt = colortxt;
+		this.userName = userName;
+	    this.parentFrame = parentFrame;
 
         // Configura el panel principal
         setBackground(colorbg);
+
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
         // Crear título principal
-        JLabel lblTitle = new JLabel("Gestión de Usuarios");
+       
         lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 24));
         lblTitle.setForeground(colortxt);
@@ -65,13 +71,14 @@ public class PanelUsuarios extends JPanel implements ActionListener {
         panel.setBackground(colorbg);
         panel.setLayout(new GridLayout(9, 1, 10, 10));
 
-        JLabel lblUsername = new JLabel("Usuario:");
         lblUsername.setFont(new Font("Arial", Font.PLAIN, 16));
         lblUsername.setForeground(colortxt);
         panel.add(lblUsername);
 
         txtUsername = new JTextField();
         txtUsername.setFont(new Font("Arial", Font.PLAIN, 14));
+        txtUsername.setBackground(colorbg);
+        txtUsername.setForeground(colortxt);
         panel.add(txtUsername);
 
         JLabel lblPassword = new JLabel("Contraseña:");
@@ -81,6 +88,8 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 
         txtPassword = new JPasswordField();
         txtPassword.setFont(new Font("Arial", Font.PLAIN, 14));
+        txtPassword.setBackground(colorbg);
+        txtPassword.setForeground(colortxt);
         panel.add(txtPassword);
 
         JLabel lblUserType = new JLabel("Tipo de Usuario:");
@@ -88,9 +97,17 @@ public class PanelUsuarios extends JPanel implements ActionListener {
         lblUserType.setForeground(colortxt);
         panel.add(lblUserType);
 
-        cmbUserType = new JComboBox<>(new String[]{"Administrador", "Usuario"});
-        cmbUserType.setModel(new DefaultComboBoxModel<>(new String[]{"Usuario", "Arbitro", "Administrador"}));
+        cmbUserType = new JComboBox<>(new String[]{"Usuario", "Arbitro"});
+        // para que los admins solo puedan crear admins
+        if (userType == 2) {
+            cmbUserType.setModel(new DefaultComboBoxModel<>(new String[]{"Usuario", "Arbitro"}));
+        } else if (userType == 4) {
+            cmbUserType.setModel(new DefaultComboBoxModel<>(new String[]{"Usuario", "Arbitro", "Administrador"}));
+        }
+
         cmbUserType.setFont(new Font("Arial", Font.PLAIN, 14));
+        cmbUserType.setBackground(colorbg);
+        cmbUserType.setForeground(colortxt);
         panel.add(cmbUserType);
 
          btnCreate = new JButton("Crear Usuario");
@@ -125,7 +142,9 @@ public class PanelUsuarios extends JPanel implements ActionListener {
         // Crear lista de usuarios
         listModel = new DefaultListModel<>();
         userList = new JList<>(listModel);
-        userList.setFont(new Font("Arial", Font.PLAIN, 18));
+        userList.setFont(new Font("Arial", Font.PLAIN, 17));
+        userList.setBackground(colorbg);
+        userList.setForeground(colortxt);
         userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         cargarUsuarios();
         userList.addListSelectionListener(new ListSelectionListener() {
@@ -136,29 +155,40 @@ public class PanelUsuarios extends JPanel implements ActionListener {
                     Usuario selectedUser = userList.getSelectedValue();
                     if (selectedUser != null) {
                         // Cargar los datos del usuario en los campos
-                    	
-                    	if (selectedUser.getType() ==4 && userType == 4) {
-                    		// Seleciono superusuario y soy superusuario
-                        	btnModify.setEnabled(true);
-                            txtUsername.setText(selectedUser.getUser());
-                            txtPassword.setText(selectedUser.getPass());
-                        } else if (selectedUser.getType() ==4){
-                        	// Seleciono superusuario y no soy superusuario
-                        	btnModify.setEnabled(false);
-                        	cmbUserType.setEnabled(false);
-                            txtUsername.setText("");
-                            txtPassword.setText("");
-                        } else {
-                        	// Seleciono cualquier otra cosa
-                        	
-                        	btnModify.setEnabled(true);
-                        	cmbUserType.setEnabled(true);
-                            txtUsername.setText(selectedUser.getUser());
-                            txtPassword.setText(selectedUser.getPass());
-                            cmbUserType.setSelectedIndex(selectedUser.getType());
-
-                        }
-                        
+	                	if (selectedUser.getType() ==4 && userType == 4) {
+	                		// Seleciono superusuario y soy superusuario
+	                    	btnModify.setEnabled(true);                        	
+	                        txtUsername.setText(selectedUser.getUser());
+	                        txtPassword.setText(selectedUser.getPass());                            
+	                    	cmbUserType.setEnabled(false);
+	                        cmbUserType.setSelectedIndex(0);
+	                    	
+	                    } else if (selectedUser.getType() == 4) {
+	                    	// Seleciono superusuario y no soy superusuario
+	                    	btnModify.setEnabled(false);                        	
+	                        txtUsername.setText("");
+	                        txtPassword.setText("");                            
+	                        cmbUserType.setSelectedIndex(0);
+	                    	cmbUserType.setEnabled(false);
+	
+	
+	                    } else if (selectedUser.getType() == 2 && userType == 2) {
+	                    	// Seleciono admin siendo admin
+	                    	btnModify.setEnabled(false);                        	
+	                        txtUsername.setText("");
+	                        txtPassword.setText("");                            
+	                        cmbUserType.setSelectedIndex(0);
+	                    	cmbUserType.setEnabled(false);
+	
+	                    } else {
+	                    	// Seleciono cualquier otra cosa
+	                    	btnModify.setEnabled(true);    
+	                        txtUsername.setText(selectedUser.getUser());
+	                        txtPassword.setText(selectedUser.getPass());                        	
+	                    	cmbUserType.setEnabled(true);
+	                        cmbUserType.setSelectedIndex(selectedUser.getType());
+	
+	                    }
                     }
                 }
             }
@@ -260,37 +290,36 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 	
 	private void eliminarTodosUsuarios() {
 		if (!listModel.isEmpty()) {
-            int confirmation = JOptionPane.showConfirmDialog(
-                    null,
-                    "¿Está seguro de que desea eliminar todos los usuarios?",
-                    "Confirmación",
-                    JOptionPane.YES_NO_OPTION
-            );
-            if (confirmation == JOptionPane.YES_OPTION) {
-                Usuario superuser = null;
-                
-                // Iterate through the list and find the superuser
-                for (int i = 0; i < listModel.size(); i++) {
-                    if (listModel.get(i).getType() == 4) {
-                        superuser = listModel.get(i);
-                        break;  // Exit the loop as we found the superuser
-                    }else {
-                        main.changes = true;
-                	}
-                }
-                
-                // Clear the list
-                listModel.removeAllElements();
-                
-                // If there was a superuser, add it back
-                if (superuser != null) {
-                    listModel.addElement(superuser);
-                
-                
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "No hay usuarios para eliminar.");
-        }
+			
+			int confirmation = JOptionPane.showConfirmDialog(null,
+					"¿Está seguro de que desea eliminar todos los usuarios?", "Confirmación",
+					JOptionPane.YES_NO_OPTION);
+			
+			if (confirmation == JOptionPane.YES_OPTION) {
+				Usuario superuser = null;
+
+				// Iterate through the list and find the superuser
+				for (int i = 0; i < listModel.size(); i++) {
+					if (listModel.get(i).getType() == 4) {
+						superuser = listModel.get(i);
+						break; // Exit the loop as we found the superuser
+					} else {
+						main.changes = true;
+					}
+				}
+
+				// Clear the list
+				listModel.removeAllElements();
+
+				// If there was a superuser, add it back
+				if (superuser != null) {
+					listModel.addElement(superuser);
+
+				}
+			} else {
+				JOptionPane.showMessageDialog(null, "No hay usuarios para eliminar.");
+			}
+		}
 	}
 	
 	private void actualizarArchivo() {
