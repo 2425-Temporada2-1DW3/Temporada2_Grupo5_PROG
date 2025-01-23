@@ -311,36 +311,37 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 	
 	private void eliminarTodosUsuarios() {
 		if (!listModel.isEmpty()) {
-			parentFrame.formatearPanelDeOpcion();
-			int confirmation = JOptionPane.showConfirmDialog(null,
-					"¿Está seguro de que desea eliminar todos los usuarios?", "Confirmación",
-					JOptionPane.YES_NO_OPTION);
-			
-			if (confirmation == JOptionPane.YES_OPTION) {
-				Usuario superuser = null;
-
-				// Iterate through the list and find the superuser
-				for (int i = 0; i < listModel.size(); i++) {
-					if (listModel.get(i).getType() == 4) {
-						superuser = listModel.get(i);
-						break; // Exit the loop as we found the superuser
-					} else {
-						parentFrame.changes = true;
-					}
-				}
-
-				// Clear the list
-				listModel.removeAllElements();
-
-				// If there was a superuser, add it back
-				if (superuser != null) {
-					listModel.addElement(superuser);
-
-				}
-			} else {
-				parentFrame.mensaje("No hay usuarios para eliminar.",0);
-			}
-		}
+            int confirmation = JOptionPane.showConfirmDialog(
+                    null,
+                    "¿Está seguro de que desea eliminar todos los usuarios?",
+                    "Confirmación",
+                    JOptionPane.YES_NO_OPTION
+            );
+            if (confirmation == JOptionPane.YES_OPTION) {
+                Usuario superuser = null;
+                
+                // Iterate through the list and find the superuser
+                for (int i = 0; i < listModel.size(); i++) {
+                    if (listModel.get(i).getType() == 4) {
+                        superuser = listModel.get(i);
+                        break;  // Exit the loop as we found the superuser
+                    }else {
+                        main.changes = true;
+                	}
+                }
+                
+                // Clear the list
+                listModel.removeAllElements();
+                
+                // If there was a superuser, add it back
+                if (superuser != null) {
+                    listModel.addElement(superuser);
+                
+                
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No hay usuarios para eliminar.");
+        }
 	}
 	
 	private void actualizarArchivo() {

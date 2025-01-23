@@ -50,7 +50,7 @@ public class main extends JFrame implements ActionListener {
 	private JPanel LayoutPanel = new JPanel();
 	private JPanel LayoutPanel_1 = new JPanel();
     public JLabel lblMensaje = new JLabel();
-
+	private String userName;
 	/**
 	 * Launch the application.
 	 */
