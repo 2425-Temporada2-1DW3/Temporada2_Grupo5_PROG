@@ -97,10 +97,8 @@ public class PanelInicio extends JPanel implements ActionListener {
 	/**
 	 * Create the panel.
 	 */
-	public PanelInicio(Color colorbg, Color colortxt, int userType, String userName) {
-
-		// guarda los valores fuera de esta funcion por si se necesitan acceder en otro
-		// sitio
+	public PanelInicio(Color colorbg, Color colortxt, int userType) {
+		// guarda los valores fuera de esta funcion por si se necesitan acceder en otro sitio
 		this.userType = userType;
 		this.colorbg = colorbg;
 		this.colortxt = colortxt;

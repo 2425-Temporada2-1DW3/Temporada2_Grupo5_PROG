@@ -120,81 +120,58 @@ public class GestionTemporada {
 		initialize();
 	}
 
-	// ...
 	private void initialize() {
 	    frame = new JFrame();
 	    frame.setTitle("Gestor de Temporadas");
 	    frame.setBounds(100, 100, 600, 400);
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    frame.getContentPane().setLayout(null);
 
-	    // Usar GridBagLayout
-	    frame.getContentPane().setLayout(new GridBagLayout());
-	    GridBagConstraints gbc = new GridBagConstraints();
-	    gbc.insets = new Insets(5, 5, 5, 5); // Espaciado entre componentes
-
-	    // Etiqueta Nombre
 	    JLabel lblNombre = new JLabel("Nombre:");
-	    gbc.gridx = 0;
-	    gbc.gridy = 0;
-	    gbc.anchor = GridBagConstraints.WEST;
-	    frame.getContentPane().add(lblNombre, gbc);
+	    lblNombre.setBounds(10, 48, 80, 14);
+	    frame.getContentPane().add(lblNombre);
 
-	    // Campo de texto para el nombre
-	    txtNombre = new JTextField(20);
-	    gbc.gridx = 1;
-	    gbc.gridy = 0;
-	    gbc.gridwidth = 2;
-	    gbc.fill = GridBagConstraints.HORIZONTAL;
-	    frame.getContentPane().add(txtNombre, gbc);
+	    txtNombre = new JTextField();
+	    txtNombre.setBounds(65, 46, 186, 20);
+	    frame.getContentPane().add(txtNombre);
+	    txtNombre.setColumns(10);
 
-	    // Etiqueta Cantidad de Equipos
 	    JLabel lblCantidadEquipos = new JLabel("Cantidad de Equipos:");
-	    gbc.gridx = 0;
-	    gbc.gridy = 1;
-	    gbc.gridwidth = 1;
-	    frame.getContentPane().add(lblCantidadEquipos, gbc);
+	    lblCantidadEquipos.setBounds(10, 76, 150, 14);
+	    frame.getContentPane().add(lblCantidadEquipos);
 
-	    // Campo de texto para la cantidad de equipos
-	    txtCantidadEquipos = new JTextField(10);
-	    gbc.gridx = 1;
-	    gbc.gridy = 1;
-	    gbc.gridwidth = 1;
-	    frame.getContentPane().add(txtCantidadEquipos, gbc);
+	    txtCantidadEquipos = new JTextField();
+	    txtCantidadEquipos.setBounds(168, 74, 83, 20);
+	    frame.getContentPane().add(txtCantidadEquipos);
+	    txtCantidadEquipos.setColumns(10);
 
-	    // Botón Crear Temporada
 	    JButton btnCrearTemporada = new JButton("Crear Temporada");
 	    btnCrearTemporada.addActionListener(e -> crearTemporada());
-	    gbc.gridx = 0;
-	    gbc.gridy = 2;
-	    gbc.gridwidth = 1;
-	    gbc.fill = GridBagConstraints.NONE;
-	    frame.getContentPane().add(btnCrearTemporada, gbc);
+	    btnCrearTemporada.setBounds(10, 135, 150, 23);
+	    frame.getContentPane().add(btnCrearTemporada);
 
-	    // Botón Añadir Equipo
-	    JButton btnAnadirEquipo = new JButton("Añadir Equipo");
-	    btnAnadirEquipo.addActionListener(e -> anadirEquipo());
-	    gbc.gridx = 1;
-	    gbc.gridy = 2;
-	    frame.getContentPane().add(btnAnadirEquipo, gbc);
-
-	    // Botón Iniciar Temporada
 	    JButton btnIniciarTemporada = new JButton("Iniciar Temporada");
+	    btnIniciarTemporada.setBounds(170, 135, 150, 23);
 	    btnIniciarTemporada.addActionListener(e -> iniciarTemporada());
-	    gbc.gridx = 2;
-	    gbc.gridy = 2;
-	    frame.getContentPane().add(btnIniciarTemporada, gbc);
+	    frame.getContentPane().add(btnIniciarTemporada);
 
-	    // Botón Finalizar Temporada
 	    JButton btnFinalizarTemporada = new JButton("Finalizar Temporada");
+	    btnFinalizarTemporada.setBounds(330, 135, 150, 23);
+	    frame.getContentPane().add(btnFinalizarTemporada);
 	    btnFinalizarTemporada.addActionListener(e -> finalizarTemporada());
-	    gbc.gridx = 3;
-	    gbc.gridy = 2;
-	    frame.getContentPane().add(btnFinalizarTemporada, gbc);
+	    JButton btnNuevoBoton = new JButton("Guardar");
+	    
+	    btnNuevoBoton.setBounds(490, 135, 90, 23); // Ajusta la posición y tamaño
+	    btnNuevoBoton.addActionListener(e -> actualizarArchivo());
+	    frame.getContentPane().add(btnNuevoBoton);
 
-	    // Tabla de Temporadas con ScrollPane
+	    // Crear el TableModel con el ArrayList
 	    TemporadaTableModel tableModel = new TemporadaTableModel(listTemporadas);
+
+	    // Crear el JTable con el TableModel
 	    jTableTemporada = new JTable(tableModel);
 
+	    // Opcional: Establecer renderizadores para las columnas booleanas
 	    jTableTemporada.getColumnModel().getColumn(2).setCellRenderer(new DefaultTableCellRenderer() {
 	        @Override
 	        public void setValue(Object value) {
@@ -209,66 +186,21 @@ public class GestionTemporada {
 	        }
 	    });
 
+	    // Crear un JScrollPane para hacer scroll en el JTable
 	    JScrollPane scrollPane = new JScrollPane(jTableTemporada);
-	    gbc.gridx = 0;
-	    gbc.gridy = 3;
-	    gbc.gridwidth = 4;
-	    gbc.fill = GridBagConstraints.BOTH;
-	    gbc.weightx = 1.0;
-	    gbc.weighty = 1.0;
-	    frame.getContentPane().add(scrollPane, gbc);
+	    scrollPane.setBounds(10, 180, 570, 170);
+	    frame.getContentPane().add(scrollPane);
 
+	    // Nuevo botón para guardar datos
+	    JButton btnGuardarDatos = new JButton("Guardar Datos");
+	    btnGuardarDatos.setBounds(10, 360, 150, 23);
+	    btnGuardarDatos.addActionListener(e -> actualizarArchivo());
+	    frame.getContentPane().add(btnGuardarDatos);
+	    
+	    
 	    cargarTemporadasDesdeArchivo();
+	  
 	}
-
-	private void anadirEquipo() {
-	    // Verificar si hay una temporada seleccionada
-	    int seleccion = jTableTemporada.getSelectedRow();
-
-	    if (seleccion == -1) {
-	        JOptionPane.showMessageDialog(frame, "Selecciona una temporada antes de añadir un equipo.", "Error", JOptionPane.ERROR_MESSAGE);
-	        return;
-	    }
-
-	    // Crear cuadro de diálogo para ingresar datos del equipo
-	    JTextField txtIdEquipo = new JTextField();
-	    JTextField txtNombreEquipo = new JTextField();
-
-	    Object[] inputs = {
-	        "ID del Equipo:", txtIdEquipo,
-	        "Nombre del Equipo:", txtNombreEquipo
-	    };
-
-	    int opcion = JOptionPane.showConfirmDialog(frame, inputs, "Añadir Equipo", JOptionPane.OK_CANCEL_OPTION);
-
-	    if (opcion == JOptionPane.OK_OPTION) {
-	        try {
-	            int idEquipo = Integer.parseInt(txtIdEquipo.getText());
-	            String nombreEquipo = txtNombreEquipo.getText();
-
-	            // Verificar datos válidos
-	            if (nombreEquipo.isEmpty()) {
-	                throw new IllegalArgumentException("El nombre del equipo no puede estar vacío.");
-	            }
-
-	            // Agregar equipo a la temporada seleccionada
-	            Temporada temporadaSeleccionada = listTemporadas.get(seleccion);
-	            Equipo nuevoEquipo = new Equipo(idEquipo, nombreEquipo);
-	            temporadaSeleccionada.getListEquipos().add(nuevoEquipo);
-
-	            JOptionPane.showMessageDialog(frame, "Equipo añadido exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-
-	            // Actualizar la tabla
-	            ((TemporadaTableModel) jTableTemporada.getModel()).fireTableRowsUpdated(seleccion, seleccion);
-	        } catch (NumberFormatException e) {
-	            JOptionPane.showMessageDialog(frame, "El ID del equipo debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
-	        } catch (IllegalArgumentException e) {
-	            JOptionPane.showMessageDialog(frame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-	        }
-	    }
-	}
-
-
 
 	
 	public class TemporadaTableModel extends AbstractTableModel {

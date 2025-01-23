@@ -63,6 +63,7 @@ public class main extends JFrame implements ActionListener {
     public main(int userType) {
         this.userType = userType; // coje la variable de la clase login y la pasa a una variable definida en la clase main
         
+
         // Cosas por defecto del Jframe
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -108,7 +109,7 @@ public class main extends JFrame implements ActionListener {
 		// Cambia el titulo de la pagina y carga el menu apropiado para cada tipo de usuario
         if (userType == 0 ) {
         	userTypeName = "Usuarios";
-        	switchPanel(new PanelInicio(colorbg,colortxt,userType, userTypeName));
+        	switchPanel(new PanelInicio(colorbg,colortxt,userType));
         	btnMenuInicio.setEnabled(false);
 
         } else if (userType == 1) {
@@ -176,7 +177,7 @@ public class main extends JFrame implements ActionListener {
         }
         if (!changes){
             if (o == btnMenuInicio) {
-            	switchPanel(new PanelInicio(colorbg,colortxt,userType, userName));
+            	switchPanel(new PanelInicio(colorbg,colortxt,userType));
             	btnMenuInicio.setEnabled(false);
 
             } else if  (o == btnMenuTemporadas) {
