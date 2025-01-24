@@ -25,41 +25,38 @@ import java.awt.FlowLayout;
 public class main extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	public int userType; 
-	private Log log = new Log();
-	public boolean changes= false;
 
-    private String userTypeName;// No usar para comparaciones, solo para mostrar el tipo de usuario visualmente si es necesitado
-   
-    public Color colorbg = new Color(40, 45, 50);
-    public Color colortxt = new Color(220, 225, 235);
-    public Color colorRed = new Color(255, 102, 102); 
-    public Color colorGreen = new Color(102, 204, 102); 
-    public Color colorYellow = new Color(255, 229, 128); 
-    public Color colorBlue = new Color(102, 178, 255); 
+	public int userType; 
+    public String userTypeName;// No usar para comparaciones, solo para mostrar el tipo de usuario visualmente si es necesitado
+	public String userName;
+	public boolean changes= false;
+	private Log mensaje = new Log();
 
     
-    public Font fuenteDefecto = new Font("SansSerif", Font.PLAIN, 15);
-    public Font fuenteDefectoBold = new Font("SansSerif", Font.BOLD, 15);
-    public Font fuenteHeader = new Font("SansSerif", Font.BOLD, 18);
+    public Color colorbg = 		new Color(40, 45, 50);
+    public Color colortxt = 	new Color(220, 225, 235);
+    public Color colorRed = 	new Color(255, 102, 102); 
+    public Color colorGreen = 	new Color(102, 204, 102); 
+    public Color colorYellow =  new Color(255, 206, 98);
+    public Color colorBlue = 	new Color(102, 178, 255); 
 
-    private JButton btnMenuInicio = new JButton("CLASIFICACIÓN");
+    
+    public Font fuenteDefecto = 	new Font("SansSerif", Font.PLAIN, 15);
+    public Font fuenteDefectoBold = new Font("SansSerif", Font.BOLD, 15);
+    public Font fuenteHeader = 		new Font("SansSerif", Font.BOLD, 18);
+
+    private JButton btnMenuInicio =		new JButton("CLASIFICACIÓN");
     private JButton btnMenuTemporadas = new JButton("TEMPORADAS");
-    private JButton btnMenuJugadores = new JButton("JUGADORES");
-    private JButton btnMenuEquipos = new JButton("EQUIPOS");
-    private JButton btnMenuUsuarios = new JButton("GESTION USUARIOS");
-    private JButton btnMenuSalir = new JButton("CERRAR SESION");
+    private JButton btnMenuJugadores =	new JButton("JUGADORES");
+    private JButton btnMenuEquipos =	new JButton("EQUIPOS");
+    private JButton btnMenuUsuarios = 	new JButton("GESTION USUARIOS");
+    private JButton btnMenuSalir = 		new JButton("CERRAR SESION");
 
     private JButton[] buttons = {btnMenuInicio, btnMenuTemporadas, btnMenuJugadores,btnMenuEquipos, btnMenuUsuarios,btnMenuSalir};
-    
-	private JPanel contentPane = new JPanel();
-	private JPanel LayoutPanel = new JPanel();
-	private JPanel LayoutPanel_1 = new JPanel();
+	private JPanel contentPane = new JPanel(), LayoutPanel_1 = new JPanel(), LayoutPanel = new JPanel();
     public JLabel lblMensaje = new JLabel();
-	public String userName;
-	/**
-	 * Launch the application.
-	 */
+ 
+    
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -77,10 +74,9 @@ public class main extends JFrame implements ActionListener {
     }
 
 
-	/**
-	 * Create the frame. 
-	 */
+ 
     public main(int userType, String userName) {
+    	
     	// coje las variables de la clase login y la pasa a una variable definida en la clase main
         this.userType = userType;
         this.userName = userName; 
@@ -114,15 +110,15 @@ public class main extends JFrame implements ActionListener {
 		// Generar los 5 Botones de menu
 		if (userType == 2 || userType == 4) {
 			for (JButton button : buttons) {
-				buttonCreate(button);
+				buttonCreate(button		  ,LayoutPanel,colorbg);
 			}
 		} else if (userType == 1){
-			buttonCreate(btnMenuInicio);
-			buttonCreate(btnMenuTemporadas);
-			buttonCreate(btnMenuSalir);
+			buttonCreate(btnMenuInicio	  ,LayoutPanel,colorbg);
+			buttonCreate(btnMenuTemporadas,LayoutPanel,colorbg);
+			buttonCreate(btnMenuSalir	  ,LayoutPanel,colorbg);
 
 		} else {
-			buttonCreate(btnMenuSalir);
+			buttonCreate(btnMenuSalir	  ,LayoutPanel,colorbg);
 		}
 		
 		// Cambia el titulo de la pagina y carga el menu apropiado para cada tipo de usuario
@@ -151,16 +147,17 @@ public class main extends JFrame implements ActionListener {
             setTitle("Federación de Voleibol - Portal de Información | Usuario: " + userName);
 
         }
-        mensaje("Bienvenido, "+userName+".",2);
+        mensaje("Bienvenido, "+userName,2);
+        mensaje.Log("Ventana main cargada, Usuario: "+userName+" Rol: ",0);
 	}
     
     // Funcion para crear todos los botones del menu
-    private void buttonCreate(JButton button) { 
-	    button.setFont(new Font("SansSerif", Font.BOLD, 16));
+    public void buttonCreate(JButton button, JPanel panel,Color color) { 
+	    button.setFont(fuenteDefectoBold);
 	    button.addActionListener(this);
-	    button.setForeground(colortxt);
-	    button.setBackground(colorbg);
-	    LayoutPanel.add(button);
+	    button.setForeground(Color.WHITE);
+	    button.setBackground(color);
+	    panel.add(button);
     }
        
     public void switchPanel(Class<? extends JPanel> panelClass) {
@@ -175,24 +172,26 @@ public class main extends JFrame implements ActionListener {
             
             revalidate();
             repaint();
+        	mensaje.Log("Panel "+panel.getClass()+" cargado",0);
 
             for (JButton button : buttons) {
                 button.setEnabled(true);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            log.Log("Error cargando panel: " + panelClass.getSimpleName(),2);
+            mensaje.Log("Error cargando panel: " + panelClass.getSimpleName(),2);
             
         }
     }
    
 
-    private int panelDeOpcion(String mensaje, String titulo) {
+    private int panelDeOpcion(String msg, String titulo) {
     	formatearPanelDeOpcion();
+    	mensaje.Log("Panel de opcion :"+titulo+" ha sido cargado",0);
         int result = JOptionPane.showConfirmDialog(
         		
                 main.this,
-                mensaje,
+                msg,
                 titulo,
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE
@@ -200,21 +199,26 @@ public class main extends JFrame implements ActionListener {
         return result;
     }
 	   
-    public void mensaje(String mensaje, int color) {
+    public void mensaje(String msg, int color) {
         if (color == 0) {
             lblMensaje.setForeground(colorRed);
-            mensaje = "Error : " + mensaje;
+            mensaje.Log("Usuario " +userName+": [lblMensaje] "+msg,2);
+            msg = "ERROR : " + msg+".";
             
         } else if (color == 1) {
             lblMensaje.setForeground(colorYellow);
-            mensaje = "Aviso : " + mensaje;
+            mensaje.Log("Usuario " +userName+": [lblMensaje] "+msg,1);
+
+            msg = "AVISO :" + msg+".";
 
         	
         } else if (color ==2) {
+            mensaje.Log("Usuario " +userName+":  [lblMensaje] "+msg,0);
+
             lblMensaje.setForeground(colorGreen);
 
         }
-        lblMensaje.setText(mensaje);
+        lblMensaje.setText(msg+".");
 
         revalidate();
         repaint();
@@ -233,13 +237,7 @@ public class main extends JFrame implements ActionListener {
     	
     	
     }
-    public void formatearBoton(JButton button) { 
-	    button.setFont(fuenteDefectoBold);
-	    button.addActionListener(this);
-	    button.setForeground(colortxt);
-	    button.setBackground(colorbg);
-    }
-    
+
     public void formatearTabla(JTable table) {
         // Set table background and foreground
         table.setBackground(colorbg);

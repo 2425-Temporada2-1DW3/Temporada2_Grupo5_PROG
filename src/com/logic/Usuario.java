@@ -95,10 +95,10 @@ public class Usuario implements Serializable  {
 			tipo = "Arbitro";
 			break;
 		case 2:
-			tipo = "Administrador";
+			tipo = "Gestor";
 			break;
 		case 4:
-			tipo = "Superusuario";
+			tipo = "Director";
 			userString = user.replaceAll(".", "*");
 			passString = pass.replaceAll(".", "*");
 		}
