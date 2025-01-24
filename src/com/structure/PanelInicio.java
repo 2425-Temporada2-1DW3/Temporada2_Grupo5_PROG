@@ -485,10 +485,11 @@ public class PanelInicio extends JPanel implements ActionListener {
 			modelClasificacion = new DefaultTableModel();
 			modelClasificacion.addColumn("posicion");
 			modelClasificacion.addColumn("equipo");
-			modelClasificacion.addColumn("puntuacion total");
+			
 			modelClasificacion.addColumn("PJ");
 			modelClasificacion.addColumn("PG");
 			modelClasificacion.addColumn("PP");
+			modelClasificacion.addColumn("puntuacion total");
 			
 			
 	
@@ -849,10 +850,11 @@ public class PanelInicio extends JPanel implements ActionListener {
 				 modelClasificacion.addRow(new Object[]{
 					        counter + 1, // Posición
 					        Clasificacion.get(counter).getNombre(), // Nombre del equipo
-					        Clasificacion.get(counter).getPuntosTotales(), // Puntuación inicia
+					       
 					        Clasificacion.get(counter).getTotalPartidos(),
 					        Clasificacion.get(counter).getVictorias(),
 					        Clasificacion.get(counter).getDerrotas(),
+					        Clasificacion.get(counter).getPuntosTotales(),
 					        
 					    });
 			}

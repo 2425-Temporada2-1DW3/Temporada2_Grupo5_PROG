@@ -20,7 +20,7 @@ public class Equipo implements Serializable {
 	public void setListJugadores(ArrayList<Jugador> listJugadores) {
 		this.listJugadores = listJugadores;
 	}
-	public int getTotalPartidos() {
+	public int getTotalPartidos() {      
 		return totalPartidos;
 	} 
 	public void setTotalPartidos(int totalPartidos) {
