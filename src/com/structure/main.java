@@ -31,20 +31,26 @@ public class main extends JFrame implements ActionListener {
 
     private String userTypeName;// No usar para comparaciones, solo para mostrar el tipo de usuario visualmente si es necesitado
    
-    public Color colorbg = new Color(50, 50, 50);
-    public Color colortxt = new Color(220, 220, 220);
-    public Color colorRed = new Color(255, 53, 53);
-    public Color colorGreen = new Color(0, 153, 51);
-    public Color colorYellow = new Color(225, 177, 45);
-    public Font fuenteDefecto = new Font("SansSerif", Font.PLAIN, 15);
+    public Color colorbg = new Color(40, 45, 50);
+    public Color colortxt = new Color(220, 225, 235);
+    public Color colorRed = new Color(255, 102, 102); 
+    public Color colorGreen = new Color(102, 204, 102); 
+    public Color colorYellow = new Color(255, 229, 128); 
+    public Color colorBlue = new Color(102, 178, 255); 
+
     
+    public Font fuenteDefecto = new Font("SansSerif", Font.PLAIN, 15);
+    public Font fuenteDefectoBold = new Font("SansSerif", Font.BOLD, 15);
+    public Font fuenteHeader = new Font("SansSerif", Font.BOLD, 18);
+
     private JButton btnMenuInicio = new JButton("CLASIFICACIÓN");
     private JButton btnMenuTemporadas = new JButton("TEMPORADAS");
     private JButton btnMenuJugadores = new JButton("JUGADORES");
+    private JButton btnMenuEquipos = new JButton("EQUIPOS");
     private JButton btnMenuUsuarios = new JButton("GESTION USUARIOS");
     private JButton btnMenuSalir = new JButton("CERRAR SESION");
-    
-    private JButton[] buttons = {btnMenuInicio, btnMenuTemporadas, btnMenuJugadores, btnMenuUsuarios,btnMenuSalir};
+
+    private JButton[] buttons = {btnMenuInicio, btnMenuTemporadas, btnMenuJugadores,btnMenuEquipos, btnMenuUsuarios,btnMenuSalir};
     
 	private JPanel contentPane = new JPanel();
 	private JPanel LayoutPanel = new JPanel();
@@ -228,7 +234,7 @@ public class main extends JFrame implements ActionListener {
     	
     }
     public void formatearBoton(JButton button) { 
-	    button.setFont(new Font("SansSerif", Font.BOLD, 16));
+	    button.setFont(fuenteDefectoBold);
 	    button.addActionListener(this);
 	    button.setForeground(colortxt);
 	    button.setBackground(colorbg);
@@ -238,7 +244,7 @@ public class main extends JFrame implements ActionListener {
         // Set table background and foreground
         table.setBackground(colorbg);
         table.setForeground(colortxt);
-
+        table.setFont(fuenteDefecto);
         // Set selection colors
         table.setSelectionBackground(colortxt); // Background for selected row(s)
         table.setSelectionForeground(colorbg); // Text color for selected row(s)
@@ -250,7 +256,7 @@ public class main extends JFrame implements ActionListener {
         JTableHeader tableHeader = table.getTableHeader();
         tableHeader.setBackground(colorbg);
         tableHeader.setForeground(colortxt);
-        tableHeader.setFont(new Font("SansSerif", Font.BOLD, 14)); // Change font if needed
+        tableHeader.setFont(fuenteDefectoBold); // Change font if needed
         tableHeader.setReorderingAllowed(false); // Optional: prevent column reordering
 
     }

@@ -121,8 +121,9 @@ public class PanelInicio extends JPanel implements ActionListener {
 		add(panel, BorderLayout.NORTH);
 
 		lblNewLabel = new JLabel("CLASIFICACION");
-
-
+		lblNewLabel.setFont(parentFrame.fuenteHeader);
+		lblNewLabel.setForeground(colortxt);
+		
 		panel.add(lblNewLabel);
 
 		panel_1 = new JPanel();
@@ -287,9 +288,9 @@ public class PanelInicio extends JPanel implements ActionListener {
  
 		table.setEnabled(false);
 		modelClasificacion = new DefaultTableModel();
-		modelClasificacion.addColumn("POSICION");
-		modelClasificacion.addColumn("EQUIPO");
-		modelClasificacion.addColumn("PTS TOTAL");
+		modelClasificacion.addColumn("Posición");
+		modelClasificacion.addColumn("Equipo");
+		modelClasificacion.addColumn("Pts Total");
 		modelClasificacion.addColumn("PJ");
 		modelClasificacion.addColumn("PG");
 		modelClasificacion.addColumn("PP");
@@ -306,7 +307,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 				partidoELoc0,pointsELoc0,partidoEVis0,pointsEVis0,
 				partidoELoc1,pointsELoc1,partidoEVis1,pointsEVis1,
 				partidoELoc2,pointsELoc2,partidoEVis2,pointsEVis2,
-				lblNewLabel,lblNewLabel_1,comboBox,prevButton,numJornada,nextButton,btnSave,btnUpdateApp,table
+				lblNewLabel_1,comboBox,prevButton,numJornada,nextButton,btnSave,btnUpdateApp
 		};
 		JComponent panelFormat[] = {panel,panel_1,panel_2,panel_3,panel_4,panel_5,panel_6,panel_7,panel_8,panel_9,panel_10,panel_11,panel_12,panel_13,panel_14};
 		
@@ -320,7 +321,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 		for (int i = 0; i < panelFormat.length; i++) {
 		    panelFormat[i].setBackground(colorbg);
 		} 
-
+		parentFrame.formatearTabla(table);
 		scrollPane.getViewport().setBackground(colorbg);
 		
 		SwichDatosJornada();
