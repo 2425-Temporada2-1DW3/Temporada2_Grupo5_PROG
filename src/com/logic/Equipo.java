@@ -14,6 +14,18 @@ public class Equipo implements Serializable {
 	private int victorias;
 	private int derrotas;
 	private int totalPartidos;
+	public ArrayList<Jugador> getListJugadores() {
+		return listJugadores;
+	}
+	public void setListJugadores(ArrayList<Jugador> listJugadores) {
+		this.listJugadores = listJugadores;
+	}
+	public int getTotalPartidos() {
+		return totalPartidos;
+	} 
+	public void setTotalPartidos(int totalPartidos) {
+		this.totalPartidos += 1;
+	}
 	private int puntosTotales;
 	
 	
@@ -142,7 +154,7 @@ public class Equipo implements Serializable {
 	public void setVictorias(int victorias) {
 		this.victorias = victorias;
 	}
-	public int getDerrotas() {
+	public int getDerrotas() { 
 		return derrotas;
 	}
 	public void setDerrotas(int derrotas) {
@@ -156,7 +168,7 @@ public class Equipo implements Serializable {
 	}
 	public void incrementarPartidosTotales() {
 		totalPartidos+=1;
-	}
+	} 
 	
 	public void incrementarPartidosGanados(){
 		victorias+= 1;

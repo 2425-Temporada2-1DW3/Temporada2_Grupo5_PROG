@@ -14,8 +14,19 @@ public class Temporada implements Serializable,  Comparable<Temporada>  {
     private int cantidadEquipos;
     private ArrayList<Jornada> listJornadas; // Nuevo atributo
     private ArrayList<Equipo> listEquipos; // Nuevo atributo
+    private ArrayList<Equipo> clasificacion;
+  
+    public ArrayList<Equipo> getClasificacion() {
+		return clasificacion;
+	}
 
-    public int getIdTemporada() {
+
+	public void setClasificacion(ArrayList<Equipo> clasificacion) {
+		this.clasificacion = clasificacion;
+	}
+
+
+	public int getIdTemporada() {
 		return id_temporada;
 	}
     
