@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 
 import java.awt.BorderLayout;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.awt.event.ActionEvent;
+import java.awt.Font;
 
 public class PanelInicio extends JPanel implements ActionListener {
 	// creamos los maps para hacer que el contenido de la pagina sea dinamico
@@ -119,9 +121,12 @@ public class PanelInicio extends JPanel implements ActionListener {
 		add(panel, BorderLayout.NORTH);
 
 		lblNewLabel = new JLabel("CLASIFICACION");
+
+
 		panel.add(lblNewLabel);
 
 		panel_1 = new JPanel();
+
 		add(panel_1, BorderLayout.WEST);
 		panel_1.setLayout(new BorderLayout(0, 0));
 
@@ -129,6 +134,8 @@ public class PanelInicio extends JPanel implements ActionListener {
 		panel_1.add(panel_3, BorderLayout.NORTH);
 
 		lblNewLabel_1 = new JLabel("Jornadas");
+
+
 		panel_3.add(lblNewLabel_1);
 
 		panel_4 = new JPanel();
@@ -139,6 +146,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 		panel_4.add(panel_5, BorderLayout.NORTH);
 
 		comboBox = new JComboBox<>();
+
 		panel_5.add(comboBox);
 		actualizarComboBox();
 
@@ -151,10 +159,13 @@ public class PanelInicio extends JPanel implements ActionListener {
 
 		// Inicializar campos para Partido 1
 		partidoELoc0 = new JLabel();
+
+	 
 		labelsMap.put("partidoELoc0", partidoELoc0);
 		panel_7.add(partidoELoc0);
 
 		pointsELoc0 = new JTextField();
+ 
 		textFieldMap.put("pointsELoc0", pointsELoc0);
 		panel_7.add(pointsELoc0);
 		pointsELoc0.setColumns(10);
@@ -163,7 +174,10 @@ public class PanelInicio extends JPanel implements ActionListener {
 		labelsMap.put("partidoEVis0", partidoEVis0);
 		panel_7.add(partidoEVis0);
 
+
+		
 		pointsEVis0 = new JTextField();
+
 		textFieldMap.put("pointsEVis0", pointsEVis0);
 		panel_7.add(pointsEVis0);
 		pointsEVis0.setColumns(10);
@@ -177,19 +191,23 @@ public class PanelInicio extends JPanel implements ActionListener {
 
 		// Inicializar campos para Partido 2
 		partidoELoc1 = new JLabel();
+ 
 		labelsMap.put("partidoELoc1", partidoELoc1);
 		panel_9.add(partidoELoc1);
 
 		pointsELoc1 = new JTextField();
+ 
 		textFieldMap.put("pointsELoc1", pointsELoc1);
 		panel_9.add(pointsELoc1);
 		pointsELoc1.setColumns(10);
 
 		partidoEVis1 = new JLabel();
+ 
 		labelsMap.put("partidoEVis1", partidoEVis1);
 		panel_9.add(partidoEVis1);
 
 		pointsEVis1 = new JTextField();
+ 
 		textFieldMap.put("pointsEVis1", pointsEVis1);
 		panel_9.add(pointsEVis1);
 		pointsEVis1.setColumns(10);
@@ -204,20 +222,23 @@ public class PanelInicio extends JPanel implements ActionListener {
 
 		// Inicializar campos para Partido 3
 		partidoELoc2 = new JLabel();
+ 
 		labelsMap.put("partidoELoc2", partidoELoc2);
 		panel_11.add(partidoELoc2);
 
 		pointsELoc2 = new JTextField();
-
+ 
 		textFieldMap.put("pointsELoc2", pointsELoc2);
 		panel_11.add(pointsELoc2);
 		pointsELoc2.setColumns(10);
 
 		partidoEVis2 = new JLabel();
+ 
 		labelsMap.put("partidoEVis2", partidoEVis2);
 		panel_11.add(partidoEVis2);
 
 		pointsEVis2 = new JTextField();
+ 
 		textFieldMap.put("pointsEVis2", pointsEVis2);
 		panel_11.add(pointsEVis2);
 		pointsEVis2.setColumns(10);
@@ -229,24 +250,33 @@ public class PanelInicio extends JPanel implements ActionListener {
 		panel_14 = new JPanel();
 		panel_13.add(panel_14, BorderLayout.NORTH);
 
+
+		
+
+		
 		prevButton = new JButton("<");
+  
 		prevButton.addActionListener(this);
 		panel_14.add(prevButton);
 
 		numJornada = new JLabel("1");
+ 
 		panel_14.add(numJornada);
 
 		nextButton = new JButton(">");
+ 
 		panel_14.add(nextButton);
 		nextButton.addActionListener(this);
 		panel_12 = new JPanel();
 		panel_1.add(panel_12, BorderLayout.SOUTH);
 
 		btnSave = new JButton("Finalizar Jornada");
+ 
 		btnSave.addActionListener(this);
 		panel_12.add(btnSave);
 		
 		btnUpdateApp = new JButton("Aplicar cambios en el sistema");
+ 
 		btnUpdateApp.addActionListener(this);
 		panel_12.add(btnUpdateApp);
 
@@ -254,11 +284,12 @@ public class PanelInicio extends JPanel implements ActionListener {
 		add(panel_2, BorderLayout.EAST);
 
 		table = new JTable();
+ 
 		table.setEnabled(false);
 		modelClasificacion = new DefaultTableModel();
-		modelClasificacion.addColumn("posicion");
-		modelClasificacion.addColumn("equipo");
-		modelClasificacion.addColumn("puntuacion total");
+		modelClasificacion.addColumn("POSICION");
+		modelClasificacion.addColumn("EQUIPO");
+		modelClasificacion.addColumn("PTS TOTAL");
 		modelClasificacion.addColumn("PJ");
 		modelClasificacion.addColumn("PG");
 		modelClasificacion.addColumn("PP");
@@ -270,7 +301,28 @@ public class PanelInicio extends JPanel implements ActionListener {
 		// Agregar JScrollPane
 		JScrollPane scrollPane = new JScrollPane(table);
 		panel_2.add(scrollPane);
+		
+		JComponent labelFormat[] = {
+				partidoELoc0,pointsELoc0,partidoEVis0,pointsEVis0,
+				partidoELoc1,pointsELoc1,partidoEVis1,pointsEVis1,
+				partidoELoc2,pointsELoc2,partidoEVis2,pointsEVis2,
+				lblNewLabel,lblNewLabel_1,comboBox,prevButton,numJornada,nextButton,btnSave,btnUpdateApp,table
+		};
+		JComponent panelFormat[] = {panel,panel_1,panel_2,panel_3,panel_4,panel_5,panel_6,panel_7,panel_8,panel_9,panel_10,panel_11,panel_12,panel_13,panel_14};
+		
+		for (int i = 0; i < labelFormat.length; i++) {
+		    labelFormat[i].setBackground(colorbg);
+		    labelFormat[i].setForeground(colortxt);
+		    labelFormat[i].setFont(parentFrame.fuenteDefecto);
+		}
 
+		// Loop through panelFormat and apply properties
+		for (int i = 0; i < panelFormat.length; i++) {
+		    panelFormat[i].setBackground(colorbg);
+		} 
+
+		scrollPane.getViewport().setBackground(colorbg);
+		
 		SwichDatosJornada();
 		cargarTabla();
 		TemporadasIniciadas();

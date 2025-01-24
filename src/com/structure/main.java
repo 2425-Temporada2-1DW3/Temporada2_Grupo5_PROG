@@ -36,6 +36,7 @@ public class main extends JFrame implements ActionListener {
     public Color colorRed = new Color(255, 53, 53);
     public Color colorGreen = new Color(0, 153, 51);
     public Color colorYellow = new Color(225, 177, 45);
+    public Font fuenteDefecto = new Font("SansSerif", Font.PLAIN, 15);
     
     private JButton btnMenuInicio = new JButton("CLASIFICACIÓN");
     private JButton btnMenuTemporadas = new JButton("TEMPORADAS");

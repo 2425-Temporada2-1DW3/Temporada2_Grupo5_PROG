@@ -46,7 +46,6 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 	    colorbg = parentFrame.colorbg;
 	    colortxt = parentFrame.colortxt;
 	    userName = parentFrame.userName;
-	    parentFrame.changes = true;
 
 
         // Configura el panel principal
