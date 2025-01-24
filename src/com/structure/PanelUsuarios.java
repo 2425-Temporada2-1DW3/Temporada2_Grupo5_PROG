@@ -268,7 +268,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
         String pass = new String(passwordChars);
         
         if (username.isEmpty() || pass.isEmpty()) {
-            parentFrame.mensaje("Por favor, ingrese un nombre de usuario válido.",0);
+            parentFrame.mensaje("Por favor, ingrese un nombre de usuario válido",0);
             return;
         }
 
@@ -283,7 +283,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
         }
 
         if (userExists) {
-            parentFrame.mensaje("El usuario ya existe. Por favor, elija otro nombre de usuario.",0);
+            parentFrame.mensaje("El usuario ya existe. Por favor, elija otro nombre de usuario",0);
         } else {
             // Create a new user
             Usuario user = new Usuario(username, userType, pass);
@@ -291,20 +291,22 @@ public class PanelUsuarios extends JPanel implements ActionListener {
             txtUsername.setText("");
             txtPassword.setText("");
             parentFrame.changes = true;
-            parentFrame.mensaje("Usuario creado exitosamente.",2);
+            parentFrame.mensaje("Usuario "+username+", ha sido creado exitosamente",2);
         }
         
 	}
 	private void eliminarUsuario() {
 		 int selectedIndex = userList.getSelectedIndex();
-		 if(listModel.elementAt(selectedIndex).getType() == 4) {
-			 parentFrame.mensaje("El usuario del Director no se puede eliminar.",1);
+		 if(selectedIndex != -1 && listModel.elementAt(selectedIndex).getType() == 4 ) {
+			 parentFrame.mensaje("El usuario del Director no se puede eliminar",1);
  
 		 } else if (selectedIndex != -1) {
+        	 parentFrame.mensaje("Usuario "+listModel.elementAt(selectedIndex).getUser()+", ha sido eliminado",2);
+
              listModel.remove(selectedIndex);
              parentFrame.changes = true;
          } else {
-        	 parentFrame.mensaje("Por favor, seleccione un usuario para eliminar.",2);
+        	 parentFrame.mensaje("Por favor, seleccione un usuario para eliminar",2);
          }
 	}
 	
@@ -354,7 +356,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
         			oos.writeObject(listModel.getElementAt(counter));
         			counter ++;
         		}
-        		parentFrame.mensaje("Cambios guardados.",2);
+        		parentFrame.mensaje("Cambios guardados",2);
         		parentFrame.changes = false;
     			
     		} catch (IOException e) {
@@ -379,7 +381,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
                 }
             }
         } catch (FileNotFoundException ex) {
-    		parentFrame.mensaje("No se encontró el archivo de usuarios. Se creará uno nuevo al guardar cambios.",1);
+    		parentFrame.mensaje("No se encontró el archivo de usuarios. Se creará uno nuevo al guardar cambios",1);
         } catch (IOException | ClassNotFoundException ex) {
         	parentFrame.mensaje("Error al cargar usuarios: " + ex.getMessage(),0);
         }
@@ -391,7 +393,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 	
 	    // Verificar si hay un usuario seleccionado
 	    if (selectedIndex == -1) {
-	        parentFrame.mensaje("Por favor, seleccione un usuario para modificar.",0);
+	        parentFrame.mensaje("Por favor, seleccione un usuario para modificar",0);
 	        return;
 	    }
 	
@@ -406,19 +408,19 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 	    
 	    // Validar los nuevos valores ingresados
 	    if (newUsername.isEmpty() && newPass.isEmpty()) {
-	        parentFrame.mensaje("Por favor, ingrese un nombre de usuario y contraseña válidos.",0);
+	        parentFrame.mensaje("Por favor, ingrese un nombre de usuario y contraseña válidos",0);
 	        return;
 	    } else if (newUsername.isEmpty()) {
-	        parentFrame.mensaje("Por favor, ingrese un nombre de usuario válido.",0);
+	        parentFrame.mensaje("Por favor, ingrese un nombre de usuario válido",0);
 	        return;
 	    } else if (newPass.isEmpty()) {
-	        parentFrame.mensaje("Por favor, ingrese una contraseña válida.",0);
+	        parentFrame.mensaje("Por favor, ingrese una contraseña válida",0);
 	        return;
 	    }
 	    Usuario selectedUserChanges = new Usuario (newUsername,newUserType,newPass);
 	    
 	    if (selectedUser.equals(selectedUserChanges)) {
-	        parentFrame.mensaje("No hay cambios.",1);
+	        parentFrame.mensaje("No hay cambios",1);
 	        return;	
 	    }
 	    // Modificar los atributos del usuario seleccionado
@@ -439,7 +441,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 	    actualizarArchivo();
 	
 	    // Mostrar un mensaje de éxito
-	    parentFrame.mensaje("Usuario modificado correctamente.",2);
+	    parentFrame.mensaje("Usuario modificado correctamente",2);
 	}
 
 }

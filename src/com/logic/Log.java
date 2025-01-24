@@ -23,7 +23,8 @@ public class Log {
 			} else {
 				log = "INFO: " + log;
 			}
-
+			
+			System.out.println(log+".");
 			bw.write(log+".");
 		    bw.newLine();
 

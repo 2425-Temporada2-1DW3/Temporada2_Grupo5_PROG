@@ -271,11 +271,11 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	        ((TemporadaTableModel) tableTemporadas.getModel()).fireTableRowsInserted(listTemporadas.size() - 1, listTemporadas.size() - 1);
 
 	        // Mostrar mensaje de éxito
-			parentFrame.mensaje("Temporada creada exitosamente.",2);
+			parentFrame.mensaje("Temporada creada exitosamente",2);
 	        parentFrame.changes = true;
 	    } catch (NumberFormatException e) {
 	        // Manejar errores de conversión
-			parentFrame.mensaje("Por favor, introduce valores válidos.",0);
+			parentFrame.mensaje("Por favor, introduce valores válidos",0);
 	    }
 	    actualizarArchivo();
 	}
@@ -323,7 +323,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 
 	        // Mostrar mensaje de éxito
 	        
-			parentFrame.mensaje("Temporada iniciada correctamente.",2);
+			parentFrame.mensaje("Temporada iniciada correctamente",2);
 
 
 	        // Imprimir el ID de la temporada iniciada (puedes usarlo según sea necesario)
@@ -364,7 +364,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	        ((TemporadaTableModel) tableTemporadas.getModel()).fireTableRowsUpdated(seleccion, seleccion);
 
 	        // Mostrar mensaje de éxito
-	        parentFrame.mensaje("Temporada finalizada correctamente.",2);
+	        parentFrame.mensaje("Temporada finalizada correctamente",2);
 	        parentFrame.changes = true;
 	    }
 	    actualizarArchivo();
@@ -375,7 +375,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	    int seleccion = tableTemporadas.getSelectedRow();
 
 	    if (seleccion == -1) {
-	    	parentFrame.mensaje("Selecciona una temporada antes de añadir un equipo.",1);
+	    	parentFrame.mensaje("Selecciona una temporada antes de añadir un equipo",1);
 	        return;
 	    }
 
@@ -404,7 +404,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 
 	            // Verificar datos válidos
 	            if (nombreEquipo.isEmpty()) {
-	                throw new IllegalArgumentException("El nombre del equipo no puede estar vacío.");
+	                throw new IllegalArgumentException("El nombre del equipo no puede estar vacío");
 	            }
 
 	            // Agregar equipo a la temporada seleccionada
@@ -412,12 +412,12 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	            Equipo nuevoEquipo = new Equipo(idEquipo, nombreEquipo);
 	            temporadaSeleccionada.getListEquipos().add(nuevoEquipo);
 
-	            parentFrame.mensaje("Equipo añadido exitosamente.",2);
+	            parentFrame.mensaje("Equipo añadido exitosamente",2);
 
 	            // Actualizar la tabla
 	            ((TemporadaTableModel) tableTemporadas.getModel()).fireTableRowsUpdated(seleccion, seleccion);
 	        } catch (NumberFormatException e) {
-	        	parentFrame.mensaje("El ID del equipo debe ser un número válido.",1);
+	        	parentFrame.mensaje("El ID del equipo debe ser un número válido",1);
 	        } catch (IllegalArgumentException e) {
 	        	parentFrame.mensaje(e.getMessage(),0);
 	        }
@@ -435,7 +435,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
         			oos.writeObject(listTemporadas.get(counter));
         			counter ++;
         		}
-        		parentFrame.mensaje("Cambios guardados.",2);
+        		parentFrame.mensaje("Cambios guardados",2);
         		parentFrame.changes = false;
     			
     		} catch (IOException e) {
@@ -443,7 +443,8 @@ public class PanelTemporadas extends JPanel implements ActionListener {
     			e.printStackTrace();
     		}
     	}}
-    //metodo para cargar las temporadas
+    
+	//metodo para cargar las temporadas
     private void cargarTemporadasDesdeArchivo() {
     	try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("Temporada.ser"))) {
             while (true) {
@@ -455,7 +456,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
                 }
             }
         } catch (FileNotFoundException ex) {
-        	parentFrame.mensaje("No se encontró el archivo de usuarios. Se creará uno nuevo al guardar cambios.",1);
+        	parentFrame.mensaje("No se encontró el archivo de usuarios. Se creará uno nuevo al guardar cambios",1);
         } catch (IOException | ClassNotFoundException ex) {
         	parentFrame.mensaje("Error al cargar usuarios: " + ex.getMessage(),0);
         }
@@ -465,6 +466,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	public ArrayList<Temporada> getListTemporadas() {
 	    return listTemporadas;
 	}
+	
 	public void setListTemporadas(ArrayList<Temporada> listTemporadas) {
 	    if (listTemporadas == null) {
 	        throw new IllegalArgumentException("La lista de temporadas no puede ser nula");
@@ -482,7 +484,6 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	    return null; // Si no se encuentra la temporada
 	}
 
-	
 	// Método para buscar un equipo por ID en una temporada específica
 	public Equipo buscarEquipoPorId(int temporadaId, int equipoId) {
 	    for (Temporada temporada : listTemporadas) {
