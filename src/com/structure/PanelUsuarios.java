@@ -27,7 +27,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
     private JButton btnModify;
     
     private JLabel lblTitle = new JLabel("Gestión de Usuarios");
-    private JLabel lblUsername = new JLabel("Usuario:");
+    private JLabel lblUsername = new JLabel("Usuario:"); 
 
 	private int userType;
 	private Color colorbg;
@@ -46,6 +46,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 	    colorbg = parentFrame.colorbg;
 	    colortxt = parentFrame.colortxt;
 	    userName = parentFrame.userName;
+	    parentFrame.changes = true;
 
 
         // Configura el panel principal
@@ -326,7 +327,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
                         superuser = listModel.get(i);
                         break;  // Exit the loop as we found the superuser
                     }else {
-                        main.changes = true;
+                    	parentFrame.changes = true; 
                 	}
                 }
                 
@@ -342,6 +343,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
         } else {
             JOptionPane.showMessageDialog(null, "No hay usuarios para eliminar.");
         }
+            }
 	}
 	
 	private void actualizarArchivo() {

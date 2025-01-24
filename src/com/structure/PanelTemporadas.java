@@ -130,24 +130,26 @@ public class PanelTemporadas extends JPanel implements ActionListener {
         gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.NONE;
         this.add(btnCrearTemporada, gbc);
+        btnCrearTemporada.addActionListener(this);
 
         // Botón Añadir Equipo
         parentFrame.formatearBoton(btnAnadirEquipo);
         gbc.gridx = 1;
         gbc.gridy = 2;
         this.add(btnAnadirEquipo, gbc);
-
+        btnAnadirEquipo.addActionListener(this);
         // Botón Iniciar Temporada
         parentFrame.formatearBoton(btnIniciarTemporada);
         gbc.gridx = 2;
         gbc.gridy = 2;
         this.add(btnIniciarTemporada, gbc);
-
+        btnIniciarTemporada.addActionListener(this);
         // Botón Finalizar Temporada
         parentFrame.formatearBoton(btnFinalizarTemporada);
         gbc.gridx = 3;
         gbc.gridy = 2;
         this.add(btnFinalizarTemporada, gbc);
+        btnFinalizarTemporada.addActionListener(this);
 
         // Tabla de Temporadas con ScrollPane
         TemporadaTableModel tableModel = new TemporadaTableModel(listTemporadas);

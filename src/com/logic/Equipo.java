@@ -85,7 +85,7 @@ public class Equipo implements Serializable {
 		this.id= ide;
 		this.Nombre= nom;
 	}
-	public Equipo (int ide, String nom, int fecha, String coach, int win, int lose, int total) {
+	public Equipo (int ide, String nom, int fecha, String coach, int win, int lose, int total, int totalPartido) {
 		id= ide;
 		Nombre= nom;
 		listJugadores = new ArrayList<Jugador>();

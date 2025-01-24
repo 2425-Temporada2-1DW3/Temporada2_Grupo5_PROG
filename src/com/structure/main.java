@@ -26,7 +26,6 @@ public class main extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	public int userType; 
-    public String userName;
 	private Log log = new Log();
 	public boolean changes= false;
 
@@ -50,7 +49,7 @@ public class main extends JFrame implements ActionListener {
 	private JPanel LayoutPanel = new JPanel();
 	private JPanel LayoutPanel_1 = new JPanel();
     public JLabel lblMensaje = new JLabel();
-	private String userName;
+	public String userName;
 	/**
 	 * Launch the application.
 	 */
