@@ -58,15 +58,15 @@ public class PanelInicio extends JPanel implements ActionListener {
 	private JPanel panel_6;
 	private JPanel panel_7;
 	private JLabel partidoELoc0;
-	private JTextField partido1LocPoints;
+	//private JTextField partido1LocPoints;
 	private JPanel panel_8;
 	private JPanel panel_9;
 	private JLabel partidoELoc1;
-	private JTextField partido2LocPoints;
+	//private JTextField partido2LocPoints;
 	private JPanel panel_10;
 	private JPanel panel_11;
 	private JLabel partidoELoc2;
-	private JTextField partido3LocPoints;
+	//private JTextField partido3LocPoints;
 	private JPanel panel_12;
 	private JTable table;
 	private JPanel panel_13;
@@ -74,18 +74,18 @@ public class PanelInicio extends JPanel implements ActionListener {
 	private JButton prevButton;
 	private JLabel numJornada;
 	private JButton nextButton;
-	private JLabel partidoEVis0;
-	private JTextField Partido1VisPoints;
-	private JLabel partidoEVis1;
-	private JTextField partido2VisPoints;
-	private JLabel partidoEVis2;
-	private JTextField Partido3;
-	private JTextField pointsEVis1;
-	private JTextField pointsELoc1;
-	private JTextField pointsELoc0;
-	private JTextField pointsEVis0;
-	private JTextField pointsELoc2;
-	private JTextField pointsEVis2;
+	private JLabel partidoEVis0,partidoEVis1,partidoEVis2;
+
+	
+	
+
+
+	private JTextField pointsEVis1,pointsELoc1, pointsELoc0,pointsEVis0,pointsELoc2,pointsEVis2 ;
+	
+	
+	
+	
+	
 	private int jornadaSelect;
 	private JButton btnSave;
 	private JButton btnUpdateApp;
