@@ -37,7 +37,7 @@ public class main extends JFrame implements ActionListener {
     public Color colortxt = 	new Color(220, 225, 235);
     public Color colorRed = 	new Color(255, 102, 102); 
     public Color colorGreen = 	new Color(102, 204, 102); 
-    public Color colorYellow = 	new Color(255, 229, 128); 
+    public Color colorYellow =  new Color(255, 206, 98);
     public Color colorBlue = 	new Color(102, 178, 255); 
 
     
@@ -53,13 +53,10 @@ public class main extends JFrame implements ActionListener {
     private JButton btnMenuSalir = 		new JButton("CERRAR SESION");
 
     private JButton[] buttons = {btnMenuInicio, btnMenuTemporadas, btnMenuJugadores,btnMenuEquipos, btnMenuUsuarios,btnMenuSalir};
-    
 	private JPanel contentPane = new JPanel(), LayoutPanel_1 = new JPanel(), LayoutPanel = new JPanel();
-
     public JLabel lblMensaje = new JLabel();
-	/**
-	 * Launch the application.
-	 */
+ 
+    
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -77,9 +74,7 @@ public class main extends JFrame implements ActionListener {
     }
 
 
-	/**
-	 * Create the frame. 
-	 */
+ 
     public main(int userType, String userName) {
     	
     	// coje las variables de la clase login y la pasa a una variable definida en la clase main
@@ -115,15 +110,15 @@ public class main extends JFrame implements ActionListener {
 		// Generar los 5 Botones de menu
 		if (userType == 2 || userType == 4) {
 			for (JButton button : buttons) {
-				buttonCreate(button);
+				buttonCreate(button		  ,LayoutPanel,colorbg);
 			}
 		} else if (userType == 1){
-			buttonCreate(btnMenuInicio);
-			buttonCreate(btnMenuTemporadas);
-			buttonCreate(btnMenuSalir);
+			buttonCreate(btnMenuInicio	  ,LayoutPanel,colorbg);
+			buttonCreate(btnMenuTemporadas,LayoutPanel,colorbg);
+			buttonCreate(btnMenuSalir	  ,LayoutPanel,colorbg);
 
 		} else {
-			buttonCreate(btnMenuSalir);
+			buttonCreate(btnMenuSalir	  ,LayoutPanel,colorbg);
 		}
 		
 		// Cambia el titulo de la pagina y carga el menu apropiado para cada tipo de usuario
@@ -157,12 +152,12 @@ public class main extends JFrame implements ActionListener {
 	}
     
     // Funcion para crear todos los botones del menu
-    private void buttonCreate(JButton button) { 
-	    button.setFont(new Font("SansSerif", Font.BOLD, 16));
+    public void buttonCreate(JButton button, JPanel panel,Color color) { 
+	    button.setFont(fuenteDefectoBold);
 	    button.addActionListener(this);
-	    button.setForeground(colortxt);
-	    button.setBackground(colorbg);
-	    LayoutPanel.add(button);
+	    button.setForeground(Color.WHITE);
+	    button.setBackground(color);
+	    panel.add(button);
     }
        
     public void switchPanel(Class<? extends JPanel> panelClass) {
@@ -242,13 +237,7 @@ public class main extends JFrame implements ActionListener {
     	
     	
     }
-    public void formatearBoton(JButton button) { 
-	    button.setFont(fuenteDefectoBold);
-	    button.addActionListener(this);
-	    button.setForeground(colortxt);
-	    button.setBackground(colorbg);
-    }
-    
+
     public void formatearTabla(JTable table) {
         // Set table background and foreground
         table.setBackground(colorbg);

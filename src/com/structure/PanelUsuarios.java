@@ -288,6 +288,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
             // Create a new user
             Usuario user = new Usuario(username, userType, pass);
             listModel.addElement(user);
+            
             txtUsername.setText("");
             txtPassword.setText("");
             parentFrame.changes = true;
@@ -416,7 +417,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 	    } else if (newPass.isEmpty()) {
 	        parentFrame.mensaje("Por favor, ingrese una contraseña válida",0);
 	        return;
-	    }
+	    } 
 	    Usuario selectedUserChanges = new Usuario (newUsername,newUserType,newPass);
 	    
 	    if (selectedUser.equals(selectedUserChanges)) {
@@ -426,19 +427,17 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 	    // Modificar los atributos del usuario seleccionado
 	    selectedUser.setUser(newUsername); 
 	    selectedUser.setPass(newPass);
-	    selectedUser.setType(newUserType);
+	    if (selectedUser.getType() != 4) {
+		    selectedUser.setType(newUserType);
+	    }
 	
 	    // Actualizar el modelo de la lista con el usuario modificado
+	    parentFrame.changes = true;
+
 	    listModel.setElementAt(selectedUser, selectedIndex);
 	
 	    // Opcional: actualizar la vista
 	    userList.repaint();
-	
-	    // Marcar cambios como realizados
-	    parentFrame.changes = true;
-	
-	    // Actualizar archivo persistente, si corresponde
-	    actualizarArchivo();
 	
 	    // Mostrar un mensaje de éxito
 	    parentFrame.mensaje("Usuario modificado correctamente",2);

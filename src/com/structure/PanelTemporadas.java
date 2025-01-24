@@ -1,10 +1,8 @@
 package com.structure;
 
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.EOFException;
@@ -16,182 +14,135 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-
 import com.logic.Equipo;
 import com.logic.GeneradorTemporada;
 import com.logic.Jornada;
 import com.logic.Partido;
 import com.logic.Temporada;
-import com.structure.PanelTemporadas.TemporadaTableModel;
 import java.awt.BorderLayout;
 
 public class PanelTemporadas extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	private int userType;
-	private Color colorbg;
-	private Color colortxt;
-	private String userName;
+	private Color colorbg,colortxt;
 	private main parentFrame;
 
-	private JTextField txtNombre;
-	private JTextField txtCantidadEquipos;
-	private JList<Temporada> jListTemporada;
+	
 	private ArrayList <Temporada> listTemporadas = new ArrayList<Temporada>();
 	private DefaultListModel<Temporada> dlm = new DefaultListModel<>();
-	private DefaultTableModel tableModel;
-    private JTable tableTemporadas; // Declarar la tabla como variable de instancia
-    private GridBagConstraints gbc = new GridBagConstraints();
-    
-    
-    
-    private JButton btnCrearTemporada = new JButton("Crear Temporada");
-    private JButton btnAnadirEquipo = new JButton("Añadir Equipo");
-    private JButton btnIniciarTemporada = new JButton("Iniciar Temporada");
+	private JButton btnCrearTemporada = 	new JButton("Crear Temporada");
+    private JButton btnAnadirEquipo = 		new JButton("Añadir Equipo");
+    private JButton btnGestionEquipos = 	new JButton("Gestionar Equipos");
+    private JButton btnIniciarTemporada = 	new JButton("Iniciar Temporada");
     private JButton btnFinalizarTemporada = new JButton("Finalizar Temporada");
-
-
-
 	
-
+    private JTable tableTemporadas; // Declarar la tabla como variable de instancia
+	private JTextField txtNombre,txtCantidadEquipos;
+    private JScrollPane scrollPane;
+    private JPanel topPanel,formPanel,buttonPanel;
+    private JLabel lblTitle,lblNombre,lblCantidadEquipos;
 
 	/**
 	 * Create the panel.
 	 */
-	public PanelTemporadas(main parentFrame) {
-		// guarda los valores fuera de esta funcion por si se necesitan acceder en otro sitio
-		this.parentFrame = parentFrame;
-	    userType = parentFrame.userType;
-	    colorbg = parentFrame.colorbg;
-	    colortxt = parentFrame.colortxt;
-	    userName = parentFrame.userName;
-
-
-        // Configuración del panel principal
-        this.setLayout(new GridBagLayout());
+    public PanelTemporadas(main parentFrame) {
+        this.parentFrame = parentFrame;
+        colorbg = parentFrame.colorbg;
+        colortxt = parentFrame.colortxt;
+        // Set up the main panel using BorderLayout
+        this.setLayout(new BorderLayout());
         this.setBackground(colorbg);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5); // Espaciado entre componentes
 
-        // Etiqueta Nombre
-        JLabel lblNombre = new JLabel("Nombre:");
+
+        topPanel = new JPanel();
+        topPanel.setLayout(new BorderLayout()); 
+        topPanel.setBackground(colorbg);
+
+        // Label para titulo de temporadas
+        lblTitle = new JLabel("TEMPORADAS", JLabel.CENTER);
+        lblTitle.setFont(parentFrame.fuenteHeader);  
+        lblTitle.setForeground(colortxt);
+        topPanel.add(lblTitle, BorderLayout.NORTH);  
+
+        // Panel para el formulario de datos (Nombre,Cantidad de equipis)
+        formPanel = new JPanel();
+        formPanel.setLayout(new GridLayout(2, 2, 5, 5)); // GridLayout 2x2
+        formPanel.setBackground(colorbg);
+
+        // Add components to the form panel
+        lblNombre = new JLabel("Nombre:");
         lblNombre.setFont(parentFrame.fuenteDefecto);
         lblNombre.setForeground(colortxt);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        this.add(lblNombre, gbc);
+        formPanel.add(lblNombre);
 
-        // Campo de texto para el nombre
         txtNombre = new JTextField(20);
         txtNombre.setBackground(colorbg);
         txtNombre.setForeground(colortxt);
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        this.add(txtNombre, gbc);
+        formPanel.add(txtNombre);
 
-        // Etiqueta Cantidad de Equipos
-        JLabel lblCantidadEquipos = new JLabel("Cantidad de Equipos:");
+        lblCantidadEquipos = new JLabel("Cantidad de Equipos:");
         lblCantidadEquipos.setFont(parentFrame.fuenteDefecto);
         lblCantidadEquipos.setForeground(colortxt);
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 1;
-        this.add(lblCantidadEquipos, gbc);
+        formPanel.add(lblCantidadEquipos);
 
-        // Campo de texto para la cantidad de equipos
         txtCantidadEquipos = new JTextField(10);
         txtCantidadEquipos.setFont(parentFrame.fuenteDefecto);
         txtCantidadEquipos.setBackground(colorbg);
         txtCantidadEquipos.setForeground(colortxt);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.gridwidth = 1;
-        this.add(txtCantidadEquipos, gbc);
+        formPanel.add(txtCantidadEquipos);
 
+        topPanel.add(formPanel, BorderLayout.CENTER);
+        this.add(topPanel, BorderLayout.NORTH);
 
+        // Panel con botones
+        buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        buttonPanel.setBackground(colorbg);
 
-        // Botón Crear Temporada
-        parentFrame.formatearBoton(btnCrearTemporada);
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 1;
-        gbc.fill = GridBagConstraints.NONE;
-        this.add(btnCrearTemporada, gbc);
+        parentFrame.buttonCreate(btnCrearTemporada, 	buttonPanel, parentFrame.colorGreen);
+        parentFrame.buttonCreate(btnAnadirEquipo, 		buttonPanel, parentFrame.colorGreen);
+        parentFrame.buttonCreate(btnGestionEquipos, 	buttonPanel, parentFrame.colorYellow);
+        parentFrame.buttonCreate(btnIniciarTemporada, 	buttonPanel, parentFrame.colorBlue);
+        parentFrame.buttonCreate(btnFinalizarTemporada, buttonPanel, parentFrame.colorRed);
+        // cambio el actionlistener de los botones a el de esta clase
         btnCrearTemporada.addActionListener(this);
-
-        // Botón Añadir Equipo
-        parentFrame.formatearBoton(btnAnadirEquipo);
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        this.add(btnAnadirEquipo, gbc);
         btnAnadirEquipo.addActionListener(this);
-        // Botón Iniciar Temporada
-        parentFrame.formatearBoton(btnIniciarTemporada);
-        gbc.gridx = 2;
-        gbc.gridy = 2;
-        this.add(btnIniciarTemporada, gbc);
+        btnGestionEquipos.addActionListener(this);
         btnIniciarTemporada.addActionListener(this);
-        // Botón Finalizar Temporada
-        parentFrame.formatearBoton(btnFinalizarTemporada);
-        gbc.gridx = 3;
-        gbc.gridy = 2;
-        this.add(btnFinalizarTemporada, gbc);
         btnFinalizarTemporada.addActionListener(this);
 
-        // Tabla de Temporadas con ScrollPane
+        this.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Tabla con scrollpane para cargar las temporadas
         TemporadaTableModel tableModel = new TemporadaTableModel(listTemporadas);
         tableTemporadas = new JTable(tableModel);
+        tableTemporadas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        tableTemporadas.getColumnModel().getColumn(2).setCellRenderer(new DefaultTableCellRenderer() {
-            @Override
-            public void setValue(Object value) {
-                setText((Boolean) value ? "Sí" : "No");
-            }
-        });
-
-        tableTemporadas.getColumnModel().getColumn(3).setCellRenderer(new DefaultTableCellRenderer() {
-            @Override
-            public void setValue(Object value) {
-                setText((Boolean) value ? "Sí" : "No");
-            }
-        });
-        
         parentFrame.formatearTabla(tableTemporadas);
-        
-        JScrollPane scrollPane = new JScrollPane(tableTemporadas);
+
+        scrollPane = new JScrollPane(tableTemporadas);
         scrollPane.getViewport().setBackground(colorbg);
+        this.add(scrollPane, BorderLayout.CENTER);
 
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 4;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        this.add(scrollPane, gbc);
-
-        // Cargar datos desde archivo
+        // Cargar datos
         cargarTemporadasDesdeArchivo();
     }
 
 
+
 	public class TemporadaTableModel extends AbstractTableModel {
-	    private ArrayList<Temporada> listaTemporadas;  // Tu ArrayList de Temporada
+		private static final long serialVersionUID = -7057022157753394655L;
+		private ArrayList<Temporada> listaTemporadas;  // Tu ArrayList de Temporada
 	    private String[] columnNames = { "ID", "Nombre", "Iniciado", "Finalizado",
 	    		"Nº Equipos", "Nº Jornadas" ,"Nº Partidos"};
 	    // Constructor que recibe el ArrayList de Temporadas
