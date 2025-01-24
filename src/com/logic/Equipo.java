@@ -1,9 +1,11 @@
 package com.logic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Equipo {
+public class Equipo implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private String Nombre;
 	private ArrayList<Jugador> listJugadores ;
@@ -11,6 +13,19 @@ public class Equipo {
 	private String entrenador;
 	private int victorias;
 	private int derrotas;
+	private int totalPartidos;
+	public ArrayList<Jugador> getListJugadores() {
+		return listJugadores;
+	}
+	public void setListJugadores(ArrayList<Jugador> listJugadores) {
+		this.listJugadores = listJugadores;
+	}
+	public int getTotalPartidos() {      
+		return totalPartidos;
+	} 
+	public void setTotalPartidos(int totalPartidos) {
+		this.totalPartidos += 1;
+	}
 	private int puntosTotales;
 	
 	
@@ -65,6 +80,7 @@ public class Equipo {
 		victorias= 0;
 		derrotas = 0;
 		puntosTotales=0;
+		totalPartidos= 0;
 	}
 	public Equipo (Equipo e) {
 		id= e.id;
@@ -75,12 +91,13 @@ public class Equipo {
 		victorias= e.victorias;
 		derrotas = e.derrotas;
 		puntosTotales=e.puntosTotales;
+		totalPartidos = e.totalPartidos;
 	}
 	public Equipo (int ide, String nom) {
 		this.id= ide;
 		this.Nombre= nom;
 	}
-	public Equipo (int ide, String nom, int fecha, String coach, int win, int lose, int total) {
+	public Equipo (int ide, String nom, int fecha, String coach, int win, int lose, int total, int totalPartido) {
 		id= ide;
 		Nombre= nom;
 		listJugadores = new ArrayList<Jugador>();
@@ -89,6 +106,7 @@ public class Equipo {
 		victorias= win;
 		derrotas = lose;
 		puntosTotales=total;
+		totalPartidos= totalPartido;
 	}
 	public void addPoints() {
 		victorias += 1;
@@ -136,7 +154,7 @@ public class Equipo {
 	public void setVictorias(int victorias) {
 		this.victorias = victorias;
 	}
-	public int getDerrotas() {
+	public int getDerrotas() { 
 		return derrotas;
 	}
 	public void setDerrotas(int derrotas) {
@@ -148,6 +166,18 @@ public class Equipo {
 	public void setPuntosTotales(int puntosTotales) {
 		this.puntosTotales = puntosTotales;
 	}
+	public void incrementarPartidosTotales() {
+		totalPartidos+=1;
+	} 
 	
+	public void incrementarPartidosGanados(){
+		victorias+= 1;
+	}
+	public void incrementarPartidosPerdido(){
+		derrotas+= 1;
+	}
+	public void agregarPuntostotales(int punto) {
+		puntosTotales += punto;
+	}
 
 }

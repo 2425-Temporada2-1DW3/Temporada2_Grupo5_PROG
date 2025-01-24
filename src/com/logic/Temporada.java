@@ -1,9 +1,11 @@
 package com.logic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Temporada implements Comparable<Temporada> {
+public class Temporada implements Serializable,  Comparable<Temporada>  {
+	private static final long serialVersionUID = 1L;
     private int id_temporada;
     private String nombre;
     private boolean iniciado;
@@ -12,15 +14,23 @@ public class Temporada implements Comparable<Temporada> {
     private int cantidadEquipos;
     private ArrayList<Jornada> listJornadas; // Nuevo atributo
     private ArrayList<Equipo> listEquipos; // Nuevo atributo
+    private ArrayList<Equipo> clasificacion;
+  
+    public ArrayList<Equipo> getClasificacion() {
+		return clasificacion;
+	}
 
-    public int getIdTemporada() {
+
+	public void setClasificacion(ArrayList<Equipo> clasificacion) {
+		this.clasificacion = clasificacion;
+	}
+
+
+	public int getIdTemporada() {
 		return id_temporada;
 	}
     
-    public String getNombre() {
-		return nombre;
-	}
-
+    
 	public void setId_temporada(int id_temporada) {
 		this.id_temporada = id_temporada;
 	}
@@ -113,16 +123,8 @@ public class Temporada implements Comparable<Temporada> {
         listJornadas = new ArrayList<>(); // Inicializar la lista de jornadas
     }
 
-	public ArrayList<Jornada> getListJornadas() {
-		return listJornadas;
-	}
-
-	public void setListJornadas(ArrayList<Jornada> listJornadas) {
-		this.listJornadas = listJornadas;
-	}
-
-	@Override
-    public String toString() {
+	
+    public String toStringTest() {
         StringBuilder sb = new StringBuilder();
         sb.append("========== Información de la Temporada ==========\n");
         sb.append("ID Temporada: ").append(id_temporada).append("\n");
@@ -149,7 +151,10 @@ public class Temporada implements Comparable<Temporada> {
         return sb.toString();
     }
 
-
+    @Override
+    public String toString() {
+    	return(nombre);
+    }
     // Equals & hashCode
     @Override
     public int hashCode() {
