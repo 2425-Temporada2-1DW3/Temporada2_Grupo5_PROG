@@ -330,179 +330,11 @@ public class PanelInicio extends JPanel implements ActionListener {
 		SwichDatosJornada();
 		cargarTabla();
 		TemporadasIniciadas();
-
+		actualizarTabla();
 		
 		     
-			this.listTemporadas = new ArrayList<>();
-			this.listJornadas = new ArrayList<>();
-			cargarTemporadasDesdeArchivo();
-
-	
-			// Cambia color del JPanel
-			setBackground(colorbg);
-			setLayout(new BorderLayout(0, 0));
-	
-			panel = new JPanel();
-			add(panel, BorderLayout.NORTH);
-	
-			lblNewLabel = new JLabel("CLASIFICACION");
-			panel.add(lblNewLabel);
-	
-			panel_1 = new JPanel();
-			add(panel_1, BorderLayout.WEST);
-			panel_1.setLayout(new BorderLayout(0, 0));
-	
-			panel_3 = new JPanel();
-			panel_1.add(panel_3, BorderLayout.NORTH);
-	
-			lblNewLabel_1 = new JLabel("Jornadas");
-			panel_3.add(lblNewLabel_1);
-	
-			panel_4 = new JPanel();
-			panel_1.add(panel_4, BorderLayout.CENTER);
-			panel_4.setLayout(new BorderLayout(0, 0));
-	
-			panel_5 = new JPanel();
-			panel_4.add(panel_5, BorderLayout.NORTH);
-	
-			comboBox = new JComboBox<>();
-			panel_5.add(comboBox);
-			actualizarComboBox();
-	
-			panel_6 = new JPanel();
-			panel_4.add(panel_6, BorderLayout.CENTER);
-			panel_6.setLayout(new BorderLayout(0, 0));
-	
-			panel_7 = new JPanel();
-			panel_6.add(panel_7, BorderLayout.NORTH);
-	
-			// Inicializar campos para Partido 1
-			partidoELoc0 = new JLabel();
-			labelsMap.put("partidoELoc0", partidoELoc0);
-			panel_7.add(partidoELoc0);
-	
-			pointsELoc0 = new JTextField();
-			textFieldMap.put("pointsELoc0", pointsELoc0);
-			panel_7.add(pointsELoc0);
-			pointsELoc0.setColumns(10);
-	
-			partidoEVis0 = new JLabel();
-			labelsMap.put("partidoEVis0", partidoEVis0);
-			panel_7.add(partidoEVis0);
-	
-			pointsEVis0 = new JTextField();
-			textFieldMap.put("pointsEVis0", pointsEVis0);
-			panel_7.add(pointsEVis0);
-			pointsEVis0.setColumns(10);
-	
-			panel_8 = new JPanel();
-			panel_6.add(panel_8, BorderLayout.CENTER);
-			panel_8.setLayout(new BorderLayout(0, 0));
-	
-			panel_9 = new JPanel();
-			panel_8.add(panel_9, BorderLayout.NORTH);
-	
-			// Inicializar campos para Partido 2
-			partidoELoc1 = new JLabel();
-			labelsMap.put("partidoELoc1", partidoELoc1);
-			panel_9.add(partidoELoc1);
-	
-			pointsELoc1 = new JTextField();
-			textFieldMap.put("pointsELoc1", pointsELoc1);
-			panel_9.add(pointsELoc1);
-			pointsELoc1.setColumns(10);
-	
-			partidoEVis1 = new JLabel();
-			labelsMap.put("partidoEVis1", partidoEVis1);
-			panel_9.add(partidoEVis1);
-	
-			pointsEVis1 = new JTextField();
-			textFieldMap.put("pointsEVis1", pointsEVis1);
-			panel_9.add(pointsEVis1);
-			pointsEVis1.setColumns(10);
-	
-			panel_10 = new JPanel();
-			panel_8.add(panel_10, BorderLayout.CENTER);
-			panel_10.setLayout(new BorderLayout(0, 0));
-	
-			panel_11 = new JPanel();
-			panel_10.add(panel_11, BorderLayout.NORTH);
-			panel_11.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-	
-			// Inicializar campos para Partido 3
-			partidoELoc2 = new JLabel();
-			labelsMap.put("partidoELoc2", partidoELoc2);
-			panel_11.add(partidoELoc2);
-	
-			pointsELoc2 = new JTextField();
-	
-			textFieldMap.put("pointsELoc2", pointsELoc2);
-			panel_11.add(pointsELoc2);
-			pointsELoc2.setColumns(10);
-	
-			partidoEVis2 = new JLabel();
-			labelsMap.put("partidoEVis2", partidoEVis2);
-			panel_11.add(partidoEVis2);
-	
-			pointsEVis2 = new JTextField();
-			textFieldMap.put("pointsEVis2", pointsEVis2);
-			panel_11.add(pointsEVis2);
-			pointsEVis2.setColumns(10);
-	
-			panel_13 = new JPanel();
-			panel_10.add(panel_13, BorderLayout.CENTER);
-			panel_13.setLayout(new BorderLayout(0, 0));
-	
-			panel_14 = new JPanel();
-			panel_13.add(panel_14, BorderLayout.NORTH);
-	
-			prevButton = new JButton("<");
-			prevButton.addActionListener(this);
-			panel_14.add(prevButton);
-	
-			numJornada = new JLabel("1");
-			panel_14.add(numJornada);
-	
-			nextButton = new JButton(">");
-			panel_14.add(nextButton);
-			nextButton.addActionListener(this);
-			panel_12 = new JPanel();
-			panel_1.add(panel_12, BorderLayout.SOUTH);
-	
-			btnSave = new JButton("Finalizar Jornada");
-			btnSave.addActionListener(this);
-			panel_12.add(btnSave);
-			
-			btnUpdateApp = new JButton("Aplicar cambios en el sistema");
-			btnUpdateApp.addActionListener(this);
-			panel_12.add(btnUpdateApp);
-	
-			panel_2 = new JPanel();
-			add(panel_2, BorderLayout.EAST);
-	
-			table = new JTable();
-			table.setEnabled(false);
-			modelClasificacion = new DefaultTableModel();
-			modelClasificacion.addColumn("posicion");
-			modelClasificacion.addColumn("equipo");
-			
-			modelClasificacion.addColumn("PJ");
-			modelClasificacion.addColumn("PG");
-			modelClasificacion.addColumn("PP");
-			modelClasificacion.addColumn("puntuacion total");
 			
 			
-	
-			table.setModel(modelClasificacion);
-	
-			// Agregar JScrollPane
-			 scrollPane = new JScrollPane(table);
-			panel_2.add(scrollPane);
-	
-			SwichDatosJornada();
-			cargarTabla();
-			TemporadasIniciadas();
-			actualizarTabla();
 			
 	
 	
@@ -519,14 +351,12 @@ public class PanelInicio extends JPanel implements ActionListener {
 					}
 				}
 			} catch (FileNotFoundException ex) {
-				JOptionPane.showMessageDialog(null,
-						"No se encontró el archivo de temporadas. Se creará uno nuevo al guardar cambios.", "Error",
-						JOptionPane.ERROR_MESSAGE);
+				parentFrame.mensaje("No se encontró el archivo de temporadas. Se creará uno nuevo al guardar cambios.",2);
+				
 			} catch (IOException | ClassNotFoundException ex) {
-				JOptionPane.showMessageDialog(null, "Error al cargar temporadas: " + ex.getMessage(), "Error",
-						JOptionPane.ERROR_MESSAGE);
-			}
-		}
+				parentFrame.mensaje("Error al cargar temporadas: " + ex.getMessage(),0);
+				   
+		}}
 	
 		private void actualizarComboBox() {
 			comboBox.removeAllItems();
@@ -557,10 +387,11 @@ public class PanelInicio extends JPanel implements ActionListener {
 				listJornadas = TemporadaSeleccionada.getListJornadas();
 				nombre = TemporadaSeleccionada.getListEquipos();
 			} else {
-				JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+				parentFrame.mensaje("error al cargar la temporada", 0);
+		
 	
 			}
-			System.out.println(userType);
+			
 		}
 	
 		private void SwichDatosJornada() {
@@ -623,7 +454,8 @@ public class PanelInicio extends JPanel implements ActionListener {
 			        }
 			    }
 			}}
-			private void cambioEstadoTextFields() {
+		
+		private void cambioEstadoTextFields() {
 				jornadaSelect = Integer.parseInt(numJornada.getText());
 				Jornada jornadaActual = listJornadas.get(jornadaSelect - 1);
 				partidos = jornadaActual.getListPartidos();
@@ -672,11 +504,6 @@ public class PanelInicio extends JPanel implements ActionListener {
 			
 			}
 			
-				
-			
-	
-		
-	
 		private void ActualizarPuntuaciones() {
 			//variables para almacenar los id de el map
 			String locales;
@@ -783,10 +610,11 @@ public class PanelInicio extends JPanel implements ActionListener {
 				parentFrame.changes=true;
 	
 			}
-			System.out.println(partidos);
-			//System.out.println(nombre);
+			
+			
 	
 		}
+		
 		private void TemporadasIniciadas() {
 			TemporadaSeleccionada = (Temporada) comboBox.getSelectedItem();
 			if(TemporadaSeleccionada.isIniciado()== false || (TemporadaSeleccionada.isIniciado() && TemporadaSeleccionada.isFinalizado())) {
@@ -799,7 +627,6 @@ public class PanelInicio extends JPanel implements ActionListener {
 			
 		}
 	
-		
 		private void guardarDatos() {
 			if (parentFrame.changes== true) {
 	    		try (FileOutputStream fos = new FileOutputStream("Temporada.ser");
@@ -810,15 +637,18 @@ public class PanelInicio extends JPanel implements ActionListener {
 	        			oos.writeObject(listTemporadas.get(counter));
 	        			counter ++;
 	        		}
-	        		JOptionPane.showMessageDialog(null, "cambios guardados.");
+	        		parentFrame.mensaje("Cambios guardados.", 2);
+	        		
 	        		parentFrame.changes=false;
 	    			
 	    		} catch (IOException e) {
 	    			// TODO Auto-generated catch block
-	    			e.printStackTrace();
+	    			parentFrame.mensaje("Error al guardar", 0);
+	    			
 	    		}
 	    	}
 		}
+		
 		private void cargarTabla() {
 			modelClasificacion.setRowCount(0); 
 			for (int counter=0; nombre.size() >counter; counter++) {
@@ -836,6 +666,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 			TemporadaSeleccionada.setClasificacion(nombre);
 			
 		}
+		
 		private void actualizarTabla(){
 			
 			TemporadaSeleccionada = (Temporada) comboBox.getSelectedItem();
@@ -845,22 +676,23 @@ public class PanelInicio extends JPanel implements ActionListener {
 			Clasificacion.sort(Comparator.comparingInt(Equipo::getPuntosTotales)
                     .reversed()
                     .thenComparingInt(Equipo::getFechaFundEq));
-			//System.out.println(Clasificacion);
+			
 			for(int counter= 0; Clasificacion.size()>counter; counter++) {
 				 modelClasificacion.addRow(new Object[]{
 					        counter + 1, // Posición
 					        Clasificacion.get(counter).getNombre(), // Nombre del equipo
-					       
+					        Clasificacion.get(counter).getPuntosTotales(),
 					        Clasificacion.get(counter).getTotalPartidos(),
 					        Clasificacion.get(counter).getVictorias(),
 					        Clasificacion.get(counter).getDerrotas(),
-					        Clasificacion.get(counter).getPuntosTotales(),
+					        
 					        
 					    });
 			}
 		
 			
 		}
+		
 		@Override
 		public void actionPerformed(ActionEvent ae) {
 			Object o = ae.getSource();
@@ -874,7 +706,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 					SwichDatosJornada();
 					cambioEstadoTextFields();
 				} else {
-					System.out.println("No hay más jornadas disponibles.");
+					parentFrame.mensaje("No hay más jornadas disponibles.",1);
 				}
 	
 			} else if (o == prevButton) {
@@ -888,12 +720,13 @@ public class PanelInicio extends JPanel implements ActionListener {
 					cambioEstadoTextFields();
 					
 				} else {
-					System.out.println("No hay jornadas anteriores.");
+					parentFrame.mensaje("No hay jornadas anteriores", 1);
 				}
 	
 			} else if (o == btnSave) {
 				if (pointsELoc0.getText().isEmpty() && pointsEVis0.getText().isEmpty()&& pointsELoc1.getText().isEmpty() && pointsEVis1.getText().isEmpty()&& pointsELoc2.getText().isEmpty() && pointsEVis2.getText().isEmpty()){
-					 JOptionPane.showMessageDialog(panel, "no puede haber ningun campo vacio", "Error", JOptionPane.ERROR_MESSAGE);
+					parentFrame.mensaje("No puede haber ningun campo vacio", 1); 
+					
 				}else {
 					if (userType < 2) {
 						int seleccion = JOptionPane.showConfirmDialog(null,
