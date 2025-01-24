@@ -88,6 +88,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 
         // Etiqueta Nombre
         JLabel lblNombre = new JLabel("Nombre:");
+        lblNombre.setFont(parentFrame.fuenteDefecto);
         lblNombre.setForeground(colortxt);
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -106,6 +107,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 
         // Etiqueta Cantidad de Equipos
         JLabel lblCantidadEquipos = new JLabel("Cantidad de Equipos:");
+        lblCantidadEquipos.setFont(parentFrame.fuenteDefecto);
         lblCantidadEquipos.setForeground(colortxt);
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -114,6 +116,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 
         // Campo de texto para la cantidad de equipos
         txtCantidadEquipos = new JTextField(10);
+        txtCantidadEquipos.setFont(parentFrame.fuenteDefecto);
         txtCantidadEquipos.setBackground(colorbg);
         txtCantidadEquipos.setForeground(colortxt);
         gbc.gridx = 1;

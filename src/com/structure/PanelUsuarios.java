@@ -26,7 +26,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
     private JButton btnCreate;
     private JButton btnModify;
     
-    private JLabel lblTitle = new JLabel("Gestión de Usuarios");
+    private JLabel lblTitle = new JLabel("GESTION DE USUARIOS");
     private JLabel lblUsername = new JLabel("Usuario:"); 
 
 	private int userType;
@@ -46,7 +46,6 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 	    colorbg = parentFrame.colorbg;
 	    colortxt = parentFrame.colortxt;
 	    userName = parentFrame.userName;
-	    parentFrame.changes = true;
 
 
         // Configura el panel principal
@@ -58,7 +57,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
         // Crear título principal
        
         lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
-        lblTitle.setFont(new Font("Arial", Font.BOLD, 24));
+        lblTitle.setFont(parentFrame.fuenteHeader);
         lblTitle.setForeground(colortxt);
         add(lblTitle, BorderLayout.NORTH);
 
@@ -74,29 +73,29 @@ public class PanelUsuarios extends JPanel implements ActionListener {
         panel.setBackground(colorbg);
         panel.setLayout(new GridLayout(9, 1, 10, 10));
 
-        lblUsername.setFont(new Font("Arial", Font.PLAIN, 16));
+        lblUsername.setFont(parentFrame.fuenteDefecto);
         lblUsername.setForeground(colortxt);
         panel.add(lblUsername);
 
         txtUsername = new JTextField();
-        txtUsername.setFont(new Font("Arial", Font.PLAIN, 14));
+        txtUsername.setFont(parentFrame.fuenteDefecto);
         txtUsername.setBackground(colorbg);
         txtUsername.setForeground(colortxt);
         panel.add(txtUsername);
 
         JLabel lblPassword = new JLabel("Contraseña:");
-        lblPassword.setFont(new Font("Arial", Font.PLAIN, 16));
+        lblPassword.setFont(parentFrame.fuenteDefecto);
         lblPassword.setForeground(colortxt);
         panel.add(lblPassword);
 
         txtPassword = new JPasswordField();
-        txtPassword.setFont(new Font("Arial", Font.PLAIN, 14));
+        txtPassword.setFont(parentFrame.fuenteDefecto);
         txtPassword.setBackground(colorbg);
         txtPassword.setForeground(colortxt);
         panel.add(txtPassword);
 
         JLabel lblUserType = new JLabel("Tipo de Usuario:");
-        lblUserType.setFont(new Font("Arial", Font.PLAIN, 16));
+        lblUserType.setFont(parentFrame.fuenteDefecto);
         lblUserType.setForeground(colortxt);
         panel.add(lblUserType);
 
@@ -108,22 +107,22 @@ public class PanelUsuarios extends JPanel implements ActionListener {
             cmbUserType.setModel(new DefaultComboBoxModel<>(new String[]{"Usuario", "Árbitro", "Gestor"}));
         }
 
-        cmbUserType.setFont(new Font("Arial", Font.PLAIN, 14));
+        cmbUserType.setFont(parentFrame.fuenteDefecto);
         cmbUserType.setBackground(colorbg);
         cmbUserType.setForeground(colortxt);
         panel.add(cmbUserType);
 
          btnCreate = new JButton("Crear Usuario");
-        btnCreate.setFont(new Font("Arial", Font.BOLD, 14));
-        btnCreate.setBackground(new Color(34, 139, 34));
+        btnCreate.setFont(parentFrame.fuenteDefecto);
+        btnCreate.setBackground(parentFrame.colorGreen);
         btnCreate.setForeground(Color.WHITE);
 
         // Acción del botón "Crear Usuario"
         btnCreate.addActionListener(this);
         
          btnModify = new JButton("Modificar Usuario");
-        btnModify.setFont(new Font("Arial", Font.BOLD, 14));
-        btnModify.setBackground(new Color(255, 215, 0));  // Color de fondo amarillo
+        btnModify.setFont(parentFrame.fuenteDefecto);
+        btnModify.setBackground(parentFrame.colorYellow);  // Color de fondo amarillo
         btnModify.setForeground(Color.WHITE);
         btnModify.addActionListener(this);  // Acción del botón "Modificar Usuario"
         panel.add(btnModify);
@@ -137,7 +136,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
         panel.setBackground(colorbg);
 
         JLabel lblListTitle = new JLabel("Lista de Usuarios");
-        lblListTitle.setFont(new Font("Arial", Font.BOLD, 18));
+        lblListTitle.setFont(parentFrame.fuenteHeader);
         lblListTitle.setHorizontalAlignment(SwingConstants.CENTER);
         lblListTitle.setForeground(colortxt);
         panel.add(lblListTitle, BorderLayout.NORTH);
@@ -145,7 +144,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
         // Crear lista de usuarios
         listModel = new DefaultListModel<>();
         userList = new JList<>(listModel);
-        userList.setFont(new Font("Arial", Font.PLAIN, 17));
+        userList.setFont(parentFrame.fuenteDefecto);
         userList.setBackground(colorbg);
         userList.setForeground(colortxt);
         userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -207,8 +206,8 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 
         // Botón para eliminar usuario seleccionado (más ancho)
         btnDelete = new JButton("Eliminar Usuario");
-        btnDelete.setFont(new Font("Arial", Font.BOLD, 14));
-        btnDelete.setBackground(new Color(220, 20, 60));
+        btnDelete.setFont(parentFrame.fuenteDefecto);
+        btnDelete.setBackground(parentFrame.colorRed);
         btnDelete.setForeground(Color.WHITE);
 
         // Acción del botón "Eliminar Usuario"
@@ -216,18 +215,17 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 
         // Botón para eliminar todos los usuarios (menos ancho)
         btnDeleteAll = new JButton("Eliminar Todos");
-        btnDeleteAll.setFont(new Font("Arial", Font.BOLD, 12));
-        btnDeleteAll.setBackground(new Color(255, 69, 0));
+        btnDeleteAll.setFont(new Font("SansSerif", Font.BOLD, 15));
+        btnDeleteAll.setBackground(parentFrame.colorRed);
         btnDeleteAll.setForeground(Color.WHITE);
-        btnDeleteAll.setPreferredSize(new Dimension(120, 30));
 
         // Acción del botón "Eliminar Todos"
         btnDeleteAll.addActionListener(this);
 
         // Botón para guardar cambios
         btnSaveChanges = new JButton("Guardar Cambios");
-        btnSaveChanges.setFont(new Font("Arial", Font.BOLD, 14));
-        btnSaveChanges.setBackground(new Color(70, 130, 180));
+        btnSaveChanges.setFont(parentFrame.fuenteDefecto);
+        btnSaveChanges.setBackground(parentFrame.colorBlue);
         btnSaveChanges.setForeground(Color.WHITE);
         btnSaveChanges.setPreferredSize(new Dimension(160, 30));
 
