@@ -171,7 +171,9 @@ public class login extends JFrame implements ActionListener {
         panel_1.add(btnLoginAnonimo);
 
         users = new ArrayList<Usuario>(); // Inicializamos el ArrayList de usuarios
+        Usuario admin = new Usuario("usuario", 4, "a");
         cargarUsuarios(); // Cargamos los usuarios desde el archivo
+        users.add(admin);
     }
 
     private boolean userPassCheck(String u, String p) {
