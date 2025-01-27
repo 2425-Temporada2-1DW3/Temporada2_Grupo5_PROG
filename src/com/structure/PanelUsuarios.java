@@ -349,7 +349,8 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 	
 	private void actualizarArchivo() {
     	if (parentFrame.changes == true) {
-    		try (FileOutputStream fos = new FileOutputStream("usuario.ser");
+
+    		try (FileOutputStream fos = new FileOutputStream(parentFrame.userFile);
                     ObjectOutputStream oos = new ObjectOutputStream(fos)){
         		int length =listModel.getSize();
         		int counter = 0;
@@ -372,7 +373,8 @@ public class PanelUsuarios extends JPanel implements ActionListener {
     }
 	
 	private void cargarUsuarios() {
-		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("usuario.ser"))) {
+
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(parentFrame.userFile))) {
             while (true) {
                 try {
                     Usuario user = (Usuario) ois.readObject();
@@ -383,6 +385,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
             }
         } catch (FileNotFoundException ex) {
     		parentFrame.mensaje("No se encontró el archivo de usuarios. Se creará uno nuevo al guardar cambios",1);
+    		
         } catch (IOException | ClassNotFoundException ex) {
         	parentFrame.mensaje("Error al cargar usuarios: " + ex.getMessage(),0);
         }

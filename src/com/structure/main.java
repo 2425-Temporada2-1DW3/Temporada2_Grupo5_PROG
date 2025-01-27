@@ -17,6 +17,7 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.JButton;
@@ -29,6 +30,8 @@ public class main extends JFrame implements ActionListener {
 	public int userType; 
     public String userTypeName;// No usar para comparaciones, solo para mostrar el tipo de usuario visualmente si es necesitado
 	public String userName;
+	public File userFile;
+	public File temporadasFile;
 	public boolean changes= false;
 	private Log log = new Log();
 
@@ -63,8 +66,9 @@ public class main extends JFrame implements ActionListener {
                 try {
                     int userType = 4; // Tipo de usuario por defecto si no recibe un valor (
                     String userName = "Anonimo"; // Nombre de usuario por defecto
-                    
-                    main frame = new main(userType,userName); // Pasa usertype y username a la main
+                    File userFile = null;
+                    File temporadasFile = null;
+                    main frame = new main(userType,userName,userFile,temporadasFile); // Pasa usertype y username a la main
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -75,13 +79,14 @@ public class main extends JFrame implements ActionListener {
 
 
  
-    public main(int userType, String userName) {
+    public main(int userType, String userName, File userFile, File temporadasFile) {
     	
     	// coje las variables de la clase login y la pasa a una variable definida en la clase main
         this.userType = userType;
         this.userName = userName; 
-
-
+        this.userFile = userFile;
+        this.temporadasFile = temporadasFile;
+        
         // Cosas por defecto del Jframe
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);

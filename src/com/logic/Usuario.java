@@ -1,5 +1,6 @@
 package com.logic;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -64,11 +65,12 @@ public class Usuario implements Serializable  {
 		this.pass = pass;
 	}
 
+
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(pass, type, user);
-	}
-
+	} 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
