@@ -30,7 +30,7 @@ public class main extends JFrame implements ActionListener {
     public String userTypeName;// No usar para comparaciones, solo para mostrar el tipo de usuario visualmente si es necesitado
 	public String userName;
 	public boolean changes= false;
-	private Log mensaje = new Log();
+	private Log log = new Log();
 
     
     public Color colorbg = 		new Color(40, 45, 50);
@@ -148,7 +148,7 @@ public class main extends JFrame implements ActionListener {
 
         }
         mensaje("Bienvenido, "+userName,2);
-        mensaje.Log("Ventana main cargada, Usuario: "+userName+" Rol: ",0);
+        log.add("Ventana main cargada, Usuario: "+userName+" Rol: ",0);
 	}
     
     // Funcion para crear todos los botones del menu
@@ -172,14 +172,14 @@ public class main extends JFrame implements ActionListener {
             
             revalidate();
             repaint();
-        	mensaje.Log("Panel "+panel.getClass()+" cargado",0);
+        	log.add("Panel "+panel.getClass()+" cargado",0);
 
             for (JButton button : buttons) {
                 button.setEnabled(true);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            mensaje.Log("Error cargando panel: " + panelClass.getSimpleName(),2);
+            log.add("Error cargando panel: " + panelClass.getSimpleName(),2);
             
         }
     }
@@ -187,7 +187,7 @@ public class main extends JFrame implements ActionListener {
 
     private int panelDeOpcion(String msg, String titulo) {
     	formatearPanelDeOpcion();
-    	mensaje.Log("Panel de opcion :"+titulo+" ha sido cargado",0);
+    	log.add("Panel de opcion :"+titulo+" ha sido cargado",0);
         int result = JOptionPane.showConfirmDialog(
         		
                 main.this,
@@ -202,18 +202,18 @@ public class main extends JFrame implements ActionListener {
     public void mensaje(String msg, int color) {
         if (color == 0) {
             lblMensaje.setForeground(colorRed);
-            mensaje.Log("Usuario " +userName+": [lblMensaje] "+msg,2);
+            log.add("Usuario " +userName+": [lblMensaje] "+msg,2);
             msg = "ERROR : " + msg+".";
             
         } else if (color == 1) {
             lblMensaje.setForeground(colorYellow);
-            mensaje.Log("Usuario " +userName+": [lblMensaje] "+msg,1);
+            log.add("Usuario " +userName+": [lblMensaje] "+msg,1);
 
             msg = "AVISO :" + msg+".";
 
         	
         } else if (color ==2) {
-            mensaje.Log("Usuario " +userName+":  [lblMensaje] "+msg,0);
+            log.add("Usuario " +userName+":  [lblMensaje] "+msg,0);
 
             lblMensaje.setForeground(colorGreen);
 

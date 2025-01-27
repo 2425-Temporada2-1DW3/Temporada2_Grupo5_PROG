@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 public class Log {
-	public void Log(String log, int severidad) {
+	public void add(String log, int severidad) {
 		String formattedDate;
 		LocalDateTime d = LocalDateTime.now();
 		formattedDate = d.getDayOfMonth() + "/"+ d.getMonthValue() + "/" + d.getYear() + " A las " + d.getHour()+":"+d.getMinute()+":"+d.getSecond();
@@ -33,7 +33,7 @@ public class Log {
 		    e.printStackTrace();
 		}
 	}
-	public void clearLog() {
+	public void clear() {
         try (FileWriter writer = new FileWriter("consoleLog.log")) {
             // Si abres un archivo sin hacer nada borra todo lo q tiene
         } catch (IOException e) {
