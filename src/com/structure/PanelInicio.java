@@ -100,8 +100,6 @@ public class PanelInicio extends JPanel implements ActionListener {
 	private ArrayList<Equipo> Clasificacion;
 	private Temporada TemporadaSeleccionada;
 	private main parentFrame;
-	private JButton btnNewButton;
-	private JPanel panel_15;
 
 	/**
 	 * Create the panel.
@@ -266,16 +264,6 @@ public class PanelInicio extends JPanel implements ActionListener {
 		nextButton = new JButton(">");
 
 		panel_14.add(nextButton);
-		
-		panel_15 = new JPanel();
-		panel_13.add(panel_15, BorderLayout.SOUTH);
-		
-		btnNewButton = new JButton("Exportar");
-		panel_15.add(btnNewButton);
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 		nextButton.addActionListener(this);
 		panel_12 = new JPanel();
 		panel_1.add(panel_12, BorderLayout.SOUTH);
@@ -333,7 +321,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 		cargarTabla();
 		TemporadasIniciadas();
 		actualizarTabla();
-		exportacion();
+		
 
 	}
 
@@ -705,9 +693,6 @@ public class PanelInicio extends JPanel implements ActionListener {
 	                    XML.add("partidos", false, 3);
 	                    for (Partido partido : jornada.getListPartidos()) {
 	                        XML.add("partido", false, 4);
-	                           
-
-
 	                            XML.add("equipos", false, 5);
 	                                XML.add("equipo_local", false, 6);
 	                                    XML.add("NombreLocal", false, 7);
@@ -750,6 +735,9 @@ public class PanelInicio extends JPanel implements ActionListener {
 	                    XML.add("nombre", false, 3);
 	                        XML.add(equipo.getNombre(), true, 4);
 	                    XML.add("nombre", false, 3);
+	                    XML.add("puntosTotales", false, 3);
+	                    XML.add(Integer.toString(equipo.getPuntosTotales()), true, 4);
+	                    XML.add("puntosTotales", false, 3);
 	                XML.add("equipo", false, 2);
 	            }
 	            XML.add("clasificacion", false, 1);
@@ -837,6 +825,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 
 		} else if (o == btnUpdateApp) {
 			guardarDatos();
+			exportacion();
 		}
 
 	}
