@@ -65,10 +65,5 @@ public class CreadorXML {
     	elementosXML.clear();
     	contenidoXMLFormateado.clear();
     }
-
-	public void addElement(String string, boolean b, int i) {
-		// TODO Auto-generated method stub
-		
-	}
     
 }

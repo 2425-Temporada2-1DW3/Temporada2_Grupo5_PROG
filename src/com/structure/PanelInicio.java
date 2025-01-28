@@ -130,8 +130,8 @@ public class PanelInicio extends JPanel implements ActionListener {
 		PanelContenedor.add(PanelTitulo, BorderLayout.NORTH);
 		
 		lblNewLabel = new JLabel("CLASIFICACION");
-		lblNewLabel.setForeground((Color) null);
-		lblNewLabel.setFont(null);
+		lblNewLabel.setForeground(Color.WHITE);
+		lblNewLabel.setFont(parentFrame.fuenteHeader);
 		PanelTitulo.add(lblNewLabel);
 		
 		PanelContenido = new JPanel();
@@ -302,7 +302,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 
 		JComponent labelFormat[] = { partidoELoc0, pointsELoc0, partidoEVis0, pointsEVis0, partidoELoc1, pointsELoc1,
 				partidoEVis1, pointsEVis1, partidoELoc2, pointsELoc2, partidoEVis2, pointsEVis2, lblNewLabel_1,
-				comboBox, prevButton, numJornada, nextButton, btnSave, btnUpdateApp, lblNewLabel };
+				comboBox, prevButton, numJornada, nextButton, btnSave, btnUpdateApp, };
 		JComponent panelFormat[] = { PanelTitulo, PanelContenido, PanelJornadas, PanelClasificacion, PanelTituloJornadas, PanelContenidoPartidos, PanelSelectTemporada, PanelMostrarPartidos, PanelPartido1, PanelPartido3,
 				panelPartido2, PanelPartido3, PanelBotones, panelMoverJornadas };
 
@@ -328,7 +328,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 	}
 
 	private void cargarTemporadasDesdeArchivo() {
-		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("Temporada.ser"))) {
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(parentFrame.temporadasFile))) {
 			while (true) {
 				try {
 					Temporada temp = (Temporada) ois.readObject();
@@ -606,7 +606,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 
 	private void guardarDatos() {
 		if (parentFrame.changes == true) {
-			try (FileOutputStream fos = new FileOutputStream("Temporada.ser");
+			try (FileOutputStream fos = new FileOutputStream(parentFrame.temporadasFile);
 					ObjectOutputStream oos = new ObjectOutputStream(fos)) {
 				int length = listTemporadas.size();
 				int counter = 0;
