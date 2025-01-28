@@ -1,10 +1,26 @@
 package com.logic;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+
+import com.structure.main;
+
 
 public class GeneradorTemporada {
+	private main parentFrame;
 	
 //--------------VARIABLES PRINCIPALES
 	
@@ -21,8 +37,8 @@ public class GeneradorTemporada {
         this.TOTAL_PARTIDOS_X_JORNADA = TOTAL_EQUIPOS / 2;
 
         // Generar equipos y asignarlos a la temporada actual
-        ArrayList<Equipo> equipos = crearListaEquipos();
-        nuevaTemporada.setListEquipos(equipos);
+//        ArrayList<Equipo> equipos = crearListaEquipos();
+//        nuevaTemporada.setListEquipos(equipos);
 
         // Generar jornadas y partidos
         ArrayList<Jornada> jornadas = crearListJornadas();
@@ -65,6 +81,89 @@ public class GeneradorTemporada {
 	        return equipovisitante;
         }
     }
+		
+		public void MostrarVentanaEquipos(Temporada temporada) {
+		    int numEquipos = temporada.getCantidadEquipos();
+		    if (numEquipos < 2) {
+		        JOptionPane.showMessageDialog(null, "Debe haber al menos 2 equipos.", "Error", JOptionPane.ERROR_MESSAGE);
+		        return;
+		    }
+
+		    // Crear ventana emergente
+		    JDialog dialog = new JDialog(parentFrame, "Ingresar Nombre de Equipos", true);
+		    dialog.setLayout(new BorderLayout());
+
+		    // Panel para contener los campos dinámicos
+		    JPanel panelEquipos = new JPanel(new GridBagLayout());
+		    GridBagConstraints gbc = new GridBagConstraints();
+		    gbc.insets = new Insets(5, 5, 5, 5);
+		    gbc.fill = GridBagConstraints.HORIZONTAL;
+
+		    // Lista para almacenar los JTextFields
+		    ArrayList<JTextField> camposTexto = new ArrayList<>();
+
+		    // Crear dinámicamente las etiquetas y los campos de texto
+		    for (int i = 0; i < numEquipos; i++) {
+		        JLabel label = new JLabel("Equipo " + (i + 1) + ":");
+		        JTextField textField = new JTextField(15);
+		        camposTexto.add(textField);
+
+		        // Añadir etiqueta
+		        gbc.gridx = 0;
+		        gbc.gridy = i;
+		        panelEquipos.add(label, gbc);
+
+		        // Añadir campo de texto
+		        gbc.gridx = 1;
+		        panelEquipos.add(textField, gbc);
+		    }
+
+		    // Botón para guardar
+		    JButton btnGuardar = new JButton("Guardar Datos");
+		    btnGuardar.addActionListener(e -> {
+		        ArrayList<Equipo> temporalListEquipos = new ArrayList<>();
+		        for (int i = 0; i < camposTexto.size(); i++) {
+		            String texto = camposTexto.get(i).getText().trim();
+		            if (texto.isEmpty()) {
+		                JOptionPane.showMessageDialog(dialog, "Todos los campos deben estar llenos.", "Error", JOptionPane.ERROR_MESSAGE);
+		                return;
+		            }
+		            // Crear objeto Equipo
+		            Equipo equipo = new Equipo(i , texto); // ID comienza en 1
+		            temporalListEquipos.add(equipo);
+		        }
+
+		        // Imprimir los equipos creados en la consola (puedes procesarlos según necesites)
+		        for (Equipo equipo : temporalListEquipos) {
+		            System.out.println("ID: " + equipo.getId() + ", Nombre: " + equipo.getNombre());
+		        }
+
+		        // Agregar los equipos a la lista de la temporada
+		        temporada.setListEquipos(temporalListEquipos);
+		        JOptionPane.showMessageDialog(dialog, "Equipos guardados correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+		        dialog.dispose();
+		    });
+
+		    // Panel para el botón
+		    JPanel panelBoton = new JPanel();
+		    panelBoton.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5)); // Alineación central, 5px de espacio horizontal y vertical
+
+		    panelBoton.add(btnGuardar);
+
+		    // Scroll si hay muchos equipos
+		    JScrollPane scrollPane = new JScrollPane(panelEquipos);
+
+		    // Agregar componentes al diálogo
+		    dialog.add(scrollPane, BorderLayout.CENTER);
+		    dialog.add(panelBoton, BorderLayout.SOUTH);
+
+		    // Configurar tamaño y mostrar
+		    dialog.setSize(400, Math.min(600, 50 * numEquipos));
+		    dialog.setLocationRelativeTo(null);
+		    dialog.setVisible(true);
+		}
+
+
 		
 	// Método para introducir los nombres de los equipos y CREAR LOS OBJETOS EQUIPOS VERSION DINAMICA PARA RETO 2 POR TRABAJAR
 		private ArrayList<Equipo> crearListaEquipos() {

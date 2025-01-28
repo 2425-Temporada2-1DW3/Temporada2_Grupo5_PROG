@@ -6,17 +6,24 @@ import java.util.Objects;
 public class Jugador implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private String numFicha;
 	private String nombre;
 	private int edad;
 	private String posicion;
 	private int dorsal;
 	private String nacionalidad;
-	private int altura;
-	private int peso;
+	private double altura;
+	private double peso;
 	private int idFoto;
 	private int idEquipo;
 	private Fecha FechaNac;
-	private String dni;
+	
+	public String getNumFicha() {
+		return numFicha;
+	}
+	public void setNumFicha(String numFicha) {
+		this.numFicha = numFicha;
+	}
 	
 	public String getNombre() {
 		return nombre;
@@ -48,17 +55,24 @@ public class Jugador implements Serializable {
 	public void setNacionalidad(String nacionalidad) {
 		this.nacionalidad = nacionalidad;
 	}
-	public int getAltura() {
+	public double getAltura() {
 		return altura;
 	}
 	public void setAltura(int altura) {
 		this.altura = altura;
 	}
-	public int getPeso() {
+	public double getPeso() {
 		return peso;
 	}
 	public void setPeso(int peso) {
 		this.peso = peso;
+	}
+	
+	public int getIdEquipo() {
+		return idEquipo;
+	}
+	public void setIdEquipo(int idEquipo) {
+		this.idEquipo = idEquipo;
 	}
 	public int getIdFoto() {
 		return idFoto;
@@ -66,9 +80,18 @@ public class Jugador implements Serializable {
 	public void setIdFoto(int idFoto) {
 		this.idFoto = idFoto;
 	}
+	
+	public Fecha getFechaNac() {
+		return FechaNac;
+	}
+	
+	public void setFechaNac(Fecha FechaNac) {
+		this.FechaNac = FechaNac;
+	}
+	
 	//constructor defecto 
 	public Jugador () {
-		dni= "00000000j";
+		numFicha= "00000000j";
 		nombre= "Jugador por defecto";
 		edad = 19;
 		dorsal= 1;
@@ -82,7 +105,7 @@ public class Jugador implements Serializable {
 	}
 	//constructor copia 
 	public Jugador (Jugador j) {
-		dni= j.dni;
+		numFicha= j.numFicha;
 		nombre= j.nombre;
 		edad = j.edad;
 		dorsal= j.dorsal;
@@ -97,7 +120,7 @@ public class Jugador implements Serializable {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(dni);
+		return Objects.hash(numFicha);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -108,20 +131,21 @@ public class Jugador implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Jugador other = (Jugador) obj;
-		return Objects.equals(dni, other.dni);
+		return Objects.equals(numFicha, other.numFicha);
 	}
 	//constructor personalizado 
-	public Jugador (String dnI, String nom, int age, int dor, String position, String nacio, int height, int weight, int id, int day, int month, int year) {
-		dni= dnI;
+	public Jugador (String Ficha, String nom, int dor, String position, String nacio, double height, double weight, int day, int month, int year, int Equipo) {
+		numFicha = Ficha;
 		nombre= nom;
-		edad = age;
-		dorsal= dor;
-		posicion = position;
-		nacionalidad= nacio;  
+		nacionalidad= nacio;
+		FechaNac = new Fecha(day,month,year);
 		altura = height;
 		peso =weight;
-		idFoto= id;
-		FechaNac = new Fecha(day,month,year);
+		dorsal= dor;
+		posicion = position;
+		idEquipo= Equipo;
+		//idFoto= id;
+		//edad = age;
 	}
 	 @Override
 	    public String toString() {

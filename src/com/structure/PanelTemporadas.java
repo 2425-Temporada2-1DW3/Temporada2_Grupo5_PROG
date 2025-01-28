@@ -213,6 +213,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	        GeneradorTemporada generador = new GeneradorTemporada(); // Pasar la instancia actual de GestionTemporadav2
 
 	        generador.GenerarTemporada(nueva);
+	        generador.MostrarVentanaEquipos(nueva);
 	        
 	        // Agregar la nueva temporada a la lista
 	        listTemporadas.add(nueva);
@@ -326,55 +327,21 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	    int seleccion = tableTemporadas.getSelectedRow();
 
 	    if (seleccion == -1) {
-	    	parentFrame.mensaje("Selecciona una temporada antes de añadir un equipo",1);
+	        parentFrame.mensaje("Selecciona una temporada antes de añadir un equipo", 1);
 	        return;
 	    }
 
-	    // Crear cuadro de diálogo para ingresar datos del equipo
-	    JTextField txtIdEquipo = new JTextField();
-	    JTextField txtNombreEquipo = new JTextField();
+	    // Obtener la temporada seleccionada
+	    Temporada temporadaSeleccionada = listTemporadas.get(seleccion);
+	    GeneradorTemporada ObtenerMetodo = new GeneradorTemporada(); // Pasar la instancia actual de GestionTemporadav2
 
-    	parentFrame.formatearPanelDeOpcion();
+	    // Llamar al método MostrarVentanaEquipos para mostrar la ventana de ingreso de equipos
+	    ObtenerMetodo.MostrarVentanaEquipos(temporadaSeleccionada);
 
-	    Object[] inputs = {
-	        "ID del Equipo:", txtIdEquipo,
-	        "Nombre del Equipo:", txtNombreEquipo
-	    };
-	    txtIdEquipo.setBackground(colorbg);
-	    txtIdEquipo.setForeground(colortxt);
-	    txtNombreEquipo.setBackground(colorbg);
-	    txtNombreEquipo.setForeground(colortxt);
-
-	    int opcion = JOptionPane.showConfirmDialog(this, inputs, "Añadir Equipo", JOptionPane.OK_CANCEL_OPTION);
-
-	    if (opcion == JOptionPane.OK_OPTION) {
-	        try {
-
-	            int idEquipo = Integer.parseInt(txtIdEquipo.getText());
-	            String nombreEquipo = txtNombreEquipo.getText();
-
-	            // Verificar datos válidos
-	            if (nombreEquipo.isEmpty()) {
-	                throw new IllegalArgumentException("El nombre del equipo no puede estar vacío");
-	            }
-
-	            // Agregar equipo a la temporada seleccionada
-	            Temporada temporadaSeleccionada = listTemporadas.get(seleccion);
-	            Equipo nuevoEquipo = new Equipo(idEquipo, nombreEquipo);
-	            temporadaSeleccionada.getListEquipos().add(nuevoEquipo);
-
-	            parentFrame.mensaje("Equipo añadido exitosamente",2);
-
-	            // Actualizar la tabla
-	            ((TemporadaTableModel) tableTemporadas.getModel()).fireTableRowsUpdated(seleccion, seleccion);
-	        } catch (NumberFormatException e) {
-	        	parentFrame.mensaje("El ID del equipo debe ser un número válido",1);
-	        } catch (IllegalArgumentException e) {
-	        	parentFrame.mensaje(e.getMessage(),0);
-	        }
-	    }
+	    // Actualizar archivo después de añadir los equipos
 	    actualizarArchivo();
 	}
+
 	
 	private void actualizarArchivo() {
     	if (parentFrame.changes== true) {
