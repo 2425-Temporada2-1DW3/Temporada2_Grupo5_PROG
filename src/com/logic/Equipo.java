@@ -14,6 +14,9 @@ public class Equipo implements Serializable {
 	private int victorias;
 	private int derrotas;
 	private int totalPartidos;
+	
+	
+	
 	public ArrayList<Jugador> getListJugadores() {
 		return listJugadores;
 	}
