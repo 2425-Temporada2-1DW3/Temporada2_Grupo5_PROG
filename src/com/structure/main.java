@@ -32,6 +32,8 @@ public class main extends JFrame implements ActionListener {
 	public String userName;
 	public File userFile;
 	public File temporadasFile;
+	public File resourcesFolder;
+
 	public boolean changes= false;
 	private Log log = new Log();
 
@@ -58,6 +60,7 @@ public class main extends JFrame implements ActionListener {
     private JButton[] buttons = {btnMenuInicio, btnMenuTemporadas, btnMenuJugadores,btnMenuEquipos, btnMenuUsuarios,btnMenuSalir};
 	private JPanel contentPane = new JPanel(), LayoutPanel_1 = new JPanel(), LayoutPanel = new JPanel();
     public JLabel lblMensaje = new JLabel();
+
  
     
     public static void main(String[] args) {
@@ -66,9 +69,8 @@ public class main extends JFrame implements ActionListener {
                 try {
                     int userType = 4; // Tipo de usuario por defecto si no recibe un valor (
                     String userName = "Anonimo"; // Nombre de usuario por defecto
-                    File userFile = null;
-                    File temporadasFile = null;
-                    main frame = new main(userType,userName,userFile,temporadasFile); // Pasa usertype y username a la main
+                    
+                    main frame = new main(userType,userName); // Pasa usertype y username a la main
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -79,13 +81,16 @@ public class main extends JFrame implements ActionListener {
 
 
  
-    public main(int userType, String userName, File userFile, File temporadasFile) {
-    	
-    	// coje las variables de la clase login y la pasa a una variable definida en la clase main
+    public main(int userType, String userName) {
+     	// coje las variables de la clase login y la pasa a una variable definida en la clase main
         this.userType = userType;
         this.userName = userName; 
-        this.userFile = userFile;
-        this.temporadasFile = temporadasFile;
+	    File jarDir = new File(System.getProperty("user.dir"));
+	    this.resourcesFolder = new File(jarDir, "resources");
+	    this.userFile = new File(resourcesFolder, "usuario.ser");
+	    this.temporadasFile = new File(resourcesFolder, "temporada.ser");
+
+        
         
         // Cosas por defecto del Jframe
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

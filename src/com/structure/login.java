@@ -217,7 +217,7 @@ public class login extends JFrame implements ActionListener {
 
 			} else if (userPassCheck(gui_user, gui_pass)) {
 				Point location = getLocation();
-				main mainFrame = new main(userType, gui_user, userFile,temporadasFile);
+				main mainFrame = new main(userType, gui_user);
 				mainFrame.setLocation(location);
 				mainFrame.setVisible(true);
 				log.add("Intento de login exitoso, Usuario : " + gui_user + " Tipo de usuario: " + userType
@@ -232,7 +232,7 @@ public class login extends JFrame implements ActionListener {
 			}
 		} else if (o == btnLoginAnonimo) {
 			Point location = getLocation();
-			main mainFrame = new main(0, "Anonimo", userFile,temporadasFile);
+			main mainFrame = new main(0, "Anonimo");
 			mainFrame.setLocation(location);
 			mainFrame.setVisible(true);
 			dispose();
@@ -248,9 +248,7 @@ public class login extends JFrame implements ActionListener {
 
 	    // Check if usuario.ser exists
 	    if (!userFile.exists()) {
-	        lblError.setText("No se encontró el archivo de usuarios. Se creará uno nuevo al guardar cambios.");
-	        inicializarApp(resourcesFolder); // Create necessary files
-	        return;
+ 	        inicializarApp(resourcesFolder); // Create necessary files
 	    }
 
 	    // Load users from usuario.ser
@@ -294,16 +292,7 @@ public class login extends JFrame implements ActionListener {
 	        e.printStackTrace();
 	    }
 
-	    // Create temporada.ser as an empty file
-	    temporadasFile = new File(resourcesFolder, "temporada.ser");
-	    try (FileOutputStream fos = new FileOutputStream(temporadasFile);
-	         ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-	        oos.writeObject(null);
-	        System.out.println("Archivo temporada.ser creado exitosamente.");
-	    } catch (IOException e) {
-	        lblError.setText("Error al crear temporada.ser: " + e.getMessage());
-	        e.printStackTrace();
-	    }
+ 
 	}
 
 

@@ -720,8 +720,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 	    }
 	}
 
-
-	
+ 
 	@Override
  	public void actionPerformed(ActionEvent ae) {
 		Object o = ae.getSource();
