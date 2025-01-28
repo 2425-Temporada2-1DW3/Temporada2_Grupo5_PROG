@@ -213,13 +213,13 @@ public class main extends JFrame implements ActionListener {
         if (color == 0) {
             lblMensaje.setForeground(colorRed);
             log.add("Usuario " +userName+": [lblMensaje] "+msg,2);
-            msg = "ERROR : " + msg+".";
+            msg = "ERROR : " + msg;
             
         } else if (color == 1) {
             lblMensaje.setForeground(colorYellow);
             log.add("Usuario " +userName+": [lblMensaje] "+msg,1);
 
-            msg = "AVISO :" + msg+".";
+            msg = "AVISO :" + msg;
 
         	
         } else if (color ==2) {
@@ -273,44 +273,42 @@ public class main extends JFrame implements ActionListener {
     @Override
      public void actionPerformed(ActionEvent ae) {
         Object o = ae.getSource();
-        if (changes) {
+        if (changes && o == btnMenuInicio && o == btnMenuTemporadas && o == btnMenuJugadores && o == btnMenuUsuarios && o == btnMenuSalir ){
         	int resultado = panelDeOpcion( "Hay Datos Sin Guardar, Quieres salir?","Datos Sin Guardar");
             // Check user's choice
             if (resultado == JOptionPane.YES_OPTION) {
             	changes = false;
             }
 
-        }
-        if (!changes){
-            if (o == btnMenuInicio) {
-            	switchPanel(PanelInicio.class);
-            	btnMenuInicio.setEnabled(false);
-
-            } else if  (o == btnMenuTemporadas) {
-            	switchPanel(PanelTemporadas.class);
-            	btnMenuTemporadas.setEnabled(false);
-
-            } else if  (o == btnMenuJugadores) {
-            	switchPanel(PanelJugadores.class);
-            	btnMenuJugadores.setEnabled(false);
-            	
-            } else if  (o == btnMenuUsuarios) {
-            	switchPanel(PanelUsuarios.class);
-            	btnMenuUsuarios.setEnabled(false);
-            	
-            } else if (o == btnMenuSalir) {
-            	int resultado = panelDeOpcion("Desea Cerrar Sesion?","Cerrar Sesion");
-                // Check user's choice
-                if (resultado == JOptionPane.YES_OPTION) {
-                    Point location = getLocation(); // Obtener la posición actual
-                    login loginFrame = new login(); // Crear el nuevo frame y pasa la variable userType para saber que funcionalidad podra usar cada usuario
-                    loginFrame.setLocation(location); // Posicionar el nuevo frame en la misma ubicación
-                    loginFrame.setVisible(true); // Mostrar el nuevo frame
-                    dispose(); // Cerrar el frame actual (login)
-                }
-
-            	
-            }
+        } else {
+ 
+	        if (o == btnMenuInicio) {
+	        	switchPanel(PanelInicio.class);
+	        	btnMenuInicio.setEnabled(false);
+	
+	        } else if  (o == btnMenuTemporadas) {
+	        	switchPanel(PanelTemporadas.class);
+	        	btnMenuTemporadas.setEnabled(false);
+	
+	        } else if  (o == btnMenuJugadores) {
+	        	switchPanel(PanelJugadores.class);
+	        	btnMenuJugadores.setEnabled(false);
+	        	
+	        } else if  (o == btnMenuUsuarios) {
+	        	switchPanel(PanelUsuarios.class);
+	        	btnMenuUsuarios.setEnabled(false);
+	        	
+	        } else if (o == btnMenuSalir) {
+	        	int resultado = panelDeOpcion("Desea Cerrar Sesion?","Cerrar Sesion");
+	            // Check user's choice
+	            if (resultado == JOptionPane.YES_OPTION) {
+	                Point location = getLocation(); // Obtener la posición actual
+	                login loginFrame = new login(); // Crear el nuevo frame y pasa la variable userType para saber que funcionalidad podra usar cada usuario
+	                loginFrame.setLocation(location); // Posicionar el nuevo frame en la misma ubicación
+	                loginFrame.setVisible(true); // Mostrar el nuevo frame
+	                dispose(); // Cerrar el frame actual (login)
+	            }	
+	       }
         }
 
 	}

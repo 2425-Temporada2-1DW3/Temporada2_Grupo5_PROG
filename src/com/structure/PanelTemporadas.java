@@ -42,10 +42,11 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	private DefaultListModel<Temporada> dlm = new DefaultListModel<>();
 	private JButton btnCrearTemporada = 	new JButton("Crear Temporada");
     private JButton btnAnadirEquipo = 		new JButton("Añadir Equipo");
-    private JButton btnGestionEquipos = 	new JButton("Gestionar Equipos");
+    private JButton btnGestionEquipos = 	new JButton("Gest. Equipos");
     private JButton btnIniciarTemporada = 	new JButton("Iniciar Temporada");
-    private JButton btnFinalizarTemporada = new JButton("Finalizar Temporada");
-	
+    private JButton btnFinalizarTemporada = new JButton("Fin Temporada");
+    private JButton btnEliminarTemporada = new JButton("Eliminar Temporada");
+
     private JTable tableTemporadas; // Declarar la tabla como variable de instancia
 	private JTextField txtNombre,txtCantidadEquipos;
     private JScrollPane scrollPane;
@@ -110,12 +111,18 @@ public class PanelTemporadas extends JPanel implements ActionListener {
         buttonPanel.setBackground(colorbg);
 
         parentFrame.buttonCreate(btnCrearTemporada, 	buttonPanel, parentFrame.colorGreen);
-        parentFrame.buttonCreate(btnAnadirEquipo, 		buttonPanel, parentFrame.colorGreen);
-        parentFrame.buttonCreate(btnGestionEquipos, 	buttonPanel, parentFrame.colorYellow);
-        parentFrame.buttonCreate(btnIniciarTemporada, 	buttonPanel, parentFrame.colorBlue);
+        if(parentFrame.userType == 4) {
+            parentFrame.buttonCreate(btnEliminarTemporada, buttonPanel, parentFrame.colorRed);
+        }
+        parentFrame.buttonCreate(btnAnadirEquipo, 		buttonPanel, parentFrame.colorBlue);
+        parentFrame.buttonCreate(btnGestionEquipos, 	buttonPanel, parentFrame.colorBlue);
+        parentFrame.buttonCreate(btnIniciarTemporada, 	buttonPanel, parentFrame.colorYellow);
         parentFrame.buttonCreate(btnFinalizarTemporada, buttonPanel, parentFrame.colorRed);
+
         // cambio el actionlistener de los botones a el de esta clase
+ 
         btnCrearTemporada.addActionListener(this);
+        btnEliminarTemporada.addActionListener(this);
         btnAnadirEquipo.addActionListener(this);
         btnGestionEquipos.addActionListener(this);
         btnIniciarTemporada.addActionListener(this);
@@ -322,6 +329,31 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	    actualizarArchivo();
 	}
 	
+	private void eliminarTemporada() {
+	    // Get the selected row index
+	    int selectedRow = tableTemporadas.getSelectedRow();
+
+	    if (selectedRow == -1) {
+	        parentFrame.mensaje("No hay ninguna temporada seleccionada", 0);
+	        return;
+	    }
+
+	    // Confirm deletion with the user
+ 
+        listTemporadas.remove(selectedRow);
+
+        // Notify the table model about the removed row
+        ((TemporadaTableModel) tableTemporadas.getModel()).fireTableRowsDeleted(selectedRow, selectedRow);
+
+        // Update the persistent file
+        actualizarArchivo();
+
+        // Show success message
+        parentFrame.mensaje("Temporada eliminada", 1);
+        parentFrame.changes = true;
+  
+	}
+	
 	private void anadirEquipo() {
 	    // Verificar si hay una temporada seleccionada
 	    int seleccion = tableTemporadas.getSelectedRow();
@@ -457,6 +489,8 @@ public class PanelTemporadas extends JPanel implements ActionListener {
             	iniciarTemporada();
             } else if (o == btnFinalizarTemporada) {
             	finalizarTemporada();
+            } else if (o == btnEliminarTemporada) {
+            	eliminarTemporada();
             }
 	}
 }
