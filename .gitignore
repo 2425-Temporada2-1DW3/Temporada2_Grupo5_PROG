@@ -1,2 +1,4 @@
 /bin/
 consoleLog.log
+*.xml
+*.ser
