@@ -344,6 +344,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 
 	
 	private void actualizarArchivo() {
+		
     	if (parentFrame.changes== true) {
     		try (FileOutputStream fos = new FileOutputStream(parentFrame.temporadasFile);
                     ObjectOutputStream oos = new ObjectOutputStream(fos)){
@@ -364,7 +365,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
     
 	//metodo para cargar las temporadas
     private void cargarTemporadasDesdeArchivo() {
-    	try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(parentFrame.temporadasFile))) {
+     	try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(parentFrame.temporadasFile))) {
             while (true) {
                 try {
                     Temporada temp = (Temporada) ois.readObject();
