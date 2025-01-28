@@ -21,12 +21,10 @@ import com.logic.Partido;
 import com.logic.Temporada;
 
 import java.awt.FlowLayout;
-import java.awt.ScrollPane;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.EOFException;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -38,7 +36,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.awt.event.ActionEvent;
-import java.awt.Font;
 import javax.swing.BoxLayout;
 import java.awt.GridLayout;
 
@@ -50,7 +47,6 @@ public class PanelInicio extends JPanel implements ActionListener {
 	private int userType;
 	private Color colorbg;
 	private Color colortxt;
-	private String userName;
 	JPanel PanelJornadas;
 	JPanel PanelClasificacion;
 	private JPanel PanelTituloJornadas;
@@ -81,9 +77,22 @@ public class PanelInicio extends JPanel implements ActionListener {
 	private ArrayList<Equipo> Clasificacion;
 	private Temporada TemporadaSeleccionada;
 	private main parentFrame;
-	private JButton btnNewButton;
-	private JPanel panel_15;
-
+	private JPanel PanelContenedor;
+	private JLabel lblNewLabel;
+	private JPanel PanelContenido;
+	private JPanel panelMoverJornadas;
+	private JButton prevButton;
+	private JLabel numJornada;
+	private JButton nextButton;
+	private JPanel panelPartido2;
+	private JLabel partidoELoc1;
+	private JTextField pointsELoc1;
+	private JLabel partidoEVis1;
+	private JTextField pointsEVis1;
+	private JLabel partidoELoc2;
+	private JTextField pointsELoc2;
+	private JLabel partidoEVis2;
+	private JTextField pointsEVis2;
 	/**
 	 * Create the panel.
 	 */
@@ -95,8 +104,6 @@ public class PanelInicio extends JPanel implements ActionListener {
 		userType = parentFrame.userType;
 		colorbg = parentFrame.colorbg;
 		colortxt = parentFrame.colortxt;
-		userName = parentFrame.userName;
-
 		this.listTemporadas = new ArrayList<>();
 		this.listJornadas = new ArrayList<>();
 		cargarTemporadasDesdeArchivo();
@@ -231,12 +238,26 @@ public class PanelInicio extends JPanel implements ActionListener {
 		panelMoverJornadas.add(numJornada);
 		
 		nextButton = new JButton(">");
-
-		panel_14.add(nextButton);
+		panelMoverJornadas.add(nextButton);
 		nextButton.addActionListener(this);
-		panel_12 = new JPanel();
-		panel_1.add(panel_12, BorderLayout.SOUTH);
- 
+		
+		PanelBotones = new JPanel();
+		PanelJornadas.add(PanelBotones, BorderLayout.SOUTH);
+		//panel_14.add(nextButton);
+		
+		//panel_15 = new JPanel();
+		//panel_13.add(panel_15, BorderLayout.SOUTH);
+		
+		//btnNewButton = new JButton("Exportar");
+		//panel_15.add(btnNewButton);
+		//btnNewButton.addActionListener(new ActionListener() {
+		//	public void actionPerformed(ActionEvent e) {
+		//	}
+		//});
+		//nextButton.addActionListener(this);
+		//panel_12 = new JPanel();
+		//panel_1.add(panel_12, BorderLayout.SOUTH);
+    
 		btnSave = new JButton("Finalizar Jornada");
 
 		btnSave.addActionListener(this);
@@ -293,7 +314,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 		cargarTabla();
 		TemporadasIniciadas();
 		actualizarTabla();
-		
+		exportacion();
 
 	}
 
@@ -416,14 +437,10 @@ public class PanelInicio extends JPanel implements ActionListener {
 		jornadaSelect = Integer.parseInt(numJornada.getText());
 		Jornada jornadaActual = listJornadas.get(jornadaSelect - 1);
 		partidos = jornadaActual.getListPartidos();
-		String locales;
-		String visitantes;
 		String pointsLoc;
 		String pointsVis;
 		for (int counter = 0; counter < partidos.size(); counter++) {
 			Partido partido = partidos.get(counter);
-			locales = "partidoELoc" + counter;
-			visitantes = "partidoEVis" + counter;
 			pointsLoc = "pointsELoc" + counter;
 			pointsVis = "pointsEVis" + counter;
 
@@ -633,94 +650,78 @@ public class PanelInicio extends JPanel implements ActionListener {
 	}
 
 	private void exportacion() {
-	    CreadorXML XML = new CreadorXML();
-	    
-	    // Ruta base donde se guardarán los archivos XML
-	    String rutaBase = "C:\\xampp\\htdocs\\xml\\";
-	    
-	    for (int t = 0; t < listTemporadas.size(); t++) {
-	        Temporada temporada = listTemporadas.get(t);
-	        XML = new CreadorXML();
+		CreadorXML XML = new CreadorXML();
+		
+		
 
-	        ArrayList<Jornada> listJornadas = temporada.getListJornadas();
-	        XML.add("temporada", false, 0);
-	            XML.add("nombre", false, 1);
-	                XML.add(temporada.getNombre(), true, 2);
-	            XML.add("nombre", false, 1);
-	            XML.add("iniciado", false, 1);
-	                XML.add(Boolean.toString(temporada.isIniciado()), true, 2);
-	            XML.add("iniciado", false, 1);
-	            XML.add("finalizado", false, 1);
-	                XML.add(Boolean.toString(temporada.isFinalizado()), true, 2);
-	            XML.add("finalizado", false, 1);
-	            XML.add("jornadas", false, 1);
-	            
-	            for (int i = 0; i < temporada.getCantidadJornadas(); i++) {
-	                Jornada jornada = listJornadas.get(i);
-	                XML.add("jornada", false, 2);
-	                    XML.add("id_jornada", false, 3);
-	                        XML.add(Integer.toString(jornada.getid_jornada()), true, 4);
-	                    XML.add("id_jornada", false, 3);
-	                    XML.add("partidos", false, 3);
-	                    for (Partido partido : jornada.getListPartidos()) {
-	                        XML.add("partido", false, 4);
-	                            XML.add("equipos", false, 5);
-	                                XML.add("equipo_local", false, 6);
-	                                    XML.add("NombreLocal", false, 7);
-	                                    int idLocal = partido.getEquipoLoc();
-	                                        XML.add(nombre.get(idLocal).getNombre(), true, 8);
-	                                    XML.add("NombreLocal", false, 7);
-	                                    XML.add("puntuacion", false, 7);
-	                                        XML.add(Integer.toString(partido.getPuntuajeLoc()), true, 8);
-	                                    XML.add("puntuacion", false, 7);
-	                                XML.add("equipo_local", false, 6);
+		for (int t = 0; t < listTemporadas.size(); t++) {
+		    Temporada temporada = listTemporadas.get(t);
+		    XML = new CreadorXML();
 
-	                                XML.add("equipo_visitante", false, 6);
-	                                int idVis = partido.getEquipoVis();
-	                                    XML.add("nombreVisitante", false, 7);
-	                                        XML.add(nombre.get(idVis).getNombre(), true, 8);
-	                                    XML.add("nombreVisitante", false, 7);
-	                                    XML.add("puntuacion", false, 7);
-	                                        XML.add(Integer.toString(partido.getPuntuajeVis()), true, 8);
-	                                    XML.add("puntuacion", false, 7);
-	                                XML.add("equipo_visitante", false, 6);
-	                            XML.add("equipos", false, 5);
+		    ArrayList<Jornada> listJornadas = temporada.getListJornadas();
+		    XML.add("temporada", false, 0);
+		        XML.add("nombre", false, 1);
+		            XML.add(temporada.getNombre(), true, 2);
+		        XML.add("nombre", false, 1);
+		        XML.add("iniciado", false, 1);
+		            XML.add(Boolean.toString(temporada.isIniciado()), true, 2);
+		        XML.add("iniciado", false, 1);
+		        XML.add("finalizado", false, 1);
+		            XML.add(Boolean.toString(temporada.isFinalizado()), true, 2);
+		        XML.add("finalizado", false, 1);
+		        XML.add("jornadas", false, 1);
+		        
+		        for (int i = 0; i < temporada.getCantidadJornadas(); i++) {
+		            Jornada jornada = listJornadas.get(i);
+		            XML.add("jornada" , false, 2);
+		                XML.add("id_jornada", false, 3);
+		                    XML.add(Integer.toString(jornada.getid_jornada()), true, 4);
+		                XML.add("id_jornada", false, 3);
+		                XML.add("partidos", false, 3);
+		                for (Partido partido : jornada.getListPartidos()) {
+		                    XML.add("partido", false, 4);
+		                        XML.add("id", false, 5);
+		                            XML.add(Integer.toString(partido.getId()), true, 6);
+		                        XML.add("id", false, 5);
 
-	                        XML.add("partido", false, 4);
-	                    }
-	                    XML.add("partidos", false, 3);
-	                XML.add("jornada", false, 2);
-	            }
-	            XML.add("jornadas", false, 1);
-	            
-	            // Añadir la clasificación de la temporada
-	            ArrayList<Equipo> clasificacion = temporada.getClasificacion();
-	            XML.add("clasificacion", false, 1);
-	            for (int i = 0; i < clasificacion.size(); i++) {
-	                Equipo equipo = clasificacion.get(i);
-	                XML.add("equipo", false, 2);
-	                    XML.add("posicion", false, 3);
-	                        XML.add(Integer.toString(i + 1), true, 4);  // La posición es i + 1
-	                    XML.add("posicion", false, 3);
-	                    
-	                    XML.add("nombre", false, 3);
-	                        XML.add(equipo.getNombre(), true, 4);
-	                    XML.add("nombre", false, 3);
-	                    XML.add("puntosTotales", false, 3);
-	                    XML.add(Integer.toString(equipo.getPuntosTotales()), true, 4);
-	                    XML.add("puntosTotales", false, 3);
-	                XML.add("equipo", false, 2);
-	            }
-	            XML.add("clasificacion", false, 1);
-	            
-	        XML.add("temporada", false, 0);
+		                        XML.add("jugado", false, 5);
+		                            XML.add(Boolean.toString(partido.isJugado()), true, 6);
+		                        XML.add("jugado", false, 5);
 
-	        // Crear un archivo para cada temporada en la ruta especificada
-	        XML.file(rutaBase + listTemporadas.get(t).getNombre());
-	    }
+		                        XML.add("equipos", false, 5);
+		                            XML.add("equipo_local", false, 6);
+		                                XML.add("id", false, 7);
+		                                    XML.add(Integer.toString(partido.getEquipoLoc()), true, 8);
+		                                XML.add("id", false, 7);
+		                                XML.add("puntuacion", false, 7);
+		                                    XML.add(Integer.toString(partido.getPuntuajeLoc()), true, 8);
+		                                XML.add("puntuacion", false, 7);
+		                            XML.add("equipo_local", false, 6);
+
+		                            XML.add("equipo_visitante", false, 6);
+		                                XML.add("id", false, 7);
+		                                    XML.add(Integer.toString(partido.getEquipoVis()), true, 8);
+		                                XML.add("id", false, 7);
+		                                XML.add("puntuacion", false, 7);
+		                                    XML.add(Integer.toString(partido.getPuntuajeVis()), true, 8);
+		                                XML.add("puntuacion", false, 7);
+		                            XML.add("equipo_visitante", false, 6);
+		                        XML.add("equipos", false, 5);
+
+		                    XML.add("partido", false, 4);
+		                }
+		                XML.add("partidos", false, 3);
+		            XML.add("jornada" + (i + 1), false, 2);
+		        }
+		        XML.add("jornadas", false, 1);
+		    XML.add("temporada", false, 0);
+
+		    // Crear un archivo para cada temporada
+		    XML.file("temporada_" + (t + 1) );
+		}
+		 
 	}
-
- 
+	
 	@Override
  	public void actionPerformed(ActionEvent ae) {
 		Object o = ae.getSource();
@@ -795,7 +796,6 @@ public class PanelInicio extends JPanel implements ActionListener {
 
 		} else if (o == btnUpdateApp) {
 			guardarDatos();
-			exportacion();
 		}
 
 	}
