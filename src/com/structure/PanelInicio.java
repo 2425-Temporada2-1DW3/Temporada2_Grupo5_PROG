@@ -93,6 +93,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 	private JTextField pointsELoc2;
 	private JLabel partidoEVis2;
 	private JTextField pointsEVis2;
+	private JButton btnExport;
 	/**
 	 * Create the panel.
 	 */
@@ -263,11 +264,14 @@ public class PanelInicio extends JPanel implements ActionListener {
 		btnSave.addActionListener(this);
 		PanelBotones.add(btnSave);
 
-		btnUpdateApp = new JButton("Aplicar cambios en el sistema");
+		btnUpdateApp = new JButton("Aplicar cambios");
 
 		btnUpdateApp.addActionListener(this);
 		PanelBotones.add(btnUpdateApp);
-
+		
+		btnExport = new JButton("Exportar");
+		PanelBotones.add(btnExport);
+		btnExport.addActionListener(this);
 		// Inicializar PanelClasificacion
 		PanelClasificacion = new JPanel();
 		// Agregar panel_2 dentro de PanelContenido en la zona central
@@ -314,7 +318,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 		cargarTabla();
 		TemporadasIniciadas();
 		actualizarTabla();
-		exportacion();
+		
 
 	}
 
@@ -811,6 +815,8 @@ public class PanelInicio extends JPanel implements ActionListener {
 
 		} else if (o == btnUpdateApp) {
 			guardarDatos();
+		}else if(o== btnExport) {
+			exportacion();
 		}
 
 	}
