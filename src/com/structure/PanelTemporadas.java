@@ -376,10 +376,11 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 
 	
 	private void actualizarArchivo() {
-		
     	if (parentFrame.changes== true) {
+//    		try (FileOutputStream fos = new FileOutputStream("Temporada.ser");
     		try (FileOutputStream fos = new FileOutputStream(parentFrame.temporadasFile);
-                    ObjectOutputStream oos = new ObjectOutputStream(fos)){
+
+    				ObjectOutputStream oos = new ObjectOutputStream(fos)){
         		int length =listTemporadas.size();
         		int counter = 0;
         		while (counter <length) {
@@ -393,12 +394,16 @@ public class PanelTemporadas extends JPanel implements ActionListener {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
     		}
-    	}}
+    	}
+    	
+	}
     
 	//metodo para cargar las temporadas
     private void cargarTemporadasDesdeArchivo() {
-     	try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(parentFrame.temporadasFile))) {
-            while (true) {
+//    	try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("Temporada.ser"))) {
+            
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(parentFrame.temporadasFile))) {
+			while (true) {
                 try {
                     Temporada temp = (Temporada) ois.readObject();
                     listTemporadas.add(temp);
