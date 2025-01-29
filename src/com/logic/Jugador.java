@@ -15,7 +15,7 @@ public class Jugador implements Serializable {
 	private String nacionalidad;
 	private double altura;
 	private double peso;
-	private int idFoto;
+	private String idFoto;
 	private int idEquipo;
 	private Fecha FechaNac;
 	
@@ -75,10 +75,10 @@ public class Jugador implements Serializable {
 	public void setIdEquipo(int idEquipo) {
 		this.idEquipo = idEquipo;
 	}
-	public int getIdFoto() {
+	public String getIdFoto() {
 		return idFoto;
 	}
-	public void setIdFoto(int idFoto) {
+	public void setIdFoto(String idFoto) {
 		this.idFoto = idFoto;
 	}
 	
@@ -102,7 +102,7 @@ public class Jugador implements Serializable {
 		nacionalidad= "Española";
 		altura = 180;
 		peso =70;
-		idFoto= 01;
+		idFoto= "default";
 		idEquipo= 1;
 		FechaNac = new Fecha(1, 1, 2000);
 	}
@@ -146,7 +146,23 @@ public class Jugador implements Serializable {
 		dorsal= dor;
 		posicion = position;
 		idEquipo= Equipo;
-		idFoto= 0;
+		idFoto= "default";
+
+        // Cálculo de la edad basado en la fecha de nacimiento
+        this.edad = calcularEdad(FechaNac);
+	}	//constructor personalizado 
+	
+	public Jugador (String Ficha, String nom, int dor, String position, String nacio, double height, double weight, int day, int month, int year, int Equipo, String file) {
+		numFicha = Ficha;
+		nombre= nom;
+		nacionalidad= nacio;
+		FechaNac = new Fecha(day,month,year);
+		altura = height;
+		peso =weight;
+		dorsal= dor;
+		posicion = position;
+		idEquipo= Equipo;
+		idFoto= file;
 
         // Cálculo de la edad basado en la fecha de nacimiento
         this.edad = calcularEdad(FechaNac);
