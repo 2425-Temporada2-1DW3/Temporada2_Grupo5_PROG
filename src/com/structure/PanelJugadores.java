@@ -351,10 +351,10 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		columnModel.getColumn(0).setPreferredWidth(100);  // "Nº Ficha"
 		columnModel.getColumn(1).setPreferredWidth(150); // "Nombre"
 		columnModel.getColumn(2).setPreferredWidth(50);  // "Edad"
-		columnModel.getColumn(3).setPreferredWidth(100); // "Nacionalidad"
+		columnModel.getColumn(3).setPreferredWidth(125); // "Nacionalidad"
 		columnModel.getColumn(4).setPreferredWidth(50);  // "Altura"
 		columnModel.getColumn(5).setPreferredWidth(50);  // "Peso"
-		columnModel.getColumn(6).setPreferredWidth(100); // "Posición"
+		columnModel.getColumn(6).setPreferredWidth(75); // "Posición"
 		columnModel.getColumn(7).setPreferredWidth(100); // "Equipo"
 		
 		
@@ -416,6 +416,11 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		for (int i = 0; i < panelFormat.length; i++) {
 		    panelFormat[i].setBackground(colorbg);
 		}
+
+
+	    CrearJugadoresPrueba();
+		
+		
 	}
 	
 	
@@ -426,7 +431,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
         private static final long serialVersionUID = 1L;
         private String[] columnNames = {
             "Nº Ficha", "Nombre", "Edad", "Nacionalidad",
-            "Altura", "Peso","Dorsal", "Posición"
+            "Altura", "Peso","Dorsal", "Posición", "Equipo",
         };
 
         public JugadorTableModel(ArrayList<Jugador> listaJugadores) {
@@ -467,7 +472,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
                 case 5: return jugador.getPeso();
                 case 6: return jugador.getDorsal();
                 case 7: return jugador.getPosicion();
-//                case 7: return jugador.getIdEquipo();
+                case 8: return jugador.getIdEquipo();
                 default: return null;
             }
         }
@@ -566,6 +571,135 @@ public class PanelJugadores extends JPanel implements ActionListener {
 
         return numeroFicha;
     }
+    
+    public void CrearyModificarJugador() {
+        try {
+            // Obtener el número de ficha y validar
+            String numFicha = txtNumFicha.getText();
+            if (numFicha.isEmpty()) {
+                parentFrame.mensaje("El campo de número de ficha está vacío.", 0);
+                return;
+            }
+
+            // Validar campo de nombre
+            String nombre = txtNombre.getText();
+            if (nombre.isEmpty()) {
+                parentFrame.mensaje("El campo de nombre está vacío.", 0);
+                return;
+            }
+
+            // Validar campo de nacionalidad
+            String nacionalidad = txtNacionalidad.getText();
+            if (nacionalidad.isEmpty()) {
+                parentFrame.mensaje("El campo de nacionalidad está vacío.", 0);
+                return;
+            }
+
+            // Validar y dividir la fecha de nacimiento
+            String fechaNacimiento = txtFechaNacimiento.getText();
+            if (fechaNacimiento.isEmpty()) {
+                parentFrame.mensaje("El campo de fecha de nacimiento está vacío.", 0);
+                return;
+            }
+            String[] partesFecha = fechaNacimiento.split("/");
+            if (partesFecha.length != 3) {
+                parentFrame.mensaje("El formato de fecha debe ser DD/MM/AAAA.", 0);
+                return;
+            }
+            int day = Integer.parseInt(partesFecha[0]);
+            int month = Integer.parseInt(partesFecha[1]);
+            int year = Integer.parseInt(partesFecha[2]);
+
+            // Validar y convertir altura
+            if (txtAltura.getText().isEmpty()) {
+                parentFrame.mensaje("El campo de altura está vacío.", 0);
+                return;
+            }
+            double altura = Double.parseDouble(txtAltura.getText());
+
+            // Validar y convertir peso
+            if (txtPeso.getText().isEmpty()) {
+                parentFrame.mensaje("El campo de peso está vacío.", 0);
+                return;
+            }
+            double peso = Double.parseDouble(txtPeso.getText());
+
+            // Validar y convertir dorsal
+            if (txtNroDorsal.getText().isEmpty()) {
+                parentFrame.mensaje("El campo de dorsal está vacío.", 0);
+                return;
+            }
+            int dorsal = Integer.parseInt(txtNroDorsal.getText());
+
+            // Validar posición seleccionada
+            String posicion = (String) combxPosicion.getSelectedItem();
+            if (posicion == null || posicion.isEmpty()) {
+                parentFrame.mensaje("Debe seleccionar una posición.", 0);
+                return;
+            }
+
+            // Validar temporada seleccionada
+            int idTemporada = combxFiltrarTempo.getSelectedIndex();
+            if (idTemporada == -1 || idTemporada >= listTemporadas.size()) {
+                parentFrame.mensaje("Debe seleccionar una temporada válida.", 0);
+                return;
+            }
+            int idEquipoFiltrar = combFiltrarJugador.getSelectedIndex();
+            // Validar equipo seleccionado
+            int idEquipo = combxEquipo.getSelectedIndex();
+            if (idEquipo == -1) {
+                parentFrame.mensaje("Debe seleccionar un equipo.", 0);
+                return;
+            }
+
+            // Buscar si el jugador existe en la lista
+            Temporada temporadaSeleccionada = listTemporadas.get(idTemporada);
+            Equipo equipoSeleccionado = temporadaSeleccionada.getListEquipos().get(idEquipoFiltrar);
+            Jugador jugadorExistente = null;
+
+            for (Jugador jugador : equipoSeleccionado.getListJugadores()) {
+                if (jugador.getNumFicha().equals(numFicha)) {
+                    jugadorExistente = jugador;
+                    break;
+                }
+            }
+
+            if (jugadorExistente != null) {
+            	// Si el jugador existe, eliminarlo de la lista y modificar sus datos
+                equipoSeleccionado.getListJugadores().remove(jugadorExistente); // Eliminar jugador existente
+//                jugadorExistente.setNombre(nombre);
+//                jugadorExistente.setNacionalidad(nacionalidad);
+//                jugadorExistente.setFechaNac(new Fecha(day, month, year));
+//                jugadorExistente.setAltura(altura);
+//                jugadorExistente.setPeso(peso);
+//                jugadorExistente.setDorsal(dorsal);
+//                jugadorExistente.setPosicion(posicion);
+//                jugadorExistente.setIdEquipo(idEquipo);
+//                // Agregar el jugador actualizado a la lista
+                temporadaSeleccionada.getListEquipos().get(idEquipo).getListJugadores().add(new Jugador(numFicha, nombre, dorsal, posicion, nacionalidad, altura, peso, day, month, year, idEquipo));
+                parentFrame.mensaje("Jugador modificado correctamente.", 2);
+            } else {
+                // Si el jugador no existe, crearlo
+                Jugador nuevoJugador = new Jugador(numFicha, nombre, dorsal, posicion, nacionalidad, altura, peso, day, month, year, idEquipo);
+                equipoSeleccionado.getListJugadores().add(nuevoJugador);
+                parentFrame.mensaje("Jugador creado correctamente.", 2);
+            }
+
+            // Actualizar la tabla (el modelo de la tabla se actualizará)
+            ((JugadorTableModel) table.getModel()).fireTableDataChanged();
+            parentFrame.changes = true;
+
+            // Actualizar archivo si es necesario
+            actualizarArchivo();
+
+        } catch (NumberFormatException e) {
+            parentFrame.mensaje("Error al convertir un campo numérico. Verifique los datos ingresados.", 0);
+        } catch (Exception e) {
+            parentFrame.mensaje("Error inesperado: " + e.getMessage(), 0);
+            e.printStackTrace();
+        }
+    }
+
     
     public void CrearJugador() {
         try {
@@ -671,7 +805,43 @@ public class PanelJugadores extends JPanel implements ActionListener {
         }
         actualizarArchivo();
     }
+    
+    public void CrearJugadoresPrueba() {
+        // Verificar que haya temporadas y equipos disponibles
+        if (listTemporadas == null || listTemporadas.isEmpty()) {
+            parentFrame.mensaje("No hay temporadas disponibles", 0);
+            return;
+        }
 
+        // Seleccionar la temporada y el equipo donde se agregarán los jugadores (ejemplo: temporada 0, equipo 0)
+        Temporada temporadaSeleccionada = listTemporadas.get(0);
+        Equipo equipoSeleccionado = temporadaSeleccionada.getListEquipos().get(0);
+
+        // Crear jugadores de prueba y agregarlos a la lista del equipo seleccionado
+        equipoSeleccionado.getListJugadores().add(new Jugador("1001-1001A", "Carlos Lopez", 13, "Armador", "Argentina", 1.85, 82, 12, 11, 1995, 0));
+        equipoSeleccionado.getListJugadores().add(new Jugador("1001-1002B", "Javier Torres", 5, "Opuesto", "Portugal", 1.98, 84, 26, 11, 1998, 0));
+        equipoSeleccionado.getListJugadores().add(new Jugador("1001-1003C", "Luis Martinez", 1, "Receptor 1", "Brasil", 1.79, 97, 7, 1, 1990, 0));
+        equipoSeleccionado.getListJugadores().add(new Jugador("1001-1004D", "Juan Perez", 19, "Receptor 2", "Colombia", 2.05, 88, 10, 3, 1995, 0));
+        equipoSeleccionado.getListJugadores().add(new Jugador("1001-1005E", "Antonio Gomez", 20, "Central", "México", 1.79, 94, 15, 12, 1995, 0));
+        equipoSeleccionado.getListJugadores().add(new Jugador("1001-1006F", "Fernando Ruiz", 4, "Libero", "Argentina", 1.74, 83, 4, 8, 1996, 0));
+        equipoSeleccionado.getListJugadores().add(new Jugador("1001-1007G", "Manuel Diaz", 18, "Armador", "Chile", 2.01, 100, 16, 5, 1986, 0));
+        equipoSeleccionado.getListJugadores().add(new Jugador("1001-1008H", "Sergio Sanchez", 21, "Opuesto", "Perú", 1.74, 69, 8, 12, 1997, 0));
+        equipoSeleccionado.getListJugadores().add(new Jugador("1001-1009I", "David Hernandez", 29, "Receptor 1", "Bolivia", 1.96, 72, 8, 11, 1985, 0));
+        equipoSeleccionado.getListJugadores().add(new Jugador("1001-1010J", "Jorge Ramos", 22, "Receptor 2", "Paraguay", 1.99, 87, 4, 1, 1999, 0));
+        equipoSeleccionado.getListJugadores().add(new Jugador("1001-1011K", "Raul Fernandez", 11, "Central", "Ecuador", 2.00, 91, 14, 8, 1999, 0));
+        equipoSeleccionado.getListJugadores().add(new Jugador("1001-1012L", "Angel Gutierrez", 26, "Libero", "Venezuela", 1.85, 100, 23, 10, 1990, 0));
+
+        parentFrame.changes = true;
+        
+        // Actualizar la tabla
+        actualizarTabla();
+        actualizarArchivo();
+
+        // Mostrar mensaje de éxito
+        parentFrame.mensaje("Jugadores creados correctamente en la temporada y equipo seleccionados.", 2);
+    }
+
+    
     private void ModificarJugador() {
         // Verificar que haya temporadas y equipos en la lista
         if (listTemporadas == null || listTemporadas.isEmpty()) {
@@ -776,6 +946,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
 
             // Buscar el jugador y actualizar los valores
             if (jugadorSeleccionado.getNumFicha().equals(numFicha)) {
+//            	equipoSeleccionado.getListJugadores().remove(jugadorSeleccionado);
                 jugadorSeleccionado.setNombre(nombre);
                 jugadorSeleccionado.setNacionalidad(nacionalidad);
                 jugadorSeleccionado.setFechaNac(new Fecha(day, month, year));  // Usamos el setter para la fecha
@@ -784,7 +955,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
                 jugadorSeleccionado.setDorsal(dorsal);
                 jugadorSeleccionado.setPosicion(posicion);
                 jugadorSeleccionado.setIdEquipo(idEquipo);
-
+//                equipoSeleccionado.getListJugadores().add(jugadorSeleccionado);
                     // Actualizar la tabla (el modelo de la tabla se actualizará)
                     ((JugadorTableModel) table.getModel()).fireTableDataChanged();
 
@@ -912,10 +1083,13 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		Object o = e.getSource();
 
         if (o == btnCrearJugador) {
-        	CrearJugador();
+//        	CrearJugador();
+        	CrearyModificarJugador();
+			JOptionPane.showMessageDialog(this, "Jugador creado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         }
         else if (o == btnModificarJugador) {
-        	ModificarJugador();
+//        	ModificarJugador();
+        	CrearyModificarJugador();
 			actualizarArchivo();
 			JOptionPane.showMessageDialog(this, "Jugador Modificado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 	        

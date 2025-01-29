@@ -2,6 +2,7 @@ package com.logic;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Calendar;
 
 public class Jugador implements Serializable {
 
@@ -85,9 +86,11 @@ public class Jugador implements Serializable {
 		return FechaNac;
 	}
 	
-	public void setFechaNac(Fecha FechaNac) {
-		this.FechaNac = FechaNac;
-	}
+    public void setFechaNac(Fecha FechaNac) {
+        this.FechaNac = FechaNac;
+        // Recalcular la edad si se cambia la fecha de nacimiento
+        this.edad = calcularEdad(FechaNac);
+    }
 	
 	//constructor defecto 
 	public Jugador () {
@@ -119,20 +122,19 @@ public class Jugador implements Serializable {
 	}
 	
 	@Override
-	public int hashCode() {
-		return Objects.hash(numFicha);
-	}
-	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Jugador other = (Jugador) obj;
-		return Objects.equals(numFicha, other.numFicha);
+	    if (this == obj) return true;  // Si son el mismo objeto
+	    if (obj == null || getClass() != obj.getClass()) return false;  // Si el objeto es null o de clase diferente
+	    Jugador other = (Jugador) obj;
+	    return Objects.equals(numFicha, other.numFicha);  // Comparar numFicha
 	}
+
+	@Override
+	public int hashCode() {
+	    return Objects.hash(numFicha);  // Usar numFicha para calcular el hashCode
+	}
+
+
 	//constructor personalizado 
 	public Jugador (String Ficha, String nom, int dor, String position, String nacio, double height, double weight, int day, int month, int year, int Equipo) {
 		numFicha = Ficha;
@@ -144,9 +146,28 @@ public class Jugador implements Serializable {
 		dorsal= dor;
 		posicion = position;
 		idEquipo= Equipo;
-		//idFoto= id;
-		//edad = age;
+		idFoto= 0;
+
+        // Cálculo de la edad basado en la fecha de nacimiento
+        this.edad = calcularEdad(FechaNac);
 	}
+	
+    // Método para calcular la edad
+    private int calcularEdad(Fecha fechaNac) {
+        Calendar now = Calendar.getInstance();
+        int yearNow = now.get(Calendar.YEAR);
+        int monthNow = now.get(Calendar.MONTH) + 1; // Meses en Calendar van de 0 a 11
+        int dayNow = now.get(Calendar.DAY_OF_MONTH);
+        
+        int age = yearNow - fechaNac.getAno();
+        
+        // Ajustar si el cumpleaños aún no ha pasado este año
+        if (monthNow < fechaNac.getMes() || (monthNow == fechaNac.getMes() && dayNow < fechaNac.getDia())) {
+            age--; // No ha cumplido años aún este año
+        }
+        
+        return age;
+    }
 	
 	@Override
 	public String toString() {
