@@ -99,6 +99,7 @@ public class Equipo implements Serializable {
 	public Equipo (int ide, String nom) {
 		this.id= ide;
 		this.Nombre= nom;
+		this.listJugadores = new ArrayList<Jugador>();
 	}
 	public Equipo (int ide, String nom, int fecha, String coach, int win, int lose, int total, int totalPartido) {
 		id= ide;

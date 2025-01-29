@@ -58,13 +58,13 @@ public class Jugador implements Serializable {
 	public double getAltura() {
 		return altura;
 	}
-	public void setAltura(int altura) {
+	public void setAltura(double altura) {
 		this.altura = altura;
 	}
 	public double getPeso() {
 		return peso;
 	}
-	public void setPeso(int peso) {
+	public void setPeso(double peso) {
 		this.peso = peso;
 	}
 	
@@ -147,12 +147,26 @@ public class Jugador implements Serializable {
 		//idFoto= id;
 		//edad = age;
 	}
-	 @Override
-	    public String toString() {
-	        return "Jugador [nombre=" + nombre + ", edad=" + edad + ", posicion=" + posicion + ", dorsal=" + dorsal
-	                + ", nacionalidad=" + nacionalidad + ", altura=" + altura + ", peso=" + peso + ", idFoto=" + idFoto
-	                + ", idEquipo=" + idEquipo + ", fechaNac=" + FechaNac + "]";
-	    }
+	
+	@Override
+	public String toString() {
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("========== Información del Jugador ==========\n");
+	    sb.append("Número de Ficha: ").append(numFicha).append("\n");
+	    sb.append("Nombre: ").append(nombre).append("\n");
+	    sb.append("Edad: ").append(edad).append("\n");
+	    sb.append("Posición: ").append(posicion).append("\n");
+	    sb.append("Dorsal: ").append(dorsal).append("\n");
+	    sb.append("Nacionalidad: ").append(nacionalidad).append("\n");
+	    sb.append("Altura: ").append(altura).append(" m\n");
+	    sb.append("Peso: ").append(peso).append(" kg\n");
+	    sb.append("ID de Foto: ").append(idFoto).append("\n");
+	    sb.append("ID de Equipo: ").append(idEquipo).append("\n");
+	    sb.append("Fecha de Nacimiento: ").append(FechaNac != null ? FechaNac.toString() : "No registrada").append("\n");
+	    sb.append("---------------------------------------------\n");
+	    return sb.toString();
+	}
+
 	//@ToDo
 	public void cambiarDeEquipo() {
 		

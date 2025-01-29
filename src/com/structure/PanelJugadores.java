@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.BoxLayout;
@@ -27,16 +28,22 @@ import java.awt.event.ActionListener;
 import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumnModel;
 
 import com.logic.Jugador;
 import com.logic.Temporada;
 import com.logic.Equipo;
+import com.logic.Fecha;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -90,7 +97,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
 	private JPanel panel_4;
 	private JComboBox<Temporada> combxFiltrarTempo;
 	private JLabel lblNewLabel_10;
-	private JComboBox<Equipo> combFiltrarJugador;
+	private JComboBox<String> combFiltrarJugador;
 	private JButton btnBuscarJugador;
 	JLabel labelImagen;
 	ImageIcon icon;
@@ -100,6 +107,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
     private static int subContadorNumerico = 1001; // Inicializa el subcontador
     private static char letraActual = 'A'; // Inicializa la parte de la letra
 
+    private ArrayList<Jugador> JTablelistaJugadores;
     private ArrayList<Jugador> listJugadores;
     private ArrayList<Temporada> listTemporadas; // Lista de temporadas
     private ArrayList<Equipo> listEquipos; // Lista de equipos para combobox 
@@ -171,6 +179,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		gbc_btnModificarJugador.gridx = 1; // Cambiado a la columna 1 (después de la separación)
 		gbc_btnModificarJugador.gridy = 0;
 		panel.add(btnModificarJugador, gbc_btnModificarJugador);
+		btnModificarJugador.addActionListener(this);
 
 		// Botón "Añadir Jugador"
 		btnCrearJugador = new JButton("Crear Jugador");
@@ -203,6 +212,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		PanelContenidoJugador.add(lblNroFicha, "cell 0 1,grow");
 		
 		txtNumFicha = new JTextField();
+		txtNumFicha.setText("prueba");
 		PanelContenidoJugador.add(txtNumFicha, "cell 1 1,alignx left,aligny top");
 		txtNumFicha.setColumns(10);
 		
@@ -260,15 +270,6 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		
 		combxEquipo = new JComboBox<>();
 		combxEquipo.setEditable(true);
-		DefaultComboBoxModel<String> modelEquipo = new DefaultComboBoxModel<>();
-		modelEquipo.addElement("");
-		modelEquipo.addElement("Armador");
-		modelEquipo.addElement("Opuesto");
-		modelEquipo.addElement("Receptor1");
-		modelEquipo.addElement("Receptor2");
-		modelEquipo.addElement("Central");
-		modelEquipo.addElement("Libero");
-		combxEquipo.setModel(modelEquipo);
 		PanelContenidoJugador.add(combxEquipo, "cell 1 9,growx,aligny top");
 		
 		icon = new ImageIcon("media.jugadores/idFotodefault.png");
@@ -294,6 +295,9 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		combxPosicion.setModel(modelPosicion);
 		PanelContenidoJugador.add(combxPosicion, "cell 1 8,growx,aligny top");
 		
+
+		
+		
 		PanelListJugadores = new JPanel();
 		PanelContenedor.add(PanelListJugadores);
 		PanelListJugadores.setLayout(new BorderLayout(0, 0));
@@ -315,6 +319,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		
 		btnGuardarCambios = new JButton("Guardar Cambios");
 		panel_1.add(btnGuardarCambios);
+		btnGuardarCambios.addActionListener(this);
 		
 		panel_2 = new JPanel();
 		PanelListJugadores.add(panel_2, BorderLayout.CENTER);
@@ -330,7 +335,29 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		// Crear la tabla y asignar el modelo
 		table = new JTable(jugadorTableModel);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Selección de una sola fila
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		    @Override
+		    public void valueChanged(ListSelectionEvent e) {
+		        if (!e.getValueIsAdjusting()) {
+		            ReflejarSeleccionJugador(); // Llama al método cuando se selecciona una fila
+		        }
+		    }
+		});
+		
+		// Configurar el ancho de las columnas
+		TableColumnModel columnModel = table.getColumnModel();
 
+		// Establecer el ancho preferido de cada columna
+		columnModel.getColumn(0).setPreferredWidth(100);  // "Nº Ficha"
+		columnModel.getColumn(1).setPreferredWidth(150); // "Nombre"
+		columnModel.getColumn(2).setPreferredWidth(50);  // "Edad"
+		columnModel.getColumn(3).setPreferredWidth(100); // "Nacionalidad"
+		columnModel.getColumn(4).setPreferredWidth(50);  // "Altura"
+		columnModel.getColumn(5).setPreferredWidth(50);  // "Peso"
+		columnModel.getColumn(6).setPreferredWidth(100); // "Posición"
+		columnModel.getColumn(7).setPreferredWidth(100); // "Equipo"
+		
+		
 		// Formatear la tabla si tienes un método para eso (opcional)
 		parentFrame.formatearTabla(table); // Si no tienes este método, puedes omitir esta línea
 
@@ -349,7 +376,13 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		combxFiltrarTempo.setPreferredSize(new Dimension(150, 25)); // Establece un ancho de 150px y alto de 25px
 		panel_4.add(combxFiltrarTempo);
 		actualizarComboBox(combxFiltrarTempo, listTemporadas);
-
+		combxFiltrarTempo.addActionListener(e -> {
+		    Object selectedItem = combxFiltrarTempo.getSelectedItem();
+		    if (selectedItem != null) {
+		        actualizarComboBoxEquipo(selectedItem.toString(), listTemporadas);
+		        actualizarTabla();
+		    }
+		});
 		
 		lblNewLabel_10 = new JLabel("Filtrar:");
 		lblNewLabel_10.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -358,8 +391,13 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		combFiltrarJugador = new JComboBox<>();
 		combFiltrarJugador.setPreferredSize(new Dimension(150, 25)); // Establece un ancho de 150px y alto de 25px
 		panel_4.add(combFiltrarJugador);
-		actualizarComboBox(combFiltrarJugador, listEquipos);
-
+		combFiltrarJugador.addActionListener(e -> {
+		    Object selectedItem = combFiltrarJugador.getSelectedItem();
+		    if (selectedItem != null) {
+		        actualizarTabla();
+		    }
+		});
+		
 		
 		btnBuscarJugador = new JButton("Buscar");
 		panel_4.add(btnBuscarJugador);
@@ -378,28 +416,29 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		for (int i = 0; i < panelFormat.length; i++) {
 		    panelFormat[i].setBackground(colorbg);
 		}
-		
 	}
 	
 	
 	
     // Clase interna para el modelo de la tabla de jugadores
     class JugadorTableModel extends AbstractTableModel {
-
+    	ArrayList<Jugador>JTablelistaJugadores;
         private static final long serialVersionUID = 1L;
-        private ArrayList<Jugador> listaJugadores;
         private String[] columnNames = {
             "Nº Ficha", "Nombre", "Edad", "Nacionalidad",
-            "Altura(m)", "Peso (kg)", "Posición", "Equipo"
+            "Altura", "Peso","Dorsal", "Posición"
         };
 
         public JugadorTableModel(ArrayList<Jugador> listaJugadores) {
-            this.listaJugadores = listaJugadores;
+            if (listaJugadores == null) {
+                this.JTablelistaJugadores = new ArrayList<>(); // Inicializa una lista vacía
+            } else {
+                this.JTablelistaJugadores = listaJugadores;
+            }
         }
-
         @Override
         public int getRowCount() {
-            return listaJugadores.size();
+            return JTablelistaJugadores.size();
         }
 
         @Override
@@ -414,7 +453,10 @@ public class PanelJugadores extends JPanel implements ActionListener {
 
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
-            Jugador jugador = listaJugadores.get(rowIndex);
+        	if (rowIndex < 0 || rowIndex >= JTablelistaJugadores.size()) {
+                return null; // O lanzar una excepción personalizada
+            }
+        	Jugador jugador = JTablelistaJugadores.get(rowIndex);
             switch (columnIndex) {
                 case 0: return jugador.getNumFicha();
                 case 1: return jugador.getNombre();
@@ -423,14 +465,85 @@ public class PanelJugadores extends JPanel implements ActionListener {
                 //case 4: return jugador.getFechaNac(); // Devuelve el objeto Fecha
                 case 4: return jugador.getAltura();
                 case 5: return jugador.getPeso();
-                //case 6: return jugador.getDorsal();
-                case 6: return jugador.getPosicion();
-                case 7: return jugador.getIdEquipo();
+                case 6: return jugador.getDorsal();
+                case 7: return jugador.getPosicion();
+//                case 7: return jugador.getIdEquipo();
                 default: return null;
             }
         }
+        
+        
+     // Método para actualizar la lista de jugadores
+        public void setListaJugadores(ArrayList<Jugador> nuevaLista) {
+            this.JTablelistaJugadores = nuevaLista;
+            fireTableDataChanged(); // Notifica a la tabla que los datos han cambiado
+        }
     }
-    
+    private void ReflejarSeleccionJugador() {
+        // Verificar que haya temporadas y equipos en la lista
+        if (listTemporadas == null || listTemporadas.isEmpty()) {
+            parentFrame.mensaje("No hay temporadas disponibles", 0);
+            return;
+        }
+        
+        // Obtener el índice de la temporada seleccionada y el equipo seleccionado
+        int idTemporada = combxFiltrarTempo.getSelectedIndex();  // Índice de la temporada seleccionada
+        int idEquipo = combFiltrarJugador.getSelectedIndex();  // Índice del equipo seleccionado
+        
+        // Verificar que los índices sean válidos
+        if (idTemporada == -1 || idEquipo == -1 || idTemporada >= listTemporadas.size()) {
+            parentFrame.mensaje("Debe seleccionar una temporada y un equipo válidos", 0);
+            return;
+        }
+
+        // Obtener la temporada y el equipo seleccionados
+        Temporada temporadaSeleccionada = listTemporadas.get(idTemporada);
+        Equipo equipoSeleccionado = temporadaSeleccionada.getListEquipos().get(idEquipo);
+
+        // Verificar que el equipo seleccionado tiene jugadores
+        if (equipoSeleccionado.getListJugadores() == null || equipoSeleccionado.getListJugadores().isEmpty()) {
+            parentFrame.mensaje("No hay jugadores disponibles para el equipo seleccionado", 0);
+            return;
+        }
+
+        // Obtener el índice de la fila seleccionada en la tabla
+        int rowIndex = table.getSelectedRow();  // Obtiene la fila seleccionada de la tabla
+
+        // Verificar si se ha seleccionado una fila válida
+        if (rowIndex != -1) {
+            try {
+                // Obtener el jugador seleccionado de la lista de jugadores del equipo seleccionado
+                Jugador jugadorSeleccionado = equipoSeleccionado.getListJugadores().get(rowIndex); 
+
+                // Asignar los valores a los campos de texto
+                txtNumFicha.setText(jugadorSeleccionado.getNumFicha());
+                txtNombre.setText(jugadorSeleccionado.getNombre());
+                txtNacionalidad.setText(jugadorSeleccionado.getNacionalidad());
+                
+                // Formatear la fecha de nacimiento
+                Fecha fechaNac = jugadorSeleccionado.getFechaNac(); // Obtener la fecha de nacimiento
+                if (fechaNac != null) {
+                    String fechaFormateada = String.format("%02d/%02d/%02d", fechaNac.getDia(), fechaNac.getMes(), fechaNac.getAno() % 100);
+                    txtFechaNacimiento.setText(fechaFormateada);
+                } else {
+                    txtFechaNacimiento.setText(""); // Si no hay fecha de nacimiento, limpiar el campo
+                }
+                
+                txtAltura.setText(String.valueOf(jugadorSeleccionado.getAltura()));
+                txtPeso.setText(String.valueOf(jugadorSeleccionado.getPeso()));
+                txtNroDorsal.setText(String.valueOf(jugadorSeleccionado.getDorsal()));
+
+                // Asignar equipo y posición al ComboBox
+                combxEquipo.setSelectedIndex(jugadorSeleccionado.getIdEquipo()); // Suponiendo que el ID del equipo está en la posición correcta
+                combxPosicion.setSelectedItem(jugadorSeleccionado.getPosicion());
+
+            } catch (IndexOutOfBoundsException e) {
+                parentFrame.mensaje("No se ha seleccionado un jugador válido", 0);
+            }
+        }
+    }
+
+
     
     // Método para generar el siguiente número de ficha
     public static String generarNumeroFicha() {
@@ -454,29 +567,11 @@ public class PanelJugadores extends JPanel implements ActionListener {
         return numeroFicha;
     }
     
-	private void cargarTemporadasDesdeArchivo() {
-		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("Temporada.ser"))) {
-			while (true) {
-				try {
-					Temporada temp = (Temporada) ois.readObject();
-					listTemporadas.add(temp);
-				} catch (EOFException ex) {
-					break;
-				}
-			}
-		} catch (FileNotFoundException ex) {
-			parentFrame.mensaje("No se encontró el archivo de temporadas. Se creará uno nuevo al guardar cambios.", 2);
-
-		} catch (IOException | ClassNotFoundException ex) {
-			parentFrame.mensaje("Error al cargar temporadas: " + ex.getMessage(), 0);
-
-		}
-	}
-    
     public void CrearJugador() {
         try {
             // Generar número de ficha
-            String numFicha = generarNumeroFicha();
+//            String numFicha = generarNumeroFicha();
+        	String numFicha = txtNumFicha.getText();
 
             // Validar campo de nombre
             String nombre = txtNombre.getText();
@@ -534,6 +629,12 @@ public class PanelJugadores extends JPanel implements ActionListener {
                 parentFrame.mensaje("Debe seleccionar una posición.", 0);
                 return;
             }
+            // Validar temporada seleccionada
+            int idTemporada = combxFiltrarTempo.getSelectedIndex();
+            if (idTemporada == -1 || idTemporada >= listTemporadas.size()) {
+                parentFrame.mensaje("Debe seleccionar una temporada válida.", 0);
+                return;
+            }
 
             // Validar equipo seleccionado
             int idEquipo = combxEquipo.getSelectedIndex();
@@ -545,8 +646,9 @@ public class PanelJugadores extends JPanel implements ActionListener {
             // Crear el objeto Jugador con los valores obtenidos
             Jugador jugador = new Jugador(numFicha, nombre, dorsal, posicion, nacionalidad, altura, peso, day, month, year, idEquipo);
             
-            // Agregar el jugador a la lista
-            listJugadores.add(jugador);
+         // Agregar el jugador a la lista del equipo correspondiente
+            listTemporadas.get(idTemporada).getListEquipos().get(idEquipo).getListJugadores().add(jugador);
+            parentFrame.changes = true;
             
             // Actualizar la tabla
             actualizarTabla();
@@ -556,18 +658,170 @@ public class PanelJugadores extends JPanel implements ActionListener {
 
             // (Opcional) Mostrar el jugador creado en la consola
             System.out.println("Jugador creado: " + jugador);
-
+            System.out.println("Validar que esta dentro de la temporada: " + listTemporadas.get(idTemporada).getListEquipos().get(idEquipo).getListJugadores().contains(jugador));
+            System.out.println("Temporada ID: " + idTemporada);
+            System.out.println("Nombre Temporada: "+ listTemporadas.get(idTemporada).getNombre());
+            System.out.println(listTemporadas.get(idTemporada).getListEquipos().get(idEquipo).toString());
+            
         } catch (NumberFormatException e) {
             parentFrame.mensaje("Error al convertir un campo numérico. Verifique los datos ingresados.", 0);
         } catch (Exception e) {
             parentFrame.mensaje("Error inesperado: " + e.getMessage(), 0);
             e.printStackTrace();
         }
+        actualizarArchivo();
     }
 
+    private void ModificarJugador() {
+        // Verificar que haya temporadas y equipos en la lista
+        if (listTemporadas == null || listTemporadas.isEmpty()) {
+            parentFrame.mensaje("No hay temporadas disponibles", 0);
+            return;
+        }
+        
+        // Obtener el índice de la temporada seleccionada y el equipo seleccionado
+        int IDTemporada = combxFiltrarTempo.getSelectedIndex();  // Índice de la temporada seleccionada
+        int IDEquipo = combFiltrarJugador.getSelectedIndex();  // Índice del equipo seleccionado
+        
+        // Verificar que los índices sean válidos
+        if (IDTemporada == -1 || IDEquipo == -1 || IDTemporada >= listTemporadas.size()) {
+            parentFrame.mensaje("Debe seleccionar una temporada y un equipo válidos", 0);
+            return;
+        }
+
+        // Obtener la temporada y el equipo seleccionados
+        Temporada temporadaSeleccionada = listTemporadas.get(IDTemporada);
+        Equipo equipoSeleccionado = temporadaSeleccionada.getListEquipos().get(IDEquipo);
+
+        // Verificar que el equipo seleccionado tiene jugadores
+        if (equipoSeleccionado.getListJugadores() == null || equipoSeleccionado.getListJugadores().isEmpty()) {
+            parentFrame.mensaje("No hay jugadores disponibles para el equipo seleccionado", 0);
+            return;
+        }
+
+        // Obtener el índice de la fila seleccionada en la tabla
+        int rowIndex = table.getSelectedRow();  // Obtiene la fila seleccionada de la tabla
+
+        // Verificar si se ha seleccionado una fila
+        if (rowIndex != -1) {
+        	// Obtener el jugador seleccionado de la lista de jugadores del equipo seleccionado
+            Jugador jugadorSeleccionado = equipoSeleccionado.getListJugadores().get(rowIndex); 
+            
+            // Validar y obtener los valores de los campos
+            String numFicha = txtNumFicha.getText();
+
+            String nombre = txtNombre.getText();
+            if (nombre.isEmpty()) {
+                parentFrame.mensaje("El campo de nombre está vacío.", 0);
+                return;
+            }
+
+            String nacionalidad = txtNacionalidad.getText();
+            if (nacionalidad.isEmpty()) {
+                parentFrame.mensaje("El campo de nacionalidad está vacío.", 0);
+                return;
+            }
+
+            String fechaNacimiento = txtFechaNacimiento.getText();
+            if (fechaNacimiento.isEmpty()) {
+                parentFrame.mensaje("El campo de fecha de nacimiento está vacío.", 0);
+                return;
+            }
+            String[] partesFecha = fechaNacimiento.split("/");
+            if (partesFecha.length != 3) {
+                parentFrame.mensaje("El formato de fecha debe ser DD/MM/AAAA.", 0);
+                return;
+            }
+            int day = Integer.parseInt(partesFecha[0]);
+            int month = Integer.parseInt(partesFecha[1]);
+            int year = Integer.parseInt(partesFecha[2]);
+
+            if (txtAltura.getText().isEmpty()) {
+                parentFrame.mensaje("El campo de altura está vacío.", 0);
+                return;
+            }
+            double altura = Double.parseDouble(txtAltura.getText());
+
+            if (txtPeso.getText().isEmpty()) {
+                parentFrame.mensaje("El campo de peso está vacío.", 0);
+                return;
+            }
+            double peso = Double.parseDouble(txtPeso.getText());
+
+            if (txtNroDorsal.getText().isEmpty()) {
+                parentFrame.mensaje("El campo de dorsal está vacío.", 0);
+                return;
+            }
+            int dorsal = Integer.parseInt(txtNroDorsal.getText());
+
+            String posicion = (String) combxPosicion.getSelectedItem();
+            if (posicion == null || posicion.isEmpty()) {
+                parentFrame.mensaje("Debe seleccionar una posición.", 0);
+                return;
+            }
+
+            // Obtener el ID de la temporada seleccionada
+            int idTemporada = combxFiltrarTempo.getSelectedIndex();
+            if (idTemporada == -1 || idTemporada >= listTemporadas.size()) {
+                parentFrame.mensaje("Debe seleccionar una temporada válida.", 0);
+                return;
+            }
+
+            // Obtener el ID del equipo seleccionado
+            int idEquipo = combxEquipo.getSelectedIndex();
+            if (idEquipo == -1) {
+                parentFrame.mensaje("Debe seleccionar un equipo.", 0);
+                return;
+            }
+
+            // Buscar el jugador y actualizar los valores
+            if (jugadorSeleccionado.getNumFicha().equals(numFicha)) {
+                jugadorSeleccionado.setNombre(nombre);
+                jugadorSeleccionado.setNacionalidad(nacionalidad);
+                jugadorSeleccionado.setFechaNac(new Fecha(day, month, year));  // Usamos el setter para la fecha
+                jugadorSeleccionado.setAltura(altura);
+                jugadorSeleccionado.setPeso(peso);
+                jugadorSeleccionado.setDorsal(dorsal);
+                jugadorSeleccionado.setPosicion(posicion);
+                jugadorSeleccionado.setIdEquipo(idEquipo);
+
+                    // Actualizar la tabla (el modelo de la tabla se actualizará)
+                    ((JugadorTableModel) table.getModel()).fireTableDataChanged();
+
+                    // Mostrar mensaje de éxito
+                    parentFrame.mensaje("Jugador modificado correctamente.", 2);
+                    return;
+                }
+
+            // Si llegamos aquí, es que no encontramos el jugador con el numFicha proporcionado
+            parentFrame.mensaje("No se encontró un jugador con ese número de ficha.", 0);
+        } else {
+            parentFrame.mensaje("No se ha seleccionado un jugador.", 0);
+        }
+    }
+
+    
     private void actualizarTabla() {
-        // Notificar al modelo de la tabla que los datos han cambiado
-        ((JugadorTableModel) table.getModel()).fireTableDataChanged();
+        // Validar temporada seleccionada
+        int idTemporada = combxFiltrarTempo.getSelectedIndex();
+        if (idTemporada == -1 || idTemporada >= listTemporadas.size()) {
+            parentFrame.mensaje("Debe seleccionar una temporada válida.", 0);
+            return;
+        }
+
+        // Validar equipo seleccionado
+        int idEquipo = combFiltrarJugador.getSelectedIndex();
+        if (idEquipo == -1 || idEquipo >= listTemporadas.get(idTemporada).getListEquipos().size()) {
+            parentFrame.mensaje("Debe seleccionar un equipo válido.", 0);
+            return;
+        }
+
+        // Obtener la lista de jugadores del equipo seleccionado
+        ArrayList<Jugador> jugadores = listTemporadas.get(idTemporada).getListEquipos().get(idEquipo).getListJugadores();
+
+        // Actualizar el modelo de la tabla
+        JugadorTableModel model = (JugadorTableModel) table.getModel();
+        model.setListaJugadores(jugadores);
     }
     
     private <T> void actualizarComboBox(JComboBox<T> comboBox, java.util.List<T> listaDatos) {
@@ -580,7 +834,77 @@ public class PanelJugadores extends JPanel implements ActionListener {
             comboBox.setSelectedIndex(0);
         }
     }
+    
+    private void actualizarComboBoxEquipo(String temporadaSeleccionada, java.util.List<Temporada> listTemporadas) {
+        for (Temporada temporada : listTemporadas) {
+            if (temporada.getNombre().equals(temporadaSeleccionada)) {
+                // Obtén la lista de equipos
+                java.util.List<Equipo> listEquipos = temporada.getListEquipos();
 
+                // Modelo para combxEquipo
+                DefaultComboBoxModel<String> modeloEquipo = new DefaultComboBoxModel<>();
+                // Modelo para combFiltrarJugador
+                DefaultComboBoxModel<String> modeloFiltrarJugador = new DefaultComboBoxModel<>();
+
+                // Llena los modelos con los nombres de los equipos
+                for (Equipo equipo : listEquipos) {
+                    String equipoNombre = equipo.getNombre();
+                    modeloEquipo.addElement(equipoNombre);
+                    modeloFiltrarJugador.addElement(equipoNombre);
+                }
+
+                // Actualiza ambos JComboBox
+                combxEquipo.setModel(modeloEquipo);
+                combFiltrarJugador.setModel(modeloFiltrarJugador);
+
+                return; // Termina después de encontrar la temporada correspondiente
+            }
+        }
+        // Si no se encuentra, limpia ambos JComboBox
+        combxEquipo.setModel(new DefaultComboBoxModel<>());
+        combFiltrarJugador.setModel(new DefaultComboBoxModel<>());
+    }
+
+    private void actualizarArchivo() {
+		if (parentFrame.changes == true) {
+			try (FileOutputStream fos = new FileOutputStream(parentFrame.temporadasFile);
+					ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+				int length = listTemporadas.size();
+				int counter = 0;
+				while (counter < length) {
+					oos.writeObject(listTemporadas.get(counter));
+					counter++;
+				}
+				parentFrame.mensaje("Cambios guardados.", 2);
+
+				parentFrame.changes = false;
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				parentFrame.mensaje("Error al guardar", 0);
+
+			}
+		}
+    	}
+	//metodo para cargar las temporadas
+    private void cargarTemporadasDesdeArchivo() {
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(parentFrame.temporadasFile))) {
+			while (true) {
+				try {
+					Temporada temp = (Temporada) ois.readObject();
+					listTemporadas.add(temp);
+				} catch (EOFException ex) {
+					break;
+				}
+			}
+		} catch (FileNotFoundException ex) {
+			parentFrame.mensaje("No se encontró el archivo de temporadas. Se creará uno nuevo al guardar cambios.", 2);
+
+		} catch (IOException | ClassNotFoundException ex) {
+			parentFrame.mensaje("Error al cargar temporadas: " + ex.getMessage(), 0);
+
+		}
+    }
 
     
 	@Override
@@ -590,6 +914,17 @@ public class PanelJugadores extends JPanel implements ActionListener {
         if (o == btnCrearJugador) {
         	CrearJugador();
         }
+        else if (o == btnModificarJugador) {
+        	ModificarJugador();
+			actualizarArchivo();
+			JOptionPane.showMessageDialog(this, "Jugador Modificado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+	        
+        }
+        else if (o == btnGuardarCambios) {
+			actualizarArchivo();
+			JOptionPane.showMessageDialog(this, "Jugadores guardados correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+	        
+		}
 		
 	}
 }
