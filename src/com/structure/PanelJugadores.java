@@ -362,7 +362,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		columnModel.getColumn(4).setPreferredWidth(50);  // "Altura"
 		columnModel.getColumn(5).setPreferredWidth(50);  // "Peso"
 		columnModel.getColumn(6).setPreferredWidth(75); // "Posición"
-		columnModel.getColumn(7).setPreferredWidth(100); // "Equipo"
+//		columnModel.getColumn(7).setPreferredWidth(100); // "Equipo"
 		
 		
 		// Formatear la tabla si tienes un método para eso (opcional)
@@ -438,7 +438,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
         private static final long serialVersionUID = 1L;
         private String[] columnNames = {
             "Nº Ficha", "Nombre", "Edad", "Nacionalidad",
-            "Altura", "Peso","Dorsal", "Posición", "Equipo",
+            "Altura", "Peso","Dorsal", "Posición",
         };
 
         public JugadorTableModel(ArrayList<Jugador> listaJugadores) {
@@ -479,7 +479,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
                 case 5: return jugador.getPeso();
                 case 6: return jugador.getDorsal();
                 case 7: return jugador.getPosicion();
-                case 8: return jugador.getIdEquipo();
+//                case 8: return jugador.getIdEquipo();
                 default: return null;
             }
         }
