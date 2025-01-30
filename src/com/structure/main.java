@@ -294,7 +294,11 @@ public class main extends JFrame implements ActionListener {
             	switchPanel(PanelJugadores.class);
             	btnMenuJugadores.setEnabled(false);
             	
-            } else if  (o == btnMenuUsuarios) {
+            } else if  (o == btnMenuEquipos) {
+            	switchPanel(PanelEquipos.class);
+            	btnMenuEquipos.setEnabled(false);
+            	
+            }  else if  (o == btnMenuUsuarios) {
             	switchPanel(PanelUsuarios.class);
             	btnMenuUsuarios.setEnabled(false);
             	

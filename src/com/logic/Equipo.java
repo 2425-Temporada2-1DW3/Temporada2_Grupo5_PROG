@@ -14,7 +14,7 @@ public class Equipo implements Serializable {
 	private int victorias;
 	private int derrotas;
 	private int totalPartidos;
-	
+	private String idFoto;
 	
 	
 	public ArrayList<Jugador> getListJugadores() {
@@ -84,6 +84,7 @@ public class Equipo implements Serializable {
 		derrotas = 0;
 		puntosTotales=0;
 		totalPartidos= 0;
+		idFoto = "idFotodefault";
 	}
 	public Equipo (Equipo e) {
 		id= e.id;
@@ -95,11 +96,14 @@ public class Equipo implements Serializable {
 		derrotas = e.derrotas;
 		puntosTotales=e.puntosTotales;
 		totalPartidos = e.totalPartidos;
+		idFoto = "idFotodefault";
 	}
 	public Equipo (int ide, String nom) {
 		this.id= ide;
 		this.Nombre= nom;
 		this.listJugadores = new ArrayList<Jugador>();
+		this.idFoto = "idFotodefault";
+		
 	}
 	public Equipo (int ide, String nom, int fecha, String coach, int win, int lose, int total, int totalPartido) {
 		id= ide;
@@ -111,6 +115,7 @@ public class Equipo implements Serializable {
 		derrotas = lose;
 		puntosTotales=total;
 		totalPartidos= totalPartido;
+		this.idFoto = "idFotodefault";
 	}
 	public void addPoints() {
 		victorias += 1;
@@ -182,6 +187,12 @@ public class Equipo implements Serializable {
 	}
 	public void agregarPuntostotales(int punto) {
 		puntosTotales += punto;
+	}
+	public String getIdFoto() {
+		return idFoto;
+	}
+	public void setIdFoto(String idFoto) {
+		this.idFoto = idFoto;
 	}
 
 }
