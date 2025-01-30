@@ -102,7 +102,7 @@ public class Jugador implements Serializable {
 		nacionalidad= "Española";
 		altura = 180;
 		peso =70;
-		idFoto= "default";
+		idFoto= "idFotodefault";
 		idEquipo= 1;
 		FechaNac = new Fecha(1, 1, 2000);
 	}
@@ -146,7 +146,7 @@ public class Jugador implements Serializable {
 		dorsal= dor;
 		posicion = position;
 		idEquipo= Equipo;
-		idFoto= "default";
+		idFoto= "idFotodefault";
 
         // Cálculo de la edad basado en la fecha de nacimiento
         this.edad = calcularEdad(FechaNac);

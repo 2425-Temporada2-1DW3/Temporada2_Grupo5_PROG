@@ -280,35 +280,42 @@ public class main extends JFrame implements ActionListener {
             	changes = false;
             }
 
-        } else {
- 
-	        if (o == btnMenuInicio) {
-	        	switchPanel(PanelInicio.class);
-	        	btnMenuInicio.setEnabled(false);
-	
-	        } else if  (o == btnMenuTemporadas) {
-	        	switchPanel(PanelTemporadas.class);
-	        	btnMenuTemporadas.setEnabled(false);
-	
-	        } else if  (o == btnMenuJugadores) {
-	        	switchPanel(PanelJugadores.class);
-	        	btnMenuJugadores.setEnabled(false);
-	        	
-	        } else if  (o == btnMenuUsuarios) {
-	        	switchPanel(PanelUsuarios.class);
-	        	btnMenuUsuarios.setEnabled(false);
-	        	
-	        } else if (o == btnMenuSalir) {
-	        	int resultado = panelDeOpcion("Desea Cerrar Sesion?","Cerrar Sesion");
-	            // Check user's choice
-	            if (resultado == JOptionPane.YES_OPTION) {
-	                Point location = getLocation(); // Obtener la posición actual
-	                login loginFrame = new login(); // Crear el nuevo frame y pasa la variable userType para saber que funcionalidad podra usar cada usuario
-	                loginFrame.setLocation(location); // Posicionar el nuevo frame en la misma ubicación
-	                loginFrame.setVisible(true); // Mostrar el nuevo frame
-	                dispose(); // Cerrar el frame actual (login)
-	            }	
-	       }
+        }
+        if (!changes){
+            if (o == btnMenuInicio) {
+            	switchPanel(PanelInicio.class);
+            	btnMenuInicio.setEnabled(false);
+
+            } else if  (o == btnMenuTemporadas) {
+            	switchPanel(PanelTemporadas.class);
+            	btnMenuTemporadas.setEnabled(false);
+
+            } else if  (o == btnMenuJugadores) {
+            	switchPanel(PanelJugadores.class);
+            	btnMenuJugadores.setEnabled(false);
+            	
+            } else if  (o == btnMenuEquipos) {
+            	switchPanel(PanelEquipos.class);
+            	btnMenuEquipos.setEnabled(false);
+            	
+            }  else if  (o == btnMenuUsuarios) {
+            	switchPanel(PanelUsuarios.class);
+            	btnMenuUsuarios.setEnabled(false);
+            	
+            } else if (o == btnMenuSalir) {
+            	int resultado = panelDeOpcion("Desea Cerrar Sesion?","Cerrar Sesion");
+                // Check user's choice
+                if (resultado == JOptionPane.YES_OPTION) {
+                    Point location = getLocation(); // Obtener la posición actual
+                    login loginFrame = new login(); // Crear el nuevo frame y pasa la variable userType para saber que funcionalidad podra usar cada usuario
+                    loginFrame.setLocation(location); // Posicionar el nuevo frame en la misma ubicación
+                    loginFrame.setVisible(true); // Mostrar el nuevo frame
+                    dispose(); // Cerrar el frame actual (login)
+                }
+
+            	
+            }
+
         }
 
 	}
