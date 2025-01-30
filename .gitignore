@@ -2,3 +2,6 @@
 consoleLog.log
 *.xml
 *.ser
+resources/temporada.ser
+resources/usuario.ser
+*.ser

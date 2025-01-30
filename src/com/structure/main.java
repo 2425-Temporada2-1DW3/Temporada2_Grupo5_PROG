@@ -213,13 +213,13 @@ public class main extends JFrame implements ActionListener {
         if (color == 0) {
             lblMensaje.setForeground(colorRed);
             log.add("Usuario " +userName+": [lblMensaje] "+msg,2);
-            msg = "ERROR : " + msg+".";
+            msg = "ERROR : " + msg;
             
         } else if (color == 1) {
             lblMensaje.setForeground(colorYellow);
             log.add("Usuario " +userName+": [lblMensaje] "+msg,1);
 
-            msg = "AVISO :" + msg+".";
+            msg = "AVISO :" + msg;
 
         	
         } else if (color ==2) {
@@ -273,7 +273,7 @@ public class main extends JFrame implements ActionListener {
     @Override
      public void actionPerformed(ActionEvent ae) {
         Object o = ae.getSource();
-        if (changes) {
+        if (changes && o == btnMenuInicio && o == btnMenuTemporadas && o == btnMenuJugadores && o == btnMenuUsuarios && o == btnMenuSalir ){
         	int resultado = panelDeOpcion( "Hay Datos Sin Guardar, Quieres salir?","Datos Sin Guardar");
             // Check user's choice
             if (resultado == JOptionPane.YES_OPTION) {
@@ -315,6 +315,7 @@ public class main extends JFrame implements ActionListener {
 
             	
             }
+
         }
 
 	}
