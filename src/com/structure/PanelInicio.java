@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 import com.logic.CreadorXML;
 import com.logic.Equipo;
 import com.logic.Jornada;
+import com.logic.Log;
 import com.logic.Partido;
 import com.logic.Temporada;
 
@@ -38,6 +39,14 @@ import java.util.Map;
 import java.awt.event.ActionEvent;
 import javax.swing.BoxLayout;
 import java.awt.GridLayout;
+import com.itextpdf.*;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.*;
 
 public class PanelInicio extends JPanel implements ActionListener {
 	// creamos los maps para hacer que el contenido de la pagina sea dinamico
@@ -95,6 +104,9 @@ public class PanelInicio extends JPanel implements ActionListener {
 	private JTextField pointsEVis2;
 	private JButton btnExport;
 	private JButton btnPrintPdf;
+	private Log log = new Log();
+
+	
 	/**
 	 * Create the panel.
 	 */
@@ -262,13 +274,15 @@ public class PanelInicio extends JPanel implements ActionListener {
 		btnExport.setBackground(colorbg);
 		btnExport.setForeground(colortxt);
 		btnExport.setFont(parentFrame.fuenteDefecto);
-		
+		btnExport.addActionListener(this);
+
 		btnPrintPdf = new JButton("Imprimir PDF");
 		PanelBotones.add(btnPrintPdf);
-		btnExport.addActionListener(this);
 		btnPrintPdf.setBackground(colorbg);
 		btnPrintPdf.setForeground(colortxt);
 		btnPrintPdf.setFont(parentFrame.fuenteDefecto);
+		btnPrintPdf.addActionListener(this);
+
 		// Inicializar PanelClasificacion
 		PanelClasificacion = new JPanel();
 		// Agregar panel_2 dentro de PanelContenido en la zona central
@@ -744,6 +758,51 @@ public class PanelInicio extends JPanel implements ActionListener {
 	    parentFrame.mensaje("Exportacion ejecutada con exito", 2);
 	}
 	
+    private void exportacionPdf(JTable jTable) {
+        Document document = new Document();
+        String nombreTemporada = comboBox.getSelectedItem().toString();
+        System.out.println("exportacion");
+        try {
+            String filePath = "clasificacion_"+nombreTemporada+".pdf";
+            PdfWriter.getInstance(document, new FileOutputStream(filePath));
+            document.open();
+            
+            // Agregar título
+            Font fontTitle = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
+            Paragraph title = new Paragraph("Clasificacion de : "+nombreTemporada  , fontTitle);
+            title.setAlignment(Element.ALIGN_CENTER);
+            document.add(title);
+            document.add(new Paragraph("\n"));
+            
+            // Crear tabla con el número de columnas del JTable
+            int columnCount = jTable.getColumnCount();
+            PdfPTable table = new PdfPTable(columnCount);
+            table.setWidthPercentage(100);
+            
+            // Encabezados
+            Font fontHeader = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
+            for (int i = 0; i < columnCount; i++) {
+                PdfPCell cell = new PdfPCell(new Phrase(jTable.getColumnName(i), fontHeader));
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                table.addCell(cell);
+            }
+            
+            // Agregar datos de la JTable
+            int rowCount = jTable.getRowCount();
+            for (int i = 0; i < rowCount; i++) {
+                for (int j = 0; j < columnCount; j++) {
+                    table.addCell(jTable.getValueAt(i, j).toString());
+                }
+            }
+            
+            document.add(table);
+            document.close();
+            parentFrame.mensaje("PDF generado correctamente en: " + filePath+" ",2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 	@Override
  	public void actionPerformed(ActionEvent ae) {
 		Object o = ae.getSource();
@@ -820,6 +879,9 @@ public class PanelInicio extends JPanel implements ActionListener {
 			guardarDatos();
 		}else if(o== btnExport) {
 			exportacion();
+
+		}else if (o == btnPrintPdf) {
+			exportacionPdf(table);
 		}
 
 	}
