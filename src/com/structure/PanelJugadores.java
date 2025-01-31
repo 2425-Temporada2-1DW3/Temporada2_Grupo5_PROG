@@ -54,10 +54,7 @@ import javax.swing.JTable;
 public class PanelJugadores extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	private int userType;
-	private Color colorbg;
-	private Color colortxt;
-	private String userName;
+ 
 	private main parentFrame;
 	JPanel PanelContenedor;
 	JPanel PanelDatosJugador;
@@ -131,17 +128,13 @@ public class PanelJugadores extends JPanel implements ActionListener {
 	public PanelJugadores(main parentFrame) {
 		// guarda los valores fuera de esta funcion por si se necesitan acceder en otro sitio
 		this.parentFrame = parentFrame;
-	    userType = parentFrame.userType;
-	    colorbg = parentFrame.colorbg;
-	    colortxt = parentFrame.colortxt;
-	    userName = parentFrame.userName;
+ 
 	    this.listTemporadas = new ArrayList<>();
 	    this.listEquipos = new ArrayList<>();
 	    cargarTemporadasDesdeArchivo();
 	    
 		// Cambia color del Jpanel
-		setBackground(colorbg);
-		setLayout(new BorderLayout(0, 0));
+ 		setLayout(new BorderLayout(0, 0));
 		
 		// Crear la lista de jugadores
         listJugadores = crearListaJugadores();
@@ -370,7 +363,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
 
 		// Agregar la tabla al JScrollPane
 		scrollPane = new JScrollPane(table);
-		scrollPane.getViewport().setBackground(colorbg);
+        parentFrame.formatearScrollPane(scrollPane);
 
 		// Añadir el JScrollPane al panel deseado
 		panel_3.add(scrollPane, BorderLayout.CENTER);
@@ -409,20 +402,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		btnBuscarJugador = new JButton("Buscar");
 		panel_4.add(btnBuscarJugador);
 
-		JComponent labelFormat[] = { lblTituloDatosJugador, lblTituloTablaJugadores, lblNroFicha, lblNombreJug, lblNacionalidad, lblFechaNacimiento, lblAltura, lblPeso, lblNroDorsal, lblPosicion, lblEquipo, lblNewLabel_10 };
-		JComponent panelFormat[] = { PanelContenedor, PanelDatosJugador, Cabecera, PanelContenidoJugador, PanelListJugadores, Cabecera2, panel, panel_1, panel_2, panel_3, panel_4 };
-
-		// Loop through labelFormat and apply properties
-		for (int i = 0; i < labelFormat.length; i++) {
-		    labelFormat[i].setBackground(colorbg);
-		    labelFormat[i].setForeground(colortxt);
-		    labelFormat[i].setFont(parentFrame.fuenteDefecto);
-		}
-
-		// Loop through panelFormat and apply properties
-		for (int i = 0; i < panelFormat.length; i++) {
-		    panelFormat[i].setBackground(colorbg);
-		}
+ 
 
 
 	    CrearJugadoresPrueba();

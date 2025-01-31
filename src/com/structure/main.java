@@ -3,7 +3,9 @@ package com.structure;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.JTableHeader;
@@ -20,6 +22,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.awt.BorderLayout;
 import java.awt.Color;
+
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import java.awt.FlowLayout;
 
@@ -99,29 +103,26 @@ public class main extends JFrame implements ActionListener {
 		setBounds(100, 100, 1000, 562);
 		
 		// Paneles de orden por defecto
-		contentPane.setBackground(colorbg);
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+ 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
-		LayoutPanel.setBackground(colorbg);
-		contentPane.add(LayoutPanel, BorderLayout.NORTH);
+ 		contentPane.add(LayoutPanel, BorderLayout.NORTH);
 		LayoutPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 	
-		LayoutPanel_1.setBackground(colorbg);
-		contentPane.add(LayoutPanel_1, BorderLayout.CENTER);
+ 		contentPane.add(LayoutPanel_1, BorderLayout.CENTER);
 		LayoutPanel_1.setLayout(new BorderLayout(0, 0));
 		
-		// Para monstar mensajes de error
+		// Formatear Fuente y colores
+        formatearObjetos(); // Formateo por defecto
+        
+        
         lblMensaje.setFont(new Font("Consolas", Font.PLAIN, 13));
 
-		
-		
-		
 		// Generar los 5 Botones de menu
 		if (userType == 2 || userType == 4) {
 			for (JButton button : buttons) {
-				buttonCreate(button		  ,LayoutPanel,colorbg);
+				buttonCreate(button,LayoutPanel,colorbg);
 			}
 		} else if (userType == 1){
 			buttonCreate(btnMenuInicio	  ,LayoutPanel,colorbg);
@@ -195,9 +196,8 @@ public class main extends JFrame implements ActionListener {
         }
     }
    
-
     private int panelDeOpcion(String msg, String titulo) {
-    	formatearPanelDeOpcion();
+    	formatearObjetos();
     	log.add("Panel de opcion :"+titulo+" ha sido cargado",0);
         int result = JOptionPane.showConfirmDialog(
         		
@@ -239,16 +239,6 @@ public class main extends JFrame implements ActionListener {
     	changes = cambios;
     }
     
-    public void formatearPanelDeOpcion() {
-    	UIManager.put("Panel.background", colorbg);
-    	UIManager.put("OptionPane.background", colorbg);
-    	UIManager.put("OptionPane.messageForeground", colortxt);
-    	UIManager.put("Button.background", colorbg);
-    	UIManager.put("Button.foreground", colortxt);
-    	
-    	
-    }
-
     public void formatearTabla(JTable table) {
         // Set table background and foreground
         table.setBackground(colorbg);
@@ -270,6 +260,35 @@ public class main extends JFrame implements ActionListener {
 
     }
     
+    public void formatearScrollPane(JScrollPane scrollPane){
+        scrollPane.setBorder(BorderFactory.createLineBorder(colortxt, 1));
+		scrollPane.getViewport().setBackground(colorbg);
+    }
+
+    
+    public void formatearObjetos() {
+    	UIManager.put("OptionPane.background", colorbg);
+    	UIManager.put("OptionPane.messageForeground", colortxt);
+	    UIManager.put("ScrollPane.background", colorbg);
+	    UIManager.put("ScrollPane.foreground", colortxt);
+ 	    UIManager.put("Panel.background", colorbg);
+	    UIManager.put("Label.foreground", colortxt);
+	    UIManager.put("Label.font", fuenteDefecto);
+	    UIManager.put("Button.background", colorbg);
+	    UIManager.put("Button.foreground", colortxt);
+	    UIManager.put("Button.font", fuenteDefecto);
+	    UIManager.put("ComboBox.background", colorbg);
+	    UIManager.put("ComboBox.foreground", colortxt);
+	    UIManager.put("ComboBox.font", fuenteDefecto);
+	    UIManager.put("TextField.background", colorbg);
+	    UIManager.put("TextField.foreground", colortxt);
+	    UIManager.put("PasswordField.background", colorbg);
+	    UIManager.put("PasswordField.foreground", colortxt);
+	    UIManager.put("List.background", colorbg);
+	    UIManager.put("List.foreground", colortxt);
+	    SwingUtilities.updateComponentTreeUI(this);
+	    
+    }
     
     @Override
      public void actionPerformed(ActionEvent ae) {
@@ -296,7 +315,7 @@ public class main extends JFrame implements ActionListener {
             	btnMenuJugadores.setEnabled(false);
             	
             } else if  (o == btnMenuEquipos) {
-            	//switchPanel(PanelEquipos.class);
+            	switchPanel(PanelEquipos.class);
             	btnMenuEquipos.setEnabled(false);
             	
             }  else if  (o == btnMenuUsuarios) {

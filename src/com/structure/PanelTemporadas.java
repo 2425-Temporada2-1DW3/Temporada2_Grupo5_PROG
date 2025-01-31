@@ -35,8 +35,7 @@ import java.awt.BorderLayout;
 public class PanelTemporadas extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	private Color colorbg,colortxt;
-	private main parentFrame;
+ 	private main parentFrame;
 
 	
 	private ArrayList <Temporada> listTemporadas = new ArrayList<Temporada>();
@@ -59,58 +58,44 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	 */
     public PanelTemporadas(main parentFrame) {
         this.parentFrame = parentFrame;
-        colorbg = parentFrame.colorbg;
-        colortxt = parentFrame.colortxt;
+        
         // Set up the main panel using BorderLayout
         this.setLayout(new BorderLayout());
-        this.setBackground(colorbg);
 
 
         topPanel = new JPanel();
         topPanel.setLayout(new BorderLayout()); 
-        topPanel.setBackground(colorbg);
 
         // Label para titulo de temporadas
         lblTitle = new JLabel("TEMPORADAS", JLabel.CENTER);
-        lblTitle.setFont(parentFrame.fuenteHeader);  
-        lblTitle.setForeground(colortxt);
         topPanel.add(lblTitle, BorderLayout.NORTH);  
 
         // Panel para el formulario de datos (Nombre,Cantidad de equipis)
         formPanel = new JPanel();
         formPanel.setLayout(new GridLayout(2, 2, 5, 5)); // GridLayout 2x2
-        formPanel.setBackground(colorbg);
-
+ 
         // Add components to the form panel
         lblNombre = new JLabel("Nombre:");
-        lblNombre.setFont(parentFrame.fuenteDefecto);
-        lblNombre.setForeground(colortxt);
+
         formPanel.add(lblNombre);
 
         txtNombre = new JTextField(20);
-        txtNombre.setBackground(colorbg);
-        txtNombre.setForeground(colortxt);
         formPanel.add(txtNombre);
 
         lblCantidadEquipos = new JLabel("Cantidad de Equipos:");
-        lblCantidadEquipos.setFont(parentFrame.fuenteDefecto);
-        lblCantidadEquipos.setForeground(colortxt);
         formPanel.add(lblCantidadEquipos);
 
         txtCantidadEquipos = new JTextField(10);
-        txtCantidadEquipos.setFont(parentFrame.fuenteDefecto);
-        txtCantidadEquipos.setBackground(colorbg);
-        txtCantidadEquipos.setForeground(colortxt);
         formPanel.add(txtCantidadEquipos);
 
         topPanel.add(formPanel, BorderLayout.CENTER);
         this.add(topPanel, BorderLayout.NORTH);
 
         // Panel con botones
+         
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
-        buttonPanel.setBackground(colorbg);
-
+ 
         parentFrame.buttonCreate(btnCrearTemporada, 	buttonPanel, parentFrame.colorGreen);
         if(parentFrame.userType == 4) {
             parentFrame.buttonCreate(btnEliminarTemporada, buttonPanel, parentFrame.colorRed);
@@ -139,7 +124,8 @@ public class PanelTemporadas extends JPanel implements ActionListener {
         parentFrame.formatearTabla(tableTemporadas);
 
         scrollPane = new JScrollPane(tableTemporadas);
-        scrollPane.getViewport().setBackground(colorbg);
+        parentFrame.formatearScrollPane(scrollPane);
+
         this.add(scrollPane, BorderLayout.CENTER);
 
         // Cargar datos
