@@ -49,6 +49,7 @@ public class main extends JFrame implements ActionListener {
     public Font fuenteDefecto = 	new Font("SansSerif", Font.PLAIN, 15);
     public Font fuenteDefectoBold = new Font("SansSerif", Font.BOLD, 15);
     public Font fuenteHeader = 		new Font("SansSerif", Font.BOLD, 18);
+    public Font fuenteBtnPequeño = new Font("SansSerif", Font.BOLD, 13);
 
     private JButton btnMenuInicio =		new JButton("CLASIFICACIÓN");
     private JButton btnMenuTemporadas = new JButton("TEMPORADAS");
@@ -163,7 +164,7 @@ public class main extends JFrame implements ActionListener {
     
     // Funcion para crear todos los botones del menu
     public void buttonCreate(JButton button, JPanel panel,Color color) { 
-	    button.setFont(fuenteDefectoBold);
+	    button.setFont(fuenteBtnPequeño);
 	    button.addActionListener(this);
 	    button.setForeground(Color.WHITE);
 	    button.setBackground(color);

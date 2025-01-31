@@ -2,6 +2,7 @@ package com.structure;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -221,7 +222,8 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 
 	        generador.GenerarTemporada(nueva);
 	        generador.MostrarVentanaEquipos(nueva);
-	        
+	        ArrayList <Equipo> nombres = nueva.getListEquipos();
+	        nueva.setClasificacion(nombres);
 	        // Agregar la nueva temporada a la lista
 	        listTemporadas.add(nueva);
 
