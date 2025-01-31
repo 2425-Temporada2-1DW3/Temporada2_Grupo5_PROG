@@ -222,8 +222,18 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 
 	        generador.GenerarTemporada(nueva);
 	        generador.MostrarVentanaEquipos(nueva);
-	        ArrayList <Equipo> nombres = nueva.getListEquipos();
-	        nueva.setClasificacion(nombres);
+	     // Obtener la lista de equipos
+	        ArrayList<Equipo> nombres = nueva.getListEquipos();
+
+	        // Verificar si la lista de clasificación es null y, si es así, inicializarla
+	        if (nueva.getClasificacion() == null) {
+	            nueva.setClasificacion(new ArrayList<>()); // Inicializa la lista
+	        }
+
+	        // Agregar todos los equipos a la clasificación
+	        nueva.getClasificacion().addAll(nombres);
+
+
 	        // Agregar la nueva temporada a la lista
 	        listTemporadas.add(nueva);
 
