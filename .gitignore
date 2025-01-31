@@ -1,2 +1,9 @@
 /bin/
 consoleLog.log
+*.xml
+*.ser
+resources/temporada.ser
+resources/usuario.ser
+*.ser
+*.pdf
+*.ser

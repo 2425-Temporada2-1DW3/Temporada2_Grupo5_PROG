@@ -35,6 +35,30 @@ public class Partido implements Serializable{
 		this.resultadoCalculado = false;
 	}
 	
+	public int getPuntuajeLoc() {
+		return puntuajeLoc;
+	}
+
+	public void setPuntuajeLoc(int puntuajeLoc) {
+		this.puntuajeLoc = puntuajeLoc;
+	}
+
+	public int getPuntuajeVis() {
+		return puntuajeVis;
+	}
+
+	public void setPuntuajeVis(int puntuajeVis) {
+		this.puntuajeVis = puntuajeVis;
+	}
+
+	public boolean isGanadorLoc() {
+		return ganadorLoc;
+	}
+
+	public boolean isGanadorVis() {
+		return ganadorVis;
+	}
+
 	// Constructor Copia
 	public Partido(Partido p) {
 	    this.id = p.id;

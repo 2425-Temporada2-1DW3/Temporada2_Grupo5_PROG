@@ -3,7 +3,9 @@ package com.structure;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.JTableHeader;
@@ -17,8 +19,11 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.awt.BorderLayout;
 import java.awt.Color;
+
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import java.awt.FlowLayout;
 
@@ -29,8 +34,12 @@ public class main extends JFrame implements ActionListener {
 	public int userType; 
     public String userTypeName;// No usar para comparaciones, solo para mostrar el tipo de usuario visualmente si es necesitado
 	public String userName;
+	public File userFile;
+	public File temporadasFile;
+	public File resourcesFolder;
+
 	public boolean changes= false;
-	private Log mensaje = new Log();
+	private Log log = new Log();
 
     
     public Color colorbg = 		new Color(40, 45, 50);
@@ -44,6 +53,7 @@ public class main extends JFrame implements ActionListener {
     public Font fuenteDefecto = 	new Font("SansSerif", Font.PLAIN, 15);
     public Font fuenteDefectoBold = new Font("SansSerif", Font.BOLD, 15);
     public Font fuenteHeader = 		new Font("SansSerif", Font.BOLD, 18);
+    public Font fuenteBtnPequeño = new Font("SansSerif", Font.BOLD, 13);
 
     private JButton btnMenuInicio =		new JButton("CLASIFICACIÓN");
     private JButton btnMenuTemporadas = new JButton("TEMPORADAS");
@@ -55,6 +65,7 @@ public class main extends JFrame implements ActionListener {
     private JButton[] buttons = {btnMenuInicio, btnMenuTemporadas, btnMenuJugadores,btnMenuEquipos, btnMenuUsuarios,btnMenuSalir};
 	private JPanel contentPane = new JPanel(), LayoutPanel_1 = new JPanel(), LayoutPanel = new JPanel();
     public JLabel lblMensaje = new JLabel();
+
  
     
     public static void main(String[] args) {
@@ -76,41 +87,42 @@ public class main extends JFrame implements ActionListener {
 
  
     public main(int userType, String userName) {
-    	
-    	// coje las variables de la clase login y la pasa a una variable definida en la clase main
+     	// coje las variables de la clase login y la pasa a una variable definida en la clase main
         this.userType = userType;
         this.userName = userName; 
+	    File jarDir = new File(System.getProperty("user.dir"));
+	    this.resourcesFolder = new File(jarDir, "resources");
+	    this.userFile = new File(resourcesFolder, "usuario.ser");
+	    this.temporadasFile = new File(resourcesFolder, "temporada.ser");
 
-
+        
+        
         // Cosas por defecto del Jframe
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 		setBounds(100, 100, 1000, 562);
 		
 		// Paneles de orden por defecto
-		contentPane.setBackground(colorbg);
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+ 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
-		LayoutPanel.setBackground(colorbg);
-		contentPane.add(LayoutPanel, BorderLayout.NORTH);
+ 		contentPane.add(LayoutPanel, BorderLayout.NORTH);
 		LayoutPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 	
-		LayoutPanel_1.setBackground(colorbg);
-		contentPane.add(LayoutPanel_1, BorderLayout.CENTER);
+ 		contentPane.add(LayoutPanel_1, BorderLayout.CENTER);
 		LayoutPanel_1.setLayout(new BorderLayout(0, 0));
 		
-		// Para monstar mensajes de error
+		// Formatear Fuente y colores
+        formatearObjetos(); // Formateo por defecto
+        
+        
         lblMensaje.setFont(new Font("Consolas", Font.PLAIN, 13));
 
-		
-		
-		
 		// Generar los 5 Botones de menu
 		if (userType == 2 || userType == 4) {
 			for (JButton button : buttons) {
-				buttonCreate(button		  ,LayoutPanel,colorbg);
+				buttonCreate(button,LayoutPanel,colorbg);
 			}
 		} else if (userType == 1){
 			buttonCreate(btnMenuInicio	  ,LayoutPanel,colorbg);
@@ -148,12 +160,12 @@ public class main extends JFrame implements ActionListener {
 
         }
         mensaje("Bienvenido, "+userName,2);
-        mensaje.Log("Ventana main cargada, Usuario: "+userName+" Rol: ",0);
+        log.add("Ventana main cargada, Usuario: "+userName+" Rol: ",0);
 	}
     
     // Funcion para crear todos los botones del menu
     public void buttonCreate(JButton button, JPanel panel,Color color) { 
-	    button.setFont(fuenteDefectoBold);
+	    button.setFont(fuenteBtnPequeño);
 	    button.addActionListener(this);
 	    button.setForeground(Color.WHITE);
 	    button.setBackground(color);
@@ -172,22 +184,21 @@ public class main extends JFrame implements ActionListener {
             
             revalidate();
             repaint();
-        	mensaje.Log("Panel "+panel.getClass()+" cargado",0);
+        	log.add("Panel "+panel.getClass()+" cargado",0);
 
             for (JButton button : buttons) {
                 button.setEnabled(true);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            mensaje.Log("Error cargando panel: " + panelClass.getSimpleName(),2);
+            log.add("Error cargando panel: " + panelClass.getSimpleName(),2);
             
         }
     }
    
-
     private int panelDeOpcion(String msg, String titulo) {
-    	formatearPanelDeOpcion();
-    	mensaje.Log("Panel de opcion :"+titulo+" ha sido cargado",0);
+    	formatearObjetos();
+    	log.add("Panel de opcion :"+titulo+" ha sido cargado",0);
         int result = JOptionPane.showConfirmDialog(
         		
                 main.this,
@@ -202,18 +213,18 @@ public class main extends JFrame implements ActionListener {
     public void mensaje(String msg, int color) {
         if (color == 0) {
             lblMensaje.setForeground(colorRed);
-            mensaje.Log("Usuario " +userName+": [lblMensaje] "+msg,2);
-            msg = "ERROR : " + msg+".";
+            log.add("Usuario " +userName+": [lblMensaje] "+msg,2);
+            msg = "ERROR : " + msg;
             
         } else if (color == 1) {
             lblMensaje.setForeground(colorYellow);
-            mensaje.Log("Usuario " +userName+": [lblMensaje] "+msg,1);
+            log.add("Usuario " +userName+": [lblMensaje] "+msg,1);
 
-            msg = "AVISO :" + msg+".";
+            msg = "AVISO :" + msg;
 
         	
         } else if (color ==2) {
-            mensaje.Log("Usuario " +userName+":  [lblMensaje] "+msg,0);
+            log.add("Usuario " +userName+":  [lblMensaje] "+msg,0);
 
             lblMensaje.setForeground(colorGreen);
 
@@ -228,16 +239,6 @@ public class main extends JFrame implements ActionListener {
     	changes = cambios;
     }
     
-    public void formatearPanelDeOpcion() {
-    	UIManager.put("Panel.background", colorbg);
-    	UIManager.put("OptionPane.background", colorbg);
-    	UIManager.put("OptionPane.messageForeground", colortxt);
-    	UIManager.put("Button.background", colorbg);
-    	UIManager.put("Button.foreground", colortxt);
-    	
-    	
-    }
-
     public void formatearTabla(JTable table) {
         // Set table background and foreground
         table.setBackground(colorbg);
@@ -259,11 +260,40 @@ public class main extends JFrame implements ActionListener {
 
     }
     
+    public void formatearScrollPane(JScrollPane scrollPane){
+        scrollPane.setBorder(BorderFactory.createLineBorder(colortxt, 1));
+		scrollPane.getViewport().setBackground(colorbg);
+    }
+
+    
+    public void formatearObjetos() {
+    	UIManager.put("OptionPane.background", colorbg);
+    	UIManager.put("OptionPane.messageForeground", colortxt);
+	    UIManager.put("ScrollPane.background", colorbg);
+	    UIManager.put("ScrollPane.foreground", colortxt);
+ 	    UIManager.put("Panel.background", colorbg);
+	    UIManager.put("Label.foreground", colortxt);
+	    UIManager.put("Label.font", fuenteDefecto);
+	    UIManager.put("Button.background", colorbg);
+	    UIManager.put("Button.foreground", colortxt);
+	    UIManager.put("Button.font", fuenteDefecto);
+	    UIManager.put("ComboBox.background", colorbg);
+	    UIManager.put("ComboBox.foreground", colortxt);
+	    UIManager.put("ComboBox.font", fuenteDefecto);
+	    UIManager.put("TextField.background", colorbg);
+	    UIManager.put("TextField.foreground", colortxt);
+	    UIManager.put("PasswordField.background", colorbg);
+	    UIManager.put("PasswordField.foreground", colortxt);
+	    UIManager.put("List.background", colorbg);
+	    UIManager.put("List.foreground", colortxt);
+	    SwingUtilities.updateComponentTreeUI(this);
+	    
+    }
     
     @Override
      public void actionPerformed(ActionEvent ae) {
         Object o = ae.getSource();
-        if (changes) {
+        if (changes && o == btnMenuInicio && o == btnMenuTemporadas && o == btnMenuJugadores && o == btnMenuUsuarios && o == btnMenuSalir ){
         	int resultado = panelDeOpcion( "Hay Datos Sin Guardar, Quieres salir?","Datos Sin Guardar");
             // Check user's choice
             if (resultado == JOptionPane.YES_OPTION) {
@@ -284,7 +314,11 @@ public class main extends JFrame implements ActionListener {
             	switchPanel(PanelJugadores.class);
             	btnMenuJugadores.setEnabled(false);
             	
-            } else if  (o == btnMenuUsuarios) {
+            } else if  (o == btnMenuEquipos) {
+            	switchPanel(PanelEquipos.class);
+            	btnMenuEquipos.setEnabled(false);
+            	
+            }  else if  (o == btnMenuUsuarios) {
             	switchPanel(PanelUsuarios.class);
             	btnMenuUsuarios.setEnabled(false);
             	
@@ -301,6 +335,7 @@ public class main extends JFrame implements ActionListener {
 
             	
             }
+
         }
 
 	}

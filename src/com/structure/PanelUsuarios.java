@@ -20,19 +20,16 @@ public class PanelUsuarios extends JPanel implements ActionListener {
     private JTextField txtUsername;
     private JPasswordField txtPassword;
     private JComboBox<String> cmbUserType;
-    private JButton btnSaveChanges;
-    private JButton btnDeleteAll;
-    private JButton btnDelete ;
-    private JButton btnCreate;
-    private JButton btnModify;
-    
+    private JButton btnSaveChanges = new JButton("Guardar Cambios");
+    private JButton btnDeleteAll = new JButton("Eliminar Todos");
+    private JButton btnDelete = new JButton("Eliminar Usuario");
+    private JButton  btnCreate = new JButton("Crear Usuario");
+    private JButton btnModify = new JButton("Modificar Usuario");
     private JLabel lblTitle = new JLabel("GESTION DE USUARIOS");
     private JLabel lblUsername = new JLabel("Usuario:"); 
 
 	private int userType;
-	private Color colorbg;
-	private Color colortxt;
-	private String userName;
+ 
 	private main parentFrame;
 
 	/**
@@ -43,14 +40,11 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 
 		this.parentFrame = parentFrame;
 	    userType = parentFrame.userType;
-	    colorbg = parentFrame.colorbg;
-	    colortxt = parentFrame.colortxt;
-	    userName = parentFrame.userName;
+ 
 
 
         // Configura el panel principal
-        setBackground(colorbg);
-
+ 
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
@@ -58,8 +52,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
        
         lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
         lblTitle.setFont(parentFrame.fuenteHeader);
-        lblTitle.setForeground(colortxt);
-        add(lblTitle, BorderLayout.NORTH);
+         add(lblTitle, BorderLayout.NORTH);
 
         // Panel de creación de usuarios
         add(createUserCreationPanel(), BorderLayout.WEST);
@@ -70,33 +63,20 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 
     private JPanel createUserCreationPanel() {
         JPanel panel = new JPanel();
-        panel.setBackground(colorbg);
         panel.setLayout(new GridLayout(9, 1, 10, 10));
 
-        lblUsername.setFont(parentFrame.fuenteDefecto);
-        lblUsername.setForeground(colortxt);
         panel.add(lblUsername);
 
         txtUsername = new JTextField();
-        txtUsername.setFont(parentFrame.fuenteDefecto);
-        txtUsername.setBackground(colorbg);
-        txtUsername.setForeground(colortxt);
         panel.add(txtUsername);
 
         JLabel lblPassword = new JLabel("Contraseña:");
-        lblPassword.setFont(parentFrame.fuenteDefecto);
-        lblPassword.setForeground(colortxt);
         panel.add(lblPassword);
 
         txtPassword = new JPasswordField();
-        txtPassword.setFont(parentFrame.fuenteDefecto);
-        txtPassword.setBackground(colorbg);
-        txtPassword.setForeground(colortxt);
         panel.add(txtPassword);
 
         JLabel lblUserType = new JLabel("Tipo de Usuario:");
-        lblUserType.setFont(parentFrame.fuenteDefecto);
-        lblUserType.setForeground(colortxt);
         panel.add(lblUserType);
 
         cmbUserType = new JComboBox<>(new String[]{"Usuario", "Árbitro"});
@@ -107,24 +87,18 @@ public class PanelUsuarios extends JPanel implements ActionListener {
             cmbUserType.setModel(new DefaultComboBoxModel<>(new String[]{"Usuario", "Árbitro", "Gestor"}));
         }
 
-        cmbUserType.setFont(parentFrame.fuenteDefecto);
-        cmbUserType.setBackground(colorbg);
-        cmbUserType.setForeground(colortxt);
+
         panel.add(cmbUserType);
 
-         btnCreate = new JButton("Crear Usuario");
-        btnCreate.setFont(parentFrame.fuenteDefecto);
-        btnCreate.setBackground(parentFrame.colorGreen);
-        btnCreate.setForeground(Color.WHITE);
+        parentFrame.buttonCreate(btnCreate, panel, parentFrame.colorGreen);
+        parentFrame.buttonCreate(btnModify, panel, parentFrame.colorYellow);
 
-        // Acción del botón "Crear Usuario"
         btnCreate.addActionListener(this);
+        btnModify.addActionListener(this);  
+
+
         
-         btnModify = new JButton("Modificar Usuario");
-        btnModify.setFont(parentFrame.fuenteDefecto);
-        btnModify.setBackground(parentFrame.colorYellow);  // Color de fondo amarillo
         btnModify.setForeground(Color.WHITE);
-        btnModify.addActionListener(this);  // Acción del botón "Modificar Usuario"
         panel.add(btnModify);
         panel.add(btnCreate);
         return panel;
@@ -133,20 +107,14 @@ public class PanelUsuarios extends JPanel implements ActionListener {
     private JPanel createUserListPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout(10, 10));
-        panel.setBackground(colorbg);
 
         JLabel lblListTitle = new JLabel("Lista de Usuarios");
-        lblListTitle.setFont(parentFrame.fuenteHeader);
         lblListTitle.setHorizontalAlignment(SwingConstants.CENTER);
-        lblListTitle.setForeground(colortxt);
         panel.add(lblListTitle, BorderLayout.NORTH);
 
         // Crear lista de usuarios
         listModel = new DefaultListModel<>();
         userList = new JList<>(listModel);
-        userList.setFont(parentFrame.fuenteDefecto);
-        userList.setBackground(colorbg);
-        userList.setForeground(colortxt);
         userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         cargarUsuarios();
         userList.addListSelectionListener(new ListSelectionListener() {
@@ -196,45 +164,30 @@ public class PanelUsuarios extends JPanel implements ActionListener {
             }
         });
         JScrollPane scrollPane = new JScrollPane(userList);
-        scrollPane.setBorder(BorderFactory.createLineBorder(colortxt, 2));
+        parentFrame.formatearScrollPane(scrollPane);
+
+
         panel.add(scrollPane, BorderLayout.CENTER);
 
         // Panel para botones
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        buttonPanel.setBackground(colorbg);
 
-        // Botón para eliminar usuario seleccionado (más ancho)
-        btnDelete = new JButton("Eliminar Usuario");
-        btnDelete.setFont(parentFrame.fuenteDefecto);
-        btnDelete.setBackground(parentFrame.colorRed);
-        btnDelete.setForeground(Color.WHITE);
-
-        // Acción del botón "Eliminar Usuario"
+        // Botones
+        
+        parentFrame.buttonCreate(btnDelete, buttonPanel, parentFrame.colorRed);
+        parentFrame.buttonCreate(btnDeleteAll, buttonPanel, parentFrame.colorRed);
+        parentFrame.buttonCreate(btnSaveChanges, buttonPanel, parentFrame.colorBlue);
+ 
+        // cambio el actionlistener de los botones a el de esta clase
+ 
         btnDelete.addActionListener(this);
-
-        // Botón para eliminar todos los usuarios (menos ancho)
-        btnDeleteAll = new JButton("Eliminar Todos");
-        btnDeleteAll.setFont(new Font("SansSerif", Font.BOLD, 15));
-        btnDeleteAll.setBackground(parentFrame.colorRed);
-        btnDeleteAll.setForeground(Color.WHITE);
-
-        // Acción del botón "Eliminar Todos"
         btnDeleteAll.addActionListener(this);
+        btnSaveChanges.addActionListener(this);
 
-        // Botón para guardar cambios
-        btnSaveChanges = new JButton("Guardar Cambios");
-        btnSaveChanges.setFont(parentFrame.fuenteDefecto);
-        btnSaveChanges.setBackground(parentFrame.colorBlue);
-        btnSaveChanges.setForeground(Color.WHITE);
-        btnSaveChanges.setPreferredSize(new Dimension(160, 30));
+        
+        
 
-        // Acción del botón "Guardar Cambios"
-        btnSaveChanges.addActionListener(this);;
-
-        buttonPanel.add(btnDelete); // Botón grande
-        buttonPanel.add(btnDeleteAll); // Botón pequeño
-        buttonPanel.add(btnSaveChanges); // Botón guardar cambios
 
         panel.add(buttonPanel, BorderLayout.SOUTH);
         return panel;
@@ -349,7 +302,8 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 	
 	private void actualizarArchivo() {
     	if (parentFrame.changes == true) {
-    		try (FileOutputStream fos = new FileOutputStream("usuario.ser");
+
+    		try (FileOutputStream fos = new FileOutputStream(parentFrame.userFile);
                     ObjectOutputStream oos = new ObjectOutputStream(fos)){
         		int length =listModel.getSize();
         		int counter = 0;
@@ -372,7 +326,8 @@ public class PanelUsuarios extends JPanel implements ActionListener {
     }
 	
 	private void cargarUsuarios() {
-		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("usuario.ser"))) {
+
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(parentFrame.userFile))) {
             while (true) {
                 try {
                     Usuario user = (Usuario) ois.readObject();
@@ -383,6 +338,7 @@ public class PanelUsuarios extends JPanel implements ActionListener {
             }
         } catch (FileNotFoundException ex) {
     		parentFrame.mensaje("No se encontró el archivo de usuarios. Se creará uno nuevo al guardar cambios",1);
+    		
         } catch (IOException | ClassNotFoundException ex) {
         	parentFrame.mensaje("Error al cargar usuarios: " + ex.getMessage(),0);
         }

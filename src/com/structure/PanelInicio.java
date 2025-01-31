@@ -12,15 +12,18 @@ import java.awt.BorderLayout;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
+import com.logic.CreadorXML;
 import com.logic.Equipo;
 import com.logic.Jornada;
+import com.logic.Log;
 import com.logic.Partido;
 import com.logic.Temporada;
 
 import java.awt.FlowLayout;
-import java.awt.ScrollPane;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -36,68 +39,77 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.awt.event.ActionEvent;
-import java.awt.Font;
+import javax.swing.BoxLayout;
+import java.awt.GridLayout;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
 
 public class PanelInicio extends JPanel implements ActionListener {
+ 	private static final long serialVersionUID = 1L;
+
 	// creamos los maps para hacer que el contenido de la pagina sea dinamico
 	private Map<String, JLabel> labelsMap = new HashMap<>();
 	private Map<String, JTextField> textFieldMap = new HashMap<>();
-	private static final long serialVersionUID = 1L;
-	private int userType;
-	private Color colorbg;
-	private Color colortxt;
-	private String userName;
-	private JPanel panel;
-	JPanel panel_1;
-	JPanel panel_2;
-	private JLabel lblNewLabel;
-	private JPanel panel_3;
-	private JLabel lblNewLabel_1;
-	private JPanel panel_4;
-	private JPanel panel_5;
-	private JPanel panel_6;
-	private JPanel panel_7;
+
+	// Panels
+	private JPanel PanelJornadas;
+	private JPanel PanelClasificacion;
+	private JPanel PanelTituloJornadas;
+	private JPanel PanelContenidoPartidos;
+	private JPanel PanelSelectTemporada;
+	private JPanel PanelTitulo;
+	private JPanel PanelMostrarPartidos;
+	private JPanel PanelPartido1;
+	private JPanel PanelPartido3;
+	private JPanel buttonPanel;
+	private JPanel PanelContenedor;
+	private JPanel PanelContenido;
+	private JPanel panelMoverJornadas;
+	private JPanel panelPartido2;
+
+	// Labels
+	private JLabel lblJornadas = new JLabel("Jornadas");
 	private JLabel partidoELoc0;
-	//private JTextField partido1LocPoints;
-	private JPanel panel_8;
-	private JPanel panel_9;
+	private JLabel partidoEVis0;
 	private JLabel partidoELoc1;
-	//private JTextField partido2LocPoints;
-	private JPanel panel_10;
-	private JPanel panel_11;
+	private JLabel partidoEVis1;
 	private JLabel partidoELoc2;
-	//private JTextField partido3LocPoints;
-	private JPanel panel_12;
-	private JTable table;
-	private JPanel panel_13;
-	private JPanel panel_14;
-	private JButton prevButton;
+	private JLabel partidoEVis2;
 	private JLabel numJornada;
+	private JLabel lblTitulo = new JLabel("CLASIFICACION");
+
+	// Text Fields
+	private JTextField pointsELoc0;
+	private JTextField pointsEVis0;
+	private JTextField pointsELoc1;
+	private JTextField pointsEVis1;
+	private JTextField pointsELoc2;
+	private JTextField pointsEVis2;
+
+	// Buttons
+ 
+	private JButton prevButton;
 	private JButton nextButton;
-	private JLabel partidoEVis0,partidoEVis1,partidoEVis2;
+	private JButton btnFinalizarJornada = new JButton("Finalizar Jornada");
+ 	private JButton btnExportXml = 		  new JButton("Exportar XML");
+	private JButton btnExportPdf = 		  new JButton("Exportar PDF");
 
-	
-	
 
-
-	private JTextField pointsEVis1,pointsELoc1, pointsELoc0,pointsEVis0,pointsELoc2,pointsEVis2 ;
-	
-	
-	
-	
-	
-	private int jornadaSelect;
-	private JButton btnSave;
-	private JButton btnUpdateApp;
+	// Otros 
+	private JTable table;
 	private DefaultTableModel modelClasificacion;
 	private ArrayList<Partido> partidos;
 	private ArrayList<Temporada> listTemporadas;
 	private ArrayList<Jornada> listJornadas;
 	private ArrayList<Equipo> nombre;
-	private JComboBox<Temporada> comboBox;
 	private ArrayList<Equipo> Clasificacion;
+	private JComboBox<Temporada> comboBox;
 	private Temporada TemporadaSeleccionada;
 	private main parentFrame;
+ 	private int jornadaSelect = 1;
+	private int userType;
+ 
+ 
 
 	/**
 	 * Create the panel.
@@ -108,176 +120,165 @@ public class PanelInicio extends JPanel implements ActionListener {
 		// sitio
 		this.parentFrame = parentFrame;
 		userType = parentFrame.userType;
-		colorbg = parentFrame.colorbg;
-		colortxt = parentFrame.colortxt;
-		userName = parentFrame.userName;
-
+ 
 		this.listTemporadas = new ArrayList<>();
 		this.listJornadas = new ArrayList<>();
 		cargarTemporadasDesdeArchivo();
 
 		// Cambia color del JPanel
-		setBackground(colorbg);
-		setLayout(new BorderLayout(0, 0));
+ 		setLayout(new BorderLayout(0, 0));
 
-		panel = new JPanel();
-		add(panel, BorderLayout.NORTH);
+		
+		PanelContenedor = new JPanel();
+		add(PanelContenedor, BorderLayout.SOUTH);
+		PanelContenedor.setLayout(new BorderLayout(0, 0));
+		
+		PanelTitulo = new JPanel();
+		PanelContenedor.add(PanelTitulo, BorderLayout.NORTH);
+		
+ 		lblTitulo.setForeground(Color.WHITE);
+		lblTitulo.setFont(parentFrame.fuenteHeader);
+		PanelTitulo.add(lblTitulo);
+		
+		PanelContenido = new JPanel();
+		PanelContenedor.add(PanelContenido, BorderLayout.SOUTH);
+		PanelContenido.setLayout(new BoxLayout(PanelContenido, BoxLayout.X_AXIS));
 
-		lblNewLabel = new JLabel("CLASIFICACION");
-		lblNewLabel.setFont(parentFrame.fuenteHeader);
-		lblNewLabel.setForeground(colortxt);
+		// Inicializar PanelJornadas
+		PanelJornadas = new JPanel();
+		PanelJornadas.setLayout(new BorderLayout(0, 0));
+		// Agregar PanelJornadas dentro de PanelContenido en la zona izquierda
+		PanelContenido.add(PanelJornadas);
 
-		panel.add(lblNewLabel);
+		PanelTituloJornadas = new JPanel();
+		PanelJornadas.add(PanelTituloJornadas, BorderLayout.NORTH);
 
-		panel_1 = new JPanel();
+		
 
-		add(panel_1, BorderLayout.WEST);
-		panel_1.setLayout(new BorderLayout(0, 0));
+		PanelTituloJornadas.add(lblJornadas);
 
-		panel_3 = new JPanel();
-		panel_1.add(panel_3, BorderLayout.NORTH);
+		PanelContenidoPartidos = new JPanel();
+		PanelJornadas.add(PanelContenidoPartidos, BorderLayout.CENTER);
+		PanelContenidoPartidos.setLayout(new BorderLayout(0, 0));
 
-		lblNewLabel_1 = new JLabel("Jornadas");
-
-		panel_3.add(lblNewLabel_1);
-
-		panel_4 = new JPanel();
-		panel_1.add(panel_4, BorderLayout.CENTER);
-		panel_4.setLayout(new BorderLayout(0, 0));
-
-		panel_5 = new JPanel();
-		panel_4.add(panel_5, BorderLayout.NORTH);
+		PanelSelectTemporada = new JPanel();
+		PanelContenidoPartidos.add(PanelSelectTemporada, BorderLayout.NORTH);
 
 		comboBox = new JComboBox<>();
 
-		panel_5.add(comboBox);
+		PanelSelectTemporada.add(comboBox);
 		actualizarComboBox();
 
-		panel_6 = new JPanel();
-		panel_4.add(panel_6, BorderLayout.CENTER);
-		panel_6.setLayout(new BorderLayout(0, 0));
+		PanelMostrarPartidos = new JPanel();
+		PanelContenidoPartidos.add(PanelMostrarPartidos, BorderLayout.CENTER);
+		PanelMostrarPartidos.setLayout(new GridLayout(0, 1, 0, 0));
 
-		panel_7 = new JPanel();
-		panel_6.add(panel_7, BorderLayout.NORTH);
+		PanelPartido1 = new JPanel();
+		PanelMostrarPartidos.add(PanelPartido1);
+
+		// Inicializar campos para Partido 1
+		PanelPartido1 = new JPanel();
+		PanelMostrarPartidos.add(PanelPartido1);
 
 		// Inicializar campos para Partido 1
 		partidoELoc0 = new JLabel();
 
 		labelsMap.put("partidoELoc0", partidoELoc0);
-		panel_7.add(partidoELoc0);
+		PanelPartido1.add(partidoELoc0);
 
 		pointsELoc0 = new JTextField();
 
 		textFieldMap.put("pointsELoc0", pointsELoc0);
-		panel_7.add(pointsELoc0);
+		PanelPartido1.add(pointsELoc0);
 		pointsELoc0.setColumns(10);
 
 		partidoEVis0 = new JLabel();
 		labelsMap.put("partidoEVis0", partidoEVis0);
-		panel_7.add(partidoEVis0);
+		PanelPartido1.add(partidoEVis0);
 
 		pointsEVis0 = new JTextField();
 
 		textFieldMap.put("pointsEVis0", pointsEVis0);
-		panel_7.add(pointsEVis0);
+		PanelPartido1.add(pointsEVis0);
 		pointsEVis0.setColumns(10);
 
-		panel_8 = new JPanel();
-		panel_6.add(panel_8, BorderLayout.CENTER);
-		panel_8.setLayout(new BorderLayout(0, 0));
-
-		panel_9 = new JPanel();
-		panel_8.add(panel_9, BorderLayout.NORTH);
-
-		// Inicializar campos para Partido 2
+		
+		panelPartido2 = new JPanel();
+		PanelMostrarPartidos.add(panelPartido2);
+		
 		partidoELoc1 = new JLabel();
-
 		labelsMap.put("partidoELoc1", partidoELoc1);
-		panel_9.add(partidoELoc1);
-
+		panelPartido2.add(partidoELoc1);
+		
 		pointsELoc1 = new JTextField();
-
 		textFieldMap.put("pointsELoc1", pointsELoc1);
-		panel_9.add(pointsELoc1);
 		pointsELoc1.setColumns(10);
-
+		panelPartido2.add(pointsELoc1);
+		
 		partidoEVis1 = new JLabel();
-
 		labelsMap.put("partidoEVis1", partidoEVis1);
-		panel_9.add(partidoEVis1);
-
+		panelPartido2.add(partidoEVis1);
+		
 		pointsEVis1 = new JTextField();
-
 		textFieldMap.put("pointsEVis1", pointsEVis1);
-		panel_9.add(pointsEVis1);
 		pointsEVis1.setColumns(10);
+		panelPartido2.add(pointsEVis1);
 
-		panel_10 = new JPanel();
-		panel_8.add(panel_10, BorderLayout.CENTER);
-		panel_10.setLayout(new BorderLayout(0, 0));
-
-		panel_11 = new JPanel();
-		panel_10.add(panel_11, BorderLayout.NORTH);
-		panel_11.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-
-		// Inicializar campos para Partido 3
+		PanelPartido3 = new JPanel();
+		PanelMostrarPartidos.add(PanelPartido3);
+		PanelPartido3.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
 		partidoELoc2 = new JLabel();
-
 		labelsMap.put("partidoELoc2", partidoELoc2);
-		panel_11.add(partidoELoc2);
-
+		PanelPartido3.add(partidoELoc2);
+		
 		pointsELoc2 = new JTextField();
-
 		textFieldMap.put("pointsELoc2", pointsELoc2);
-		panel_11.add(pointsELoc2);
 		pointsELoc2.setColumns(10);
-
+		PanelPartido3.add(pointsELoc2);
+		
 		partidoEVis2 = new JLabel();
-
 		labelsMap.put("partidoEVis2", partidoEVis2);
-		panel_11.add(partidoEVis2);
-
+		PanelPartido3.add(partidoEVis2);
+		
 		pointsEVis2 = new JTextField();
-
 		textFieldMap.put("pointsEVis2", pointsEVis2);
-		panel_11.add(pointsEVis2);
 		pointsEVis2.setColumns(10);
-
-		panel_13 = new JPanel();
-		panel_10.add(panel_13, BorderLayout.CENTER);
-		panel_13.setLayout(new BorderLayout(0, 0));
-
-		panel_14 = new JPanel();
-		panel_13.add(panel_14, BorderLayout.NORTH);
-
+		PanelPartido3.add(pointsEVis2);
+		panelMoverJornadas = new JPanel();
+		PanelContenidoPartidos.add(panelMoverJornadas, BorderLayout.SOUTH);
+		
 		prevButton = new JButton("<");
-
 		prevButton.addActionListener(this);
-		panel_14.add(prevButton);
-
+		panelMoverJornadas.add(prevButton);
+		
 		numJornada = new JLabel("1");
-
-		panel_14.add(numJornada);
-
+		panelMoverJornadas.add(numJornada);
+		
 		nextButton = new JButton(">");
-
-		panel_14.add(nextButton);
+		panelMoverJornadas.add(nextButton);
 		nextButton.addActionListener(this);
-		panel_12 = new JPanel();
-		panel_1.add(panel_12, BorderLayout.SOUTH);
+		
+		buttonPanel = new JPanel();
+		PanelJornadas.add(buttonPanel, BorderLayout.SOUTH);
+		
 
-		btnSave = new JButton("Finalizar Jornada");
+    
+        parentFrame.buttonCreate(btnFinalizarJornada, buttonPanel, parentFrame.colorRed);
+        parentFrame.buttonCreate(btnExportXml, buttonPanel, parentFrame.colorBlue);
+        parentFrame.buttonCreate(btnExportPdf, buttonPanel, parentFrame.colorBlue);
 
-		btnSave.addActionListener(this);
-		panel_12.add(btnSave);
+        // cambio el actionlistener de los botones a el de esta clase
+ 
+        btnFinalizarJornada.addActionListener(this);
+        btnExportXml.addActionListener(this);
+        btnExportPdf.addActionListener(this);
 
-		btnUpdateApp = new JButton("Aplicar cambios en el sistema");
 
-		btnUpdateApp.addActionListener(this);
-		panel_12.add(btnUpdateApp);
-
-		panel_2 = new JPanel();
-		add(panel_2, BorderLayout.EAST);
+		// Inicializar PanelClasificacion
+		PanelClasificacion = new JPanel();
+		// Agregar panel_2 dentro de PanelContenido en la zona central
+		PanelContenido.add(PanelClasificacion);
 
 		table = new JTable();
 
@@ -289,41 +290,27 @@ public class PanelInicio extends JPanel implements ActionListener {
 		modelClasificacion.addColumn("PJ");
 		modelClasificacion.addColumn("PG");
 		modelClasificacion.addColumn("PP");
+		PanelClasificacion.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		table.setModel(modelClasificacion);
 
 		// Agregar JScrollPane
 		JScrollPane scrollPane = new JScrollPane(table);
-		panel_2.add(scrollPane);
-
-		JComponent labelFormat[] = { partidoELoc0, pointsELoc0, partidoEVis0, pointsEVis0, partidoELoc1, pointsELoc1,
-				partidoEVis1, pointsEVis1, partidoELoc2, pointsELoc2, partidoEVis2, pointsEVis2, lblNewLabel_1,
-				comboBox, prevButton, numJornada, nextButton, btnSave, btnUpdateApp };
-		JComponent panelFormat[] = { panel, panel_1, panel_2, panel_3, panel_4, panel_5, panel_6, panel_7, panel_8,
-				panel_9, panel_10, panel_11, panel_12, panel_13, panel_14 };
-
-		for (int i = 0; i < labelFormat.length; i++) {
-			labelFormat[i].setBackground(colorbg);
-			labelFormat[i].setForeground(colortxt);
-			labelFormat[i].setFont(parentFrame.fuenteDefecto);
-		}
-
-		// Loop through panelFormat and apply properties
-		for (int i = 0; i < panelFormat.length; i++) {
-			panelFormat[i].setBackground(colorbg);
-		}
-		parentFrame.formatearTabla(table);
-		scrollPane.getViewport().setBackground(colorbg);
+		PanelClasificacion.add(scrollPane);
+  
+	    parentFrame.formatearTabla(table);
+        parentFrame.formatearScrollPane(scrollPane);
 
 		SwichDatosJornada();
 		cargarTabla();
 		TemporadasIniciadas();
 		actualizarTabla();
+		
 
 	}
 
 	private void cargarTemporadasDesdeArchivo() {
-		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("Temporada.ser"))) {
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(parentFrame.temporadasFile))) {
 			while (true) {
 				try {
 					Temporada temp = (Temporada) ois.readObject();
@@ -377,7 +364,6 @@ public class PanelInicio extends JPanel implements ActionListener {
 	}
 
 	private void SwichDatosJornada() {
-		jornadaSelect = Integer.parseInt(numJornada.getText());
 		Jornada jornadaActual = listJornadas.get(jornadaSelect - 1);
 		partidos = jornadaActual.getListPartidos();
 		String locales;
@@ -442,14 +428,10 @@ public class PanelInicio extends JPanel implements ActionListener {
 		jornadaSelect = Integer.parseInt(numJornada.getText());
 		Jornada jornadaActual = listJornadas.get(jornadaSelect - 1);
 		partidos = jornadaActual.getListPartidos();
-		String locales;
-		String visitantes;
 		String pointsLoc;
 		String pointsVis;
 		for (int counter = 0; counter < partidos.size(); counter++) {
 			Partido partido = partidos.get(counter);
-			locales = "partidoELoc" + counter;
-			visitantes = "partidoEVis" + counter;
 			pointsLoc = "pointsELoc" + counter;
 			pointsVis = "pointsEVis" + counter;
 
@@ -591,18 +573,16 @@ public class PanelInicio extends JPanel implements ActionListener {
 		TemporadaSeleccionada = (Temporada) comboBox.getSelectedItem();
 		if (TemporadaSeleccionada.isIniciado() == false
 				|| (TemporadaSeleccionada.isIniciado() && TemporadaSeleccionada.isFinalizado())) {
-			btnSave.setVisible(false);
-			btnUpdateApp.setVisible(false);
+			btnFinalizarJornada.setVisible(false);
 		} else {
-			btnSave.setVisible(true);
-			btnUpdateApp.setVisible(true);
+			btnFinalizarJornada.setVisible(true);
 		}
 
 	}
 
 	private void guardarDatos() {
 		if (parentFrame.changes == true) {
-			try (FileOutputStream fos = new FileOutputStream("Temporada.ser");
+			try (FileOutputStream fos = new FileOutputStream(parentFrame.temporadasFile);
 					ObjectOutputStream oos = new ObjectOutputStream(fos)) {
 				int length = listTemporadas.size();
 				int counter = 0;
@@ -658,8 +638,166 @@ public class PanelInicio extends JPanel implements ActionListener {
 
 	}
 
+	private void exportacion() {
+	    CreadorXML XML = new CreadorXML();
+	    
+	    // Ruta base donde se guardarán los archivos XML
+	    String rutaBase = "C:\\xampp\\htdocs\\xml\\";
+	    
+	    for (int t = 0; t < listTemporadas.size(); t++) {
+	        Temporada temporada = listTemporadas.get(t);
+	        XML = new CreadorXML();
+
+	        if (!temporada.isIniciado() && !temporada.isFinalizado()) {
+	            continue;
+	        } else {
+	            ArrayList<Jornada> listJornadas = temporada.getListJornadas();
+	            XML.add("temporada", false, 0);
+	            XML.add("nombre", false, 1);
+	            XML.add(temporada.getNombre(), true, 2);
+	            XML.add("nombre", false, 1);
+	            XML.add("iniciado", false, 1);
+	            XML.add(Boolean.toString(temporada.isIniciado()), true, 2);
+	            XML.add("iniciado", false, 1);
+	            XML.add("finalizado", false, 1);
+	            XML.add(Boolean.toString(temporada.isFinalizado()), true, 2);
+	            XML.add("finalizado", false, 1);
+	            XML.add("jornadas", false, 1);
+
+	            // Validación: Usar listJornadas.size() en lugar de temporada.getCantidadJornadas()
+	            for (int i = 0; i < listJornadas.size(); i++) {
+	                Jornada jornada = listJornadas.get(i);
+	                XML.add("jornada", false, 2);
+	                XML.add("id_jornada", false, 3);
+	                XML.add(Integer.toString(jornada.getid_jornada()), true, 4);
+	                XML.add("id_jornada", false, 3);
+	                XML.add("partidos", false, 3);
+
+	                for (Partido partido : jornada.getListPartidos()) {
+	                    XML.add("partido", false, 4);
+	                    XML.add("equipos", false, 5);
+	                    XML.add("equipo_local", false, 6);
+	                    XML.add("NombreLocal", false, 7);
+
+	                    int idLocal = partido.getEquipoLoc();
+	                    // Validación: Verificar que idLocal esté dentro del rango de la lista nombre
+	                    if (idLocal >= 0 && idLocal < nombre.size()) {
+	                        XML.add(nombre.get(idLocal).getNombre(), true, 8);
+	                    } else {
+	                        XML.add("Equipo desconocido", true, 8);
+	                    }
+
+	                    XML.add("NombreLocal", false, 7);
+	                    XML.add("puntuacion", false, 7);
+	                    XML.add(Integer.toString(partido.getPuntuajeLoc()), true, 8);
+	                    XML.add("puntuacion", false, 7);
+	                    XML.add("equipo_local", false, 6);
+
+	                    XML.add("equipo_visitante", false, 6);
+	                    int idVis = partido.getEquipoVis();
+	                    XML.add("nombreVisitante", false, 7);
+
+	                    // Validación: Verificar que idVis esté dentro del rango de la lista nombre
+	                    if (idVis >= 0 && idVis < nombre.size()) {
+	                        XML.add(nombre.get(idVis).getNombre(), true, 8);
+	                    } else {
+	                        XML.add("Equipo desconocido", true, 8);
+	                    }
+
+	                    XML.add("nombreVisitante", false, 7);
+	                    XML.add("puntuacion", false, 7);
+	                    XML.add(Integer.toString(partido.getPuntuajeVis()), true, 8);
+	                    XML.add("puntuacion", false, 7);
+	                    XML.add("equipo_visitante", false, 6);
+	                    XML.add("equipos", false, 5);
+
+	                    XML.add("partido", false, 4);
+	                }
+	                XML.add("partidos", false, 3);
+	                XML.add("jornada", false, 2);
+	            }
+	            XML.add("jornadas", false, 1);
+
+	            // Añadir la clasificación de la temporada
+	            ArrayList<Equipo> clasificacion = temporada.getClasificacion();
+	            XML.add("clasificacion", false, 1);
+
+	            // Validación: Asegurar que clasificacion no sea null
+	            if (clasificacion != null) {
+	                for (int i = 0; i < clasificacion.size(); i++) {
+	                    Equipo equipo = clasificacion.get(i);
+	                    XML.add("equipo", false, 2);
+	                    XML.add("posicion", false, 3);
+	                    XML.add(Integer.toString(i + 1), true, 4); // La posición es i + 1
+	                    XML.add("posicion", false, 3);
+	                    XML.add("nombre", false, 3);
+	                    XML.add(equipo.getNombre(), true, 4);
+	                    XML.add("nombre", false, 3);
+	                    XML.add("puntosTotales", false, 3);
+	                    XML.add(Integer.toString(equipo.getPuntosTotales()), true, 4);
+	                    XML.add("puntosTotales", false, 3);
+	                    XML.add("equipo", false, 2);
+	                }
+	            }
+	            XML.add("clasificacion", false, 1);
+
+	            XML.add("temporada", false, 0);
+	        }
+
+	        // Crear un archivo para cada temporada en la ruta especificada
+	        XML.file(rutaBase + listTemporadas.get(t).getNombre());
+	    }
+	    parentFrame.mensaje("Exportacion ejecutada con exito", 2);
+	}
+
+	
+    private void exportacionPdf(JTable jTable) {
+        Document document = new Document();
+        String nombreTemporada = comboBox.getSelectedItem().toString();
+        System.out.println("exportacion");
+        try {
+            String filePath = "clasificacion_"+nombreTemporada+".pdf";
+            PdfWriter.getInstance(document, new FileOutputStream(filePath));
+            document.open();
+            
+            // Agregar título
+            Font fontTitle = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
+            Paragraph title = new Paragraph("Clasificacion de : "+nombreTemporada  , fontTitle);
+            title.setAlignment(Element.ALIGN_CENTER);
+            document.add(title);
+            document.add(new Paragraph("\n"));
+            
+            // Crear tabla con el número de columnas del JTable
+            int columnCount = jTable.getColumnCount();
+            PdfPTable table = new PdfPTable(columnCount);
+            table.setWidthPercentage(100);
+            
+            // Encabezados
+            Font fontHeader = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
+            for (int i = 0; i < columnCount; i++) {
+                PdfPCell cell = new PdfPCell(new Phrase(jTable.getColumnName(i), fontHeader));
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                table.addCell(cell);
+            }
+            
+            // Agregar datos de la JTable
+            int rowCount = jTable.getRowCount();
+            for (int i = 0; i < rowCount; i++) {
+                for (int j = 0; j < columnCount; j++) {
+                    table.addCell(jTable.getValueAt(i, j).toString());
+                }
+            }
+            
+            document.add(table);
+            document.close();
+            parentFrame.mensaje("PDF generado correctamente en: " + filePath+" ",2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 	@Override
-	public void actionPerformed(ActionEvent ae) {
+ 	public void actionPerformed(ActionEvent ae) {
 		Object o = ae.getSource();
 		if (o == nextButton) {
 			jornadaSelect = Integer.parseInt(numJornada.getText());
@@ -688,7 +826,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 				parentFrame.mensaje("No hay jornadas anteriores", 1);
 			}
 
-		} else if (o == btnSave) {
+		} else if (o == btnFinalizarJornada) {
 			if (pointsELoc0.getText().isEmpty() && pointsEVis0.getText().isEmpty() && pointsELoc1.getText().isEmpty()
 					&& pointsEVis1.getText().isEmpty() && pointsELoc2.getText().isEmpty()
 					&& pointsEVis2.getText().isEmpty()) {
@@ -709,6 +847,9 @@ public class PanelInicio extends JPanel implements ActionListener {
 						ActualizarPuntuaciones(); // Si el usuario selecciona "Sí", ejecuta el método
 						cambioEstadoTextFields();
 						actualizarTabla();
+						parentFrame.changes = true;		
+						guardarDatos();
+
 					}
 				} else {
 					int seleccion = JOptionPane.showConfirmDialog(null, "¿Deseas guardar la jornada?", // Mensaje que se
@@ -726,12 +867,17 @@ public class PanelInicio extends JPanel implements ActionListener {
 						ActualizarPuntuaciones(); // Si el usuario selecciona "Sí", ejecuta el método
 						cambioEstadoTextFields();
 						actualizarTabla();
+						parentFrame.changes = true;		
+						guardarDatos();
 					}
 				}
 			}
 
-		} else if (o == btnUpdateApp) {
-			guardarDatos();
+		} else if (o == btnExportXml) {
+			exportacion();
+
+		} else if (o == btnExportPdf) {
+			exportacionPdf(table);
 		}
 
 	}

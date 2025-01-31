@@ -2,6 +2,7 @@ package com.structure;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,18 +35,18 @@ import java.awt.BorderLayout;
 public class PanelTemporadas extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	private Color colorbg,colortxt;
-	private main parentFrame;
+ 	private main parentFrame;
 
 	
 	private ArrayList <Temporada> listTemporadas = new ArrayList<Temporada>();
 	private DefaultListModel<Temporada> dlm = new DefaultListModel<>();
 	private JButton btnCrearTemporada = 	new JButton("Crear Temporada");
     private JButton btnAnadirEquipo = 		new JButton("Añadir Equipo");
-    private JButton btnGestionEquipos = 	new JButton("Gestionar Equipos");
+    private JButton btnGestionEquipos = 	new JButton("Gest. Equipos");
     private JButton btnIniciarTemporada = 	new JButton("Iniciar Temporada");
-    private JButton btnFinalizarTemporada = new JButton("Finalizar Temporada");
-	
+    private JButton btnFinalizarTemporada = new JButton("Fin Temporada");
+    private JButton btnEliminarTemporada = new JButton("Eliminar Temporada");
+
     private JTable tableTemporadas; // Declarar la tabla como variable de instancia
 	private JTextField txtNombre,txtCantidadEquipos;
     private JScrollPane scrollPane;
@@ -57,65 +58,57 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	 */
     public PanelTemporadas(main parentFrame) {
         this.parentFrame = parentFrame;
-        colorbg = parentFrame.colorbg;
-        colortxt = parentFrame.colortxt;
+        
         // Set up the main panel using BorderLayout
         this.setLayout(new BorderLayout());
-        this.setBackground(colorbg);
 
 
         topPanel = new JPanel();
         topPanel.setLayout(new BorderLayout()); 
-        topPanel.setBackground(colorbg);
 
         // Label para titulo de temporadas
         lblTitle = new JLabel("TEMPORADAS", JLabel.CENTER);
-        lblTitle.setFont(parentFrame.fuenteHeader);  
-        lblTitle.setForeground(colortxt);
         topPanel.add(lblTitle, BorderLayout.NORTH);  
 
         // Panel para el formulario de datos (Nombre,Cantidad de equipis)
         formPanel = new JPanel();
         formPanel.setLayout(new GridLayout(2, 2, 5, 5)); // GridLayout 2x2
-        formPanel.setBackground(colorbg);
-
+ 
         // Add components to the form panel
         lblNombre = new JLabel("Nombre:");
-        lblNombre.setFont(parentFrame.fuenteDefecto);
-        lblNombre.setForeground(colortxt);
+
         formPanel.add(lblNombre);
 
         txtNombre = new JTextField(20);
-        txtNombre.setBackground(colorbg);
-        txtNombre.setForeground(colortxt);
         formPanel.add(txtNombre);
 
         lblCantidadEquipos = new JLabel("Cantidad de Equipos:");
-        lblCantidadEquipos.setFont(parentFrame.fuenteDefecto);
-        lblCantidadEquipos.setForeground(colortxt);
         formPanel.add(lblCantidadEquipos);
 
         txtCantidadEquipos = new JTextField(10);
-        txtCantidadEquipos.setFont(parentFrame.fuenteDefecto);
-        txtCantidadEquipos.setBackground(colorbg);
-        txtCantidadEquipos.setForeground(colortxt);
         formPanel.add(txtCantidadEquipos);
 
         topPanel.add(formPanel, BorderLayout.CENTER);
         this.add(topPanel, BorderLayout.NORTH);
 
         // Panel con botones
+         
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
-        buttonPanel.setBackground(colorbg);
-
+ 
         parentFrame.buttonCreate(btnCrearTemporada, 	buttonPanel, parentFrame.colorGreen);
-        parentFrame.buttonCreate(btnAnadirEquipo, 		buttonPanel, parentFrame.colorGreen);
-        parentFrame.buttonCreate(btnGestionEquipos, 	buttonPanel, parentFrame.colorYellow);
-        parentFrame.buttonCreate(btnIniciarTemporada, 	buttonPanel, parentFrame.colorBlue);
+        if(parentFrame.userType == 4) {
+            parentFrame.buttonCreate(btnEliminarTemporada, buttonPanel, parentFrame.colorRed);
+        }
+        parentFrame.buttonCreate(btnAnadirEquipo, 		buttonPanel, parentFrame.colorBlue);
+        parentFrame.buttonCreate(btnGestionEquipos, 	buttonPanel, parentFrame.colorBlue);
+        parentFrame.buttonCreate(btnIniciarTemporada, 	buttonPanel, parentFrame.colorYellow);
         parentFrame.buttonCreate(btnFinalizarTemporada, buttonPanel, parentFrame.colorRed);
+
         // cambio el actionlistener de los botones a el de esta clase
+ 
         btnCrearTemporada.addActionListener(this);
+        btnEliminarTemporada.addActionListener(this);
         btnAnadirEquipo.addActionListener(this);
         btnGestionEquipos.addActionListener(this);
         btnIniciarTemporada.addActionListener(this);
@@ -131,7 +124,8 @@ public class PanelTemporadas extends JPanel implements ActionListener {
         parentFrame.formatearTabla(tableTemporadas);
 
         scrollPane = new JScrollPane(tableTemporadas);
-        scrollPane.getViewport().setBackground(colorbg);
+        parentFrame.formatearScrollPane(scrollPane);
+
         this.add(scrollPane, BorderLayout.CENTER);
 
         // Cargar datos
@@ -213,7 +207,19 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	        GeneradorTemporada generador = new GeneradorTemporada(); // Pasar la instancia actual de GestionTemporadav2
 
 	        generador.GenerarTemporada(nueva);
-	        
+	        generador.MostrarVentanaEquipos(nueva);
+	     // Obtener la lista de equipos
+	        ArrayList<Equipo> nombres = nueva.getListEquipos();
+
+	        // Verificar si la lista de clasificación es null y, si es así, inicializarla
+	        if (nueva.getClasificacion() == null) {
+	            nueva.setClasificacion(new ArrayList<>()); // Inicializa la lista
+	        }
+
+	        // Agregar todos los equipos a la clasificación
+	        nueva.getClasificacion().addAll(nombres);
+
+
 	        // Agregar la nueva temporada a la lista
 	        listTemporadas.add(nueva);
 
@@ -321,65 +327,58 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	    actualizarArchivo();
 	}
 	
+	private void eliminarTemporada() {
+	    // Get the selected row index
+	    int selectedRow = tableTemporadas.getSelectedRow();
+
+	    if (selectedRow == -1) {
+	        parentFrame.mensaje("No hay ninguna temporada seleccionada", 0);
+	        return;
+	    }
+
+	    // Confirm deletion with the user
+ 
+        listTemporadas.remove(selectedRow);
+
+        // Notify the table model about the removed row
+        ((TemporadaTableModel) tableTemporadas.getModel()).fireTableRowsDeleted(selectedRow, selectedRow);
+
+        // Update the persistent file
+        actualizarArchivo();
+
+        // Show success message
+        parentFrame.mensaje("Temporada eliminada", 1);
+        parentFrame.changes = true;
+  
+	}
+	
 	private void anadirEquipo() {
 	    // Verificar si hay una temporada seleccionada
 	    int seleccion = tableTemporadas.getSelectedRow();
 
 	    if (seleccion == -1) {
-	    	parentFrame.mensaje("Selecciona una temporada antes de añadir un equipo",1);
+	        parentFrame.mensaje("Selecciona una temporada antes de añadir un equipo", 1);
 	        return;
 	    }
 
-	    // Crear cuadro de diálogo para ingresar datos del equipo
-	    JTextField txtIdEquipo = new JTextField();
-	    JTextField txtNombreEquipo = new JTextField();
+	    // Obtener la temporada seleccionada
+	    Temporada temporadaSeleccionada = listTemporadas.get(seleccion);
+	    GeneradorTemporada ObtenerMetodo = new GeneradorTemporada(); // Pasar la instancia actual de GestionTemporadav2
 
-    	parentFrame.formatearPanelDeOpcion();
+	    // Llamar al método MostrarVentanaEquipos para mostrar la ventana de ingreso de equipos
+	    ObtenerMetodo.MostrarVentanaEquipos(temporadaSeleccionada);
 
-	    Object[] inputs = {
-	        "ID del Equipo:", txtIdEquipo,
-	        "Nombre del Equipo:", txtNombreEquipo
-	    };
-	    txtIdEquipo.setBackground(colorbg);
-	    txtIdEquipo.setForeground(colortxt);
-	    txtNombreEquipo.setBackground(colorbg);
-	    txtNombreEquipo.setForeground(colortxt);
-
-	    int opcion = JOptionPane.showConfirmDialog(this, inputs, "Añadir Equipo", JOptionPane.OK_CANCEL_OPTION);
-
-	    if (opcion == JOptionPane.OK_OPTION) {
-	        try {
-
-	            int idEquipo = Integer.parseInt(txtIdEquipo.getText());
-	            String nombreEquipo = txtNombreEquipo.getText();
-
-	            // Verificar datos válidos
-	            if (nombreEquipo.isEmpty()) {
-	                throw new IllegalArgumentException("El nombre del equipo no puede estar vacío");
-	            }
-
-	            // Agregar equipo a la temporada seleccionada
-	            Temporada temporadaSeleccionada = listTemporadas.get(seleccion);
-	            Equipo nuevoEquipo = new Equipo(idEquipo, nombreEquipo);
-	            temporadaSeleccionada.getListEquipos().add(nuevoEquipo);
-
-	            parentFrame.mensaje("Equipo añadido exitosamente",2);
-
-	            // Actualizar la tabla
-	            ((TemporadaTableModel) tableTemporadas.getModel()).fireTableRowsUpdated(seleccion, seleccion);
-	        } catch (NumberFormatException e) {
-	        	parentFrame.mensaje("El ID del equipo debe ser un número válido",1);
-	        } catch (IllegalArgumentException e) {
-	        	parentFrame.mensaje(e.getMessage(),0);
-	        }
-	    }
+	    // Actualizar archivo después de añadir los equipos
 	    actualizarArchivo();
 	}
+
 	
 	private void actualizarArchivo() {
     	if (parentFrame.changes== true) {
-    		try (FileOutputStream fos = new FileOutputStream("Temporada.ser");
-                    ObjectOutputStream oos = new ObjectOutputStream(fos)){
+//    		try (FileOutputStream fos = new FileOutputStream("Temporada.ser");
+    		try (FileOutputStream fos = new FileOutputStream(parentFrame.temporadasFile);
+
+    				ObjectOutputStream oos = new ObjectOutputStream(fos)){
         		int length =listTemporadas.size();
         		int counter = 0;
         		while (counter <length) {
@@ -393,12 +392,16 @@ public class PanelTemporadas extends JPanel implements ActionListener {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
     		}
-    	}}
+    	}
+    	
+	}
     
 	//metodo para cargar las temporadas
     private void cargarTemporadasDesdeArchivo() {
-    	try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("Temporada.ser"))) {
-            while (true) {
+//    	try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("Temporada.ser"))) {
+            
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(parentFrame.temporadasFile))) {
+			while (true) {
                 try {
                     Temporada temp = (Temporada) ois.readObject();
                     listTemporadas.add(temp);
@@ -489,6 +492,8 @@ public class PanelTemporadas extends JPanel implements ActionListener {
             	iniciarTemporada();
             } else if (o == btnFinalizarTemporada) {
             	finalizarTemporada();
+            } else if (o == btnEliminarTemporada) {
+            	eliminarTemporada();
             }
 	}
 }
