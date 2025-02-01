@@ -824,6 +824,75 @@ public class PanelJugadores extends JPanel implements ActionListener {
         }
     }
 
+    public void EliminarJugador() {
+        // Obtener la fila seleccionada en la tabla
+        int rowIndex = table.getSelectedRow();
+        
+        if (rowIndex == -1) {
+            parentFrame.mensaje("⚠️ Debe seleccionar un jugador para eliminar.", 0);
+            return;
+        }
+
+        // Obtener la temporada y equipo seleccionados
+        int idTemporada = combxFiltrarTempo.getSelectedIndex();
+        int idEquipo = combFiltrarJugador.getSelectedIndex();
+        Temporada temporadaSeleccionada = listTemporadas.get(idTemporada);
+        Equipo equipoSeleccionado = temporadaSeleccionada.getListEquipos().get(idEquipo);
+
+        // Obtener el jugador seleccionado
+        Jugador jugadorSeleccionado = equipoSeleccionado.getListJugadores().get(rowIndex);
+
+        // Confirmar eliminación
+        int confirmacion = JOptionPane.showConfirmDialog(
+            this, 
+            "¿Está seguro de que desea eliminar al jugador '" + jugadorSeleccionado.getNombre() + "'?", 
+            "Confirmar Eliminación", 
+            JOptionPane.YES_NO_OPTION, 
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            // Eliminar jugador de la lista
+            equipoSeleccionado.getListJugadores().remove(rowIndex);
+            
+            // Actualizar la tabla y archivo
+            ((JugadorTableModel) table.getModel()).fireTableDataChanged();
+            parentFrame.changes = true;
+            actualizarArchivo();
+
+            parentFrame.mensaje("✅ Jugador eliminado correctamente.", 2);
+        }
+    }
+    
+    public void EliminarTodos() {
+        // Obtener la temporada y equipo seleccionados
+        int idTemporada = combxFiltrarTempo.getSelectedIndex();
+        int idEquipo = combFiltrarJugador.getSelectedIndex();
+        Temporada temporadaSeleccionada = listTemporadas.get(idTemporada);
+        Equipo equipoSeleccionado = temporadaSeleccionada.getListEquipos().get(idEquipo);
+
+        // Confirmar eliminación de todos los jugadores
+        int confirmacion = JOptionPane.showConfirmDialog(
+            this, 
+            "⚠️ ¿Está seguro de que desea eliminar TODOS los jugadores del equipo '" + equipoSeleccionado.getNombre() + "'?", 
+            "Confirmar Eliminación Masiva", 
+            JOptionPane.YES_NO_OPTION, 
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            // Vaciar la lista de jugadores
+            equipoSeleccionado.getListJugadores().clear();
+            
+            // Actualizar la tabla y archivo
+            ((JugadorTableModel) table.getModel()).fireTableDataChanged();
+            parentFrame.changes = true;
+            actualizarArchivo();
+
+            parentFrame.mensaje("✅ Todos los jugadores han sido eliminados correctamente.", 2);
+        }
+    }
+    
     
     public void CrearJugadoresPrueba() {
         // Verificar que haya temporadas y equipos disponibles
@@ -1058,73 +1127,11 @@ public class PanelJugadores extends JPanel implements ActionListener {
         	CambiarFotografia();
         }
         else if (o == btnEliminarJugador) {
-            // Obtener la fila seleccionada en la tabla
-            int rowIndex = table.getSelectedRow();
-            
-            if (rowIndex == -1) {
-                parentFrame.mensaje("⚠️ Debe seleccionar un jugador para eliminar.", 0);
-                return;
-            }
-
-            // Obtener la temporada y equipo seleccionados
-            int idTemporada = combxFiltrarTempo.getSelectedIndex();
-            int idEquipo = combFiltrarJugador.getSelectedIndex();
-            Temporada temporadaSeleccionada = listTemporadas.get(idTemporada);
-            Equipo equipoSeleccionado = temporadaSeleccionada.getListEquipos().get(idEquipo);
-
-            // Obtener el jugador seleccionado
-            Jugador jugadorSeleccionado = equipoSeleccionado.getListJugadores().get(rowIndex);
-
-            // Confirmar eliminación
-            int confirmacion = JOptionPane.showConfirmDialog(
-                this, 
-                "¿Está seguro de que desea eliminar al jugador '" + jugadorSeleccionado.getNombre() + "'?", 
-                "Confirmar Eliminación", 
-                JOptionPane.YES_NO_OPTION, 
-                JOptionPane.WARNING_MESSAGE
-            );
-
-            if (confirmacion == JOptionPane.YES_OPTION) {
-                // Eliminar jugador de la lista
-                equipoSeleccionado.getListJugadores().remove(rowIndex);
-                
-                // Actualizar la tabla y archivo
-                ((JugadorTableModel) table.getModel()).fireTableDataChanged();
-                parentFrame.changes = true;
-                actualizarArchivo();
-
-                parentFrame.mensaje("✅ Jugador eliminado correctamente.", 2);
-            }
+        	EliminarJugador();
         } 
 
         else if (o == btnEliminarTodos) {
-            // Obtener la temporada y equipo seleccionados
-            int idTemporada = combxFiltrarTempo.getSelectedIndex();
-            int idEquipo = combFiltrarJugador.getSelectedIndex();
-            Temporada temporadaSeleccionada = listTemporadas.get(idTemporada);
-            Equipo equipoSeleccionado = temporadaSeleccionada.getListEquipos().get(idEquipo);
-
-            // Confirmar eliminación de todos los jugadores
-            int confirmacion = JOptionPane.showConfirmDialog(
-                this, 
-                "⚠️ ¿Está seguro de que desea eliminar TODOS los jugadores del equipo '" + equipoSeleccionado.getNombre() + "'?", 
-                "Confirmar Eliminación Masiva", 
-                JOptionPane.YES_NO_OPTION, 
-                JOptionPane.WARNING_MESSAGE
-            );
-
-            if (confirmacion == JOptionPane.YES_OPTION) {
-                // Vaciar la lista de jugadores
-                equipoSeleccionado.getListJugadores().clear();
-                
-                // Actualizar la tabla y archivo
-                ((JugadorTableModel) table.getModel()).fireTableDataChanged();
-                parentFrame.changes = true;
-                actualizarArchivo();
-
-                parentFrame.mensaje("✅ Todos los jugadores han sido eliminados correctamente.", 2);
-            }
+        	EliminarTodos();
         }
-
 	}
 }
