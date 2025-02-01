@@ -7,7 +7,9 @@ import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.EOFException;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -17,13 +19,16 @@ import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -32,6 +37,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -54,23 +60,21 @@ public class PanelEquipos extends JPanel implements ActionListener {
 	JPanel Cabecera;
 	JLabel lblTituloDatosJugador;
 	JPanel panel;
-	JButton btnModificarJugador;
+	JButton btnModificarEquipo;
 	JPanel PanelContenidoJugador;
 	JPanel PanelListEquipos;
 	JPanel Cabecera2;
 	JLabel lblTituloTablaJugadores;
 	JPanel panel_1;
-	JButton btnEliminarJugador;
-	JButton btnEliminarTodos;
 	JButton btnGuardarCambios;
-	JTextField txtNumFicha;
-	JLabel lblNroFicha;
-	private JLabel lblNombreJug;
+	JTextField txtNumID;
+	JLabel lblNroID;
+	private JLabel lblNombreEquipo;
 	private JTextField txtNombre;
-	private JTextField txtNacionalidad;
-	private JLabel lblNacionalidad;
-	private JLabel lblFechaNacimiento;
-	private JTextField txtFechaNacimiento;
+	private JTextField txtEntrenador;
+	private JLabel lblEntrenador;
+	private JLabel lblFechaFundacion;
+	private JTextField txtFechaFundacion;
 	private JPanel panel_2;
 	private JPanel panel_3;
 	private JScrollPane scrollPane;
@@ -84,6 +88,8 @@ public class PanelEquipos extends JPanel implements ActionListener {
 
     private ArrayList<Temporada> listTemporadas; // Lista de temporadas
     private ArrayList<Equipo> listEquipos; // Lista de equipos para combobox 
+    private JButton btnCambiarFoto;
+    private JLabel lblTituloTempo;
 	/**
 	 * Create the panel.
 	 */
@@ -109,7 +115,7 @@ public class PanelEquipos extends JPanel implements ActionListener {
 		PanelContenedor.setLayout(new BoxLayout(PanelContenedor, BoxLayout.X_AXIS));
 		
 		PanelDatosJugador = new JPanel();
-		PanelDatosJugador.setPreferredSize(new Dimension(300, 600)); // Tamaño deseado
+		PanelDatosJugador.setPreferredSize(new Dimension(200, 600)); // Tamaño deseado
 		PanelContenedor.add(PanelDatosJugador);
 		PanelDatosJugador.setLayout(new BorderLayout(0, 0));
 		
@@ -124,62 +130,64 @@ public class PanelEquipos extends JPanel implements ActionListener {
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		// Botón "Modificar Jugador"
-		btnModificarJugador = new JButton("Modificar Datos");
-		panel.add(btnModificarJugador);
-		btnModificarJugador.addActionListener(this);
+		btnModificarEquipo = new JButton("Modificar Datos");
+		panel.add(btnModificarEquipo);
+		btnModificarEquipo.addActionListener(this);
 
+		btnCambiarFoto = new JButton("Cambiar Fotografía");
+		panel.add(btnCambiarFoto);
+		btnCambiarFoto.addActionListener(this);
 		
 		PanelContenidoJugador = new JPanel();
-		PanelContenidoJugador.setPreferredSize(new Dimension(500, 600)); // Tamaño deseado
+		PanelContenidoJugador.setPreferredSize(new Dimension(600, 600)); // Tamaño deseado
 		PanelDatosJugador.add(PanelContenidoJugador, BorderLayout.CENTER);
-		PanelContenidoJugador.setLayout(new MigLayout("", "[70px][130px]", "[46px][46px][19px][19px][19px][19px]"));
+		PanelContenidoJugador.setLayout(new MigLayout("", "[40px][70px][85px]", "[150px][19px][19px][19px][19px]"));
 		
-		lblNroFicha = new JLabel("Nº ID:");
-		lblNroFicha.setHorizontalAlignment(SwingConstants.RIGHT);
-		PanelContenidoJugador.add(lblNroFicha, "cell 0 2,grow");
+		lblNroID = new JLabel("Nº ID:");
+		lblNroID.setHorizontalAlignment(SwingConstants.RIGHT);
+		PanelContenidoJugador.add(lblNroID, "cell 1 1,grow");
 		
-		txtNumFicha = new JTextField();
-		txtNumFicha.setText("0");
-		PanelContenidoJugador.add(txtNumFicha, "cell 1 2,alignx left,aligny top");
-		txtNumFicha.setColumns(10);
+		txtNumID = new JTextField();
+		txtNumID.setEditable(false);
+		txtNumID.setEnabled(false);
+		txtNumID.setText("0");
+		PanelContenidoJugador.add(txtNumID, "cell 2 1,growx,aligny top");
+		txtNumID.setColumns(10);
 		
-		lblNombreJug = new JLabel("NOMBRE:");
-		lblNombreJug.setHorizontalAlignment(SwingConstants.RIGHT);
-		PanelContenidoJugador.add(lblNombreJug, "cell 0 3,grow");
+		lblNombreEquipo = new JLabel("NOMBRE:");
+		lblNombreEquipo.setHorizontalAlignment(SwingConstants.RIGHT);
+		PanelContenidoJugador.add(lblNombreEquipo, "cell 1 2,grow");
 		
 		txtNombre = new JTextField();
 		txtNombre.setText("Nombre Equipo");
 		txtNombre.setColumns(10);
-		PanelContenidoJugador.add(txtNombre, "cell 1 3,alignx left,aligny top");
+		PanelContenidoJugador.add(txtNombre, "cell 2 2,growx,aligny top");
 		
-		txtNacionalidad = new JTextField();
-		txtNacionalidad.setText("Entrenador");
-		txtNacionalidad.setColumns(10);
-		PanelContenidoJugador.add(txtNacionalidad, "cell 1 4,alignx left,aligny top");
+		txtEntrenador = new JTextField();
+		txtEntrenador.setText("Entrenador");
+		txtEntrenador.setColumns(10);
+		PanelContenidoJugador.add(txtEntrenador, "cell 2 3,growx,aligny top");
 		
-		lblNacionalidad = new JLabel("ENTRENADOR:");
-		lblNacionalidad.setHorizontalAlignment(SwingConstants.RIGHT);
-		PanelContenidoJugador.add(lblNacionalidad, "cell 0 4,grow");
+		lblEntrenador = new JLabel("ENTRENADOR:");
+		lblEntrenador.setHorizontalAlignment(SwingConstants.RIGHT);
+		PanelContenidoJugador.add(lblEntrenador, "cell 1 3,grow");
 		
-		lblFechaNacimiento = new JLabel("F. FUNDACIÓN:");
-		lblFechaNacimiento.setHorizontalAlignment(SwingConstants.RIGHT);
-		PanelContenidoJugador.add(lblFechaNacimiento, "cell 0 5,alignx left,growy");
+		lblFechaFundacion = new JLabel("F. FUNDACIÓN:");
+		lblFechaFundacion.setHorizontalAlignment(SwingConstants.RIGHT);
+		PanelContenidoJugador.add(lblFechaFundacion, "cell 1 4,alignx left,growy");
 		
-		txtFechaNacimiento = new JTextField();
-		txtFechaNacimiento.setText("0000");
-		txtFechaNacimiento.setColumns(10);
-		PanelContenidoJugador.add(txtFechaNacimiento, "cell 1 5,alignx left,aligny top");
+		txtFechaFundacion = new JTextField();
+		txtFechaFundacion.setText("AAAA");
+		txtFechaFundacion.setColumns(10);
+		PanelContenidoJugador.add(txtFechaFundacion, "cell 2 4,growx,aligny top");
 		
 		icon = new ImageIcon("media.jugadores/idFotodefault.png");
 		Image image = icon.getImage();
 		Image newImage = image.getScaledInstance(79, 93, Image.SCALE_SMOOTH);
 		icon = new ImageIcon(newImage);
 		labelImagen = new JLabel();
-		PanelContenidoJugador.add(labelImagen, "cell 1 1,grow");
+		PanelContenidoJugador.add(labelImagen, "cell 2 0,grow");
 		labelImagen.setIcon(icon);
-		
-		JLabel lblNewLabel = new JLabel("");
-		PanelContenidoJugador.add(lblNewLabel, "cell 1 0,alignx left,growy");
 		DefaultComboBoxModel<String> modelPosicion = new DefaultComboBoxModel<>();
 		modelPosicion.addElement("Armador");
 		modelPosicion.addElement("Opuesto");
@@ -200,12 +208,6 @@ public class PanelEquipos extends JPanel implements ActionListener {
 		
 		panel_1 = new JPanel();
 		PanelListEquipos.add(panel_1, BorderLayout.SOUTH);
-		
-		btnEliminarJugador = new JButton("Eliminar Equipo");
-		panel_1.add(btnEliminarJugador);
-		
-		btnEliminarTodos = new JButton("Eliminar Todos");
-		panel_1.add(btnEliminarTodos);
 		
 		btnGuardarCambios = new JButton("Guardar Cambios");
 		panel_1.add(btnGuardarCambios);
@@ -239,8 +241,8 @@ public class PanelEquipos extends JPanel implements ActionListener {
 
 		// Establecer el ancho preferido de cada columna
 		columnModel.getColumn(0).setPreferredWidth(25);  // "Nº ID"
-		columnModel.getColumn(1).setPreferredWidth(125); // "Nombre"
-		columnModel.getColumn(2).setPreferredWidth(100);  // "F. Fundacion"
+		columnModel.getColumn(1).setPreferredWidth(150); // "Nombre"
+		columnModel.getColumn(2).setPreferredWidth(80);  // "F. Fundacion"
 		columnModel.getColumn(3).setPreferredWidth(150); // "Entrenador"
 		columnModel.getColumn(4).setPreferredWidth(75);  // "Total Jugadores"
 		
@@ -259,6 +261,9 @@ public class PanelEquipos extends JPanel implements ActionListener {
 		panel_4 = new JPanel();
 		panel_2.add(panel_4, BorderLayout.NORTH);
 		
+		lblTituloTempo = new JLabel("Temporada:");
+		panel_4.add(lblTituloTempo);
+		
 		combxFiltrarTempo = new JComboBox<>();
 		combxFiltrarTempo.setPreferredSize(new Dimension(150, 25)); // Establece un ancho de 150px y alto de 25px
 		panel_4.add(combxFiltrarTempo);
@@ -270,7 +275,7 @@ public class PanelEquipos extends JPanel implements ActionListener {
 		    }
 		});
 		
-		JComponent labelFormat[] = { lblTituloDatosJugador, lblTituloTablaJugadores, lblNroFicha, lblNombreJug, lblNacionalidad, lblFechaNacimiento };
+		JComponent labelFormat[] = { lblTituloDatosJugador, lblTituloTablaJugadores, lblNroID, lblNombreEquipo, lblEntrenador, lblFechaFundacion };
 		JComponent panelFormat[] = { PanelContenedor, PanelDatosJugador, Cabecera, PanelContenidoJugador, PanelListEquipos, Cabecera2, panel, panel_1, panel_2, panel_3, panel_4 };
 
 		// Loop through labelFormat and apply properties
@@ -374,42 +379,39 @@ public class PanelEquipos extends JPanel implements ActionListener {
 
                 // Asignar los valores a los campos de texto
                 
-                txtNumFicha.setText(Integer.toString(EquipoSeleccionado.getId()));
+                txtNumID.setText(Integer.toString(EquipoSeleccionado.getId()));
                 txtNombre.setText(EquipoSeleccionado.getNombre());
-                txtNacionalidad.setText(EquipoSeleccionado.getEntrenador());
-                txtFechaNacimiento.setText(Integer.toString(EquipoSeleccionado.getFechaFundEq()));
+                txtEntrenador.setText(EquipoSeleccionado.getEntrenador());
+                txtFechaFundacion.setText(Integer.toString(EquipoSeleccionado.getFechaFundEq()));
 
 
-             // Construir la ruta de la imagen basada en el ID del jugador
-                String rutaImagen = "/com/resources/jugadores/" + EquipoSeleccionado.getIdFoto() + ".png";
+             // **Construir la ruta de la imagen basada en la carpeta externa**
+                String rutaImagen = System.getProperty("user.dir") + "/equipos/" + EquipoSeleccionado.getIdFoto() + ".png";
 
-                // Intentar cargar la imagen con getResource()
-                URL imageUrl = getClass().getResource(rutaImagen);
-
-                if (imageUrl == null) {
+                // Cargar la imagen del jugador o usar una imagen por defecto si no existe
+                File archivoImagen = new File(rutaImagen);
+                if (!archivoImagen.exists()) {
                     System.err.println("⚠️ Imagen no encontrada: " + rutaImagen);
-                    // Usar imagen por defecto si la original no se encuentra
-                    imageUrl = getClass().getResource("/com/resources/jugadores/idFotodefault.png");
+                    archivoImagen = new File(System.getProperty("user.dir") + "/equipos/idFotodefault.png");
                 }
 
-                // Verificar nuevamente si la imagen de respaldo está disponible
-                if (imageUrl != null) {
-                    icon = new ImageIcon(imageUrl);
+                // Verificar si la imagen existe y cargarla
+                if (archivoImagen.exists()) {
+                    BufferedImage bufferedImage = ImageIO.read(archivoImagen);
+                    Image newImage = bufferedImage.getScaledInstance(79, 93, Image.SCALE_SMOOTH);
+                    ImageIcon icon = new ImageIcon(newImage);
+
+                    // Asignar la nueva imagen al JLabel
+                    labelImagen.setIcon(icon);
+                    labelImagen.revalidate();
+                    labelImagen.repaint();
                 } else {
                     System.err.println("❌ ERROR: No se pudo cargar la imagen por defecto.");
-                    icon = new ImageIcon(); // Icono vacío si no hay imagen
                 }
 
-                // Escalar la imagen para ajustarla al JLabel
-                Image image = icon.getImage();
-                Image newImage = image.getScaledInstance(79, 93, Image.SCALE_SMOOTH);
-                icon = new ImageIcon(newImage);
 
-                // Asignar la imagen al JLabel
-                labelImagen.setIcon(icon);
-
-
-                
+            } catch (IOException e) {
+                System.err.println("❌ ERROR al cargar la imagen: " + e.getMessage());
             } catch (IndexOutOfBoundsException e) {
                 parentFrame.mensaje("No se ha seleccionado un jugador válido", 0);
             }
@@ -419,97 +421,154 @@ public class PanelEquipos extends JPanel implements ActionListener {
 
     public void ModificarDatosEquipo() {
         try {
-            // Obtener el número de ficha y validar
-            String numFicha = txtNumFicha.getText();
-            if (numFicha.isEmpty()) {
-                parentFrame.mensaje("El campo de número de ficha está vacío.", 0);
+            // Obtener el ID del equipo y validar
+            String idEquipoTexto = txtNumID.getText();
+            if (idEquipoTexto.isEmpty()) {
+                parentFrame.mensaje("❌ El campo de ID del equipo está vacío.", 0);
                 return;
             }
+            int idEquipo = Integer.parseInt(idEquipoTexto);
 
-            // Validar campo de nombre
+            // Validar el nombre del equipo
             String nombre = txtNombre.getText();
             if (nombre.isEmpty()) {
-                parentFrame.mensaje("El campo de nombre está vacío.", 0);
+                parentFrame.mensaje("❌ El campo de nombre está vacío.", 0);
                 return;
             }
 
-            // Validar campo de nacionalidad
-            String nacionalidad = txtNacionalidad.getText();
-            if (nacionalidad.isEmpty()) {
-                parentFrame.mensaje("El campo de nacionalidad está vacío.", 0);
+            // Validar el entrenador
+            String entrenador = txtEntrenador.getText();
+            if (entrenador.isEmpty()) {
+                parentFrame.mensaje("❌ El campo de entrenador está vacío.", 0);
                 return;
             }
 
-            // Validar y dividir la fecha de nacimiento
-            String fechaNacimiento = txtFechaNacimiento.getText();
-            if (fechaNacimiento.isEmpty()) {
-                parentFrame.mensaje("El campo de fecha de nacimiento está vacío.", 0);
+            // Validar y obtener el año de fundación
+            String fechaFundacionTexto = txtFechaFundacion.getText();
+            if (fechaFundacionTexto.isEmpty()) {
+                parentFrame.mensaje("❌ El campo de año de fundación está vacío.", 0);
                 return;
             }
-            String[] partesFecha = fechaNacimiento.split("/");
-            if (partesFecha.length != 3) {
-                parentFrame.mensaje("El formato de fecha debe ser DD/MM/AAAA.", 0);
-                return;
-            }
-            int day = Integer.parseInt(partesFecha[0]);
-            int month = Integer.parseInt(partesFecha[1]);
-            int year = Integer.parseInt(partesFecha[2]);
 
-            // Validar temporada seleccionada
+            // Verificar que solo sea un número de 4 dígitos (AAAA)
+            if (!fechaFundacionTexto.matches("\\d{4}")) {
+                parentFrame.mensaje("❌ El año de fundación debe tener el formato AAAA.", 0);
+                return;
+            }
+
+            int anioFundacion = Integer.parseInt(fechaFundacionTexto);
+
+            // Validar la temporada seleccionada
             int idTemporada = combxFiltrarTempo.getSelectedIndex();
             if (idTemporada == -1 || idTemporada >= listTemporadas.size()) {
-                parentFrame.mensaje("Debe seleccionar una temporada válida.", 0);
+                parentFrame.mensaje("❌ Debe seleccionar una temporada válida.", 0);
                 return;
             }
 
-
-            // Buscar si el jugador existe en la lista
+            // Buscar la temporada y verificar si el equipo existe
             Temporada temporadaSeleccionada = listTemporadas.get(idTemporada);
             Equipo equipoExistente = null;
 
             for (Equipo equipo : temporadaSeleccionada.getListEquipos()) {
-                if (equipo.getId() == Integer.parseInt(numFicha)) {
-                	equipoExistente = equipo;
+                if (equipo.getId() == idEquipo) {
+                    equipoExistente = equipo;
                     break;
                 }
             }
 
+            // Si el equipo existe, modificarlo
             if (equipoExistente != null) {
-            	// Si el jugador existe, eliminarlo de la lista y modificar sus datos
-            	equipoExistente.getListJugadores().remove(equipoExistente); // Eliminar jugador existente
-//                jugadorExistente.setNombre(nombre);
-//                jugadorExistente.setNacionalidad(nacionalidad);
-//                jugadorExistente.setFechaNac(new Fecha(day, month, year));
-//                jugadorExistente.setAltura(altura);
-//                jugadorExistente.setPeso(peso);
-//                jugadorExistente.setDorsal(dorsal);
-//                jugadorExistente.setPosicion(posicion);
-//                jugadorExistente.setIdEquipo(idEquipo);
-//                // Agregar el jugador actualizado a la lista
-//                temporadaSeleccionada.getListEquipos().get(idEquipo).getListJugadores().add(new Jugador(numFicha, nombre, dorsal, posicion, nacionalidad, altura, peso, day, month, year, idEquipo));
-                parentFrame.mensaje("Jugador modificado correctamente.", 2);
+                equipoExistente.setNombre(nombre); // Modificar nombre
+                equipoExistente.setEntrenador(entrenador); // Modificar entrenador
+                equipoExistente.setFechaFundEq(anioFundacion); // Modificar año de fundación
+
+                parentFrame.mensaje("✅ Equipo modificado correctamente.", 2);
             } else {
-                // Si el jugador no existe, crearlo
-//                Equipo nuevoJugador = new Jugador(numFicha, nombre, dorsal, posicion, nacionalidad, altura, peso, day, month, year, idEquipo);
-//                Equipo nuevoEquipo = new Equipo()
-//                temporadaSeleccionada.getListEquipos().add(nuevoJugador);
-                parentFrame.mensaje("Jugador creado correctamente.", 2);
+                parentFrame.mensaje("❌ No se encontró un equipo con el ID ingresado.", 0);
+                return;
             }
 
-            // Actualizar la tabla (el modelo de la tabla se actualizará)
+            // Actualizar la tabla y guardar cambios
             ((EquiposTableModel) table.getModel()).fireTableDataChanged();
             parentFrame.changes = true;
-
-            // Actualizar archivo si es necesario
             actualizarArchivo();
 
         } catch (NumberFormatException e) {
-            parentFrame.mensaje("Error al convertir un campo numérico. Verifique los datos ingresados.", 0);
+            parentFrame.mensaje("❌ Error: Verifique que los campos numéricos sean correctos.", 0);
         } catch (Exception e) {
-            parentFrame.mensaje("Error inesperado: " + e.getMessage(), 0);
+            parentFrame.mensaje("❌ Error inesperado: " + e.getMessage(), 0);
             e.printStackTrace();
         }
     }
+
+    public void CambiarFotografia() {
+        int rowIndex = table.getSelectedRow();
+
+        if (rowIndex == -1) {
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona un equipo de la lista.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Obtener equipo seleccionado
+        int idTemporada = combxFiltrarTempo.getSelectedIndex();
+        Temporada temporadaSeleccionada = listTemporadas.get(idTemporada);
+        Equipo equipoSeleccionado = temporadaSeleccionada.getListEquipos().get(rowIndex);
+
+        // **Nueva ruta para equipos fuera del JAR**
+        String rutaBase = System.getProperty("user.dir") + "/equipos/";
+        File directorio = new File(rutaBase);
+        if (!directorio.exists()) {
+            directorio.mkdirs(); // Crea la carpeta si no existe
+        }
+
+        String idFoto = equipoSeleccionado.getIdFoto(); // ID de la imagen basado en el equipo
+
+        // Abrir JFileChooser para seleccionar una nueva imagen
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Seleccionar Fotografía");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Imágenes (JPG, PNG)", "jpg", "png");
+        fileChooser.setFileFilter(filter);
+
+        int seleccion = fileChooser.showOpenDialog(this);
+        if (seleccion == JFileChooser.APPROVE_OPTION) {
+            File archivoSeleccionado = fileChooser.getSelectedFile();
+            
+            // **Definir la ruta de destino con extensión PNG**
+            File archivoDestino = new File(rutaBase + idFoto + ".png");
+
+            try {
+                // **Leer la imagen seleccionada y convertirla a PNG**
+                BufferedImage imagenOriginal = ImageIO.read(archivoSeleccionado);
+                if (imagenOriginal == null) {
+                    JOptionPane.showMessageDialog(this, "Error al leer la imagen.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // **Eliminar la imagen antigua antes de guardar la nueva**
+                if (archivoDestino.exists()) {
+                    archivoDestino.delete();
+                }
+
+                // **Guardar la imagen en formato PNG**
+                ImageIO.write(imagenOriginal, "png", archivoDestino);
+
+                // **Forzar la recarga de la imagen para evitar caché**
+                BufferedImage bufferedImage = ImageIO.read(archivoDestino);
+                Image newImage = bufferedImage.getScaledInstance(79, 93, Image.SCALE_SMOOTH);
+                ImageIcon icon = new ImageIcon(newImage);
+                labelImagen.setIcon(icon);
+
+                // **Refrescar el JLabel para asegurar que la imagen se actualiza**
+                labelImagen.revalidate();
+                labelImagen.repaint();
+
+                JOptionPane.showMessageDialog(this, "Fotografía del equipo guardada correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Error al guardar la imagen: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
 
     
     private void actualizarTabla() {
@@ -688,6 +747,16 @@ public class PanelEquipos extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
-		
+		 if (o == btnModificarEquipo) {
+	        	ModificarDatosEquipo();
+	        }
+		 else if (o == btnCambiarFoto) {
+			 	CambiarFotografia();
+		 }
+		 else if (o == btnGuardarCambios){
+				actualizarArchivo();
+				JOptionPane.showMessageDialog(this, "Equipos guardados correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+	 
+		 }
 	}
 }
