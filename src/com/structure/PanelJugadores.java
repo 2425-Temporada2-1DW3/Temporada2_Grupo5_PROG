@@ -122,16 +122,6 @@ public class PanelJugadores extends JPanel implements ActionListener {
 	/**
 	 * Create the panel.
 	 */
-    
- // Método para crear una lista de jugadores de ejemplo
-    private ArrayList<Jugador> crearListaJugadores() {
-        ArrayList<Jugador> jugadores = new ArrayList<>();
-//        jugadores.add(new Jugador("001", "Lionel Messi", 10, "Delantero", "Argentina", 170, 72, 24, 6, 1987));
-//        jugadores.add(new Jugador("002", "Cristiano Ronaldo", 7, "Delantero", "Portugal", 187, 83, 5, 2, 1985));
-//        jugadores.add(new Jugador("003", "Neymar Jr.", 11, "Delantero", "Brasil", 175, 68, 5, 2, 1992));
-        // Agrega más jugadores según sea necesario
-        return jugadores;
-    }
 
 	public PanelJugadores(main parentFrame) {
 		// guarda los valores fuera de esta funcion por si se necesitan acceder en otro sitio
@@ -143,11 +133,6 @@ public class PanelJugadores extends JPanel implements ActionListener {
 	    
 		// Cambia color del Jpanel
  		setLayout(new BorderLayout(0, 0));
-		
-		// Crear la lista de jugadores
-        listJugadores = crearListaJugadores();
-        
-        
 		
 		PanelContenedor = new JPanel();
 		add(PanelContenedor);
@@ -175,26 +160,27 @@ public class PanelJugadores extends JPanel implements ActionListener {
 
 		// Botón "Modificar Jugador"
 		btnModificarJugador = new JButton("Modificar Jugador");
+		parentFrame.buttonCreate(btnModificarJugador, panel, parentFrame.colorBlue);
 		GridBagConstraints gbc_btnModificarJugador = new GridBagConstraints();
 		gbc_btnModificarJugador.anchor = GridBagConstraints.NORTHWEST;
 		gbc_btnModificarJugador.insets = new Insets(0, 10, 5, 5); // Margen izquierdo de 10px
 		gbc_btnModificarJugador.gridx = 1; // Cambiado a la columna 1 (después de la separación)
 		gbc_btnModificarJugador.gridy = 0;
 		panel.add(btnModificarJugador, gbc_btnModificarJugador);
-		btnModificarJugador.addActionListener(this);
-
+		
 		// Botón "Añadir Jugador"
 		btnCrearJugador = new JButton("Crear Jugador");
+		parentFrame.buttonCreate(btnCrearJugador, panel, parentFrame.colorGreen);
 		GridBagConstraints gbc_btnCrearJugador = new GridBagConstraints();
 		gbc_btnCrearJugador.anchor = GridBagConstraints.NORTHWEST;
 		gbc_btnCrearJugador.insets = new Insets(0, 0, 5, 0); // Sin margen adicional
 		gbc_btnCrearJugador.gridx = 2; // Cambiado a la columna 2
 		gbc_btnCrearJugador.gridy = 0;
 		panel.add(btnCrearJugador, gbc_btnCrearJugador);
-		btnCrearJugador.addActionListener(this);
 
 		// Botón "Cambiar Fotografía"
 		btnCambiarFoto = new JButton("Cambiar Fotografía");
+		parentFrame.buttonCreate(btnCambiarFoto, panel, parentFrame.colorYellow);
 		GridBagConstraints gbc_btnCambiarFoto = new GridBagConstraints();
 		gbc_btnCambiarFoto.anchor = GridBagConstraints.NORTH;
 		gbc_btnCambiarFoto.gridwidth = 2; // El botón ocupa 2 columnas
@@ -202,8 +188,6 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		gbc_btnCambiarFoto.gridx = 1; // Inicia en la columna 1
 		gbc_btnCambiarFoto.gridy = 1;
 		panel.add(btnCambiarFoto, gbc_btnCambiarFoto);
-		btnCambiarFoto.addActionListener(this);
-
 		
 		PanelContenidoJugador = new JPanel();
 		PanelContenidoJugador.setPreferredSize(new Dimension(700, 600)); // Tamaño deseado
@@ -281,7 +265,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		combxEquipo.setEditable(true);
 		PanelContenidoJugador.add(combxEquipo, "cell 1 9,growx,aligny top");
 		
-		icon = new ImageIcon("media.jugadores/idFotodefault.png");
+		icon = new ImageIcon("imagenes/jugadores/idFotodefault.png");
 		Image image = icon.getImage();
 		Image newImage = image.getScaledInstance(79, 93, Image.SCALE_SMOOTH);
 		icon = new ImageIcon(newImage);
@@ -321,16 +305,13 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		PanelListJugadores.add(panel_1, BorderLayout.SOUTH);
 		
 		btnEliminarJugador = new JButton("Eliminar Jugador");
-		panel_1.add(btnEliminarJugador);
-		btnEliminarJugador.addActionListener(this);
+		parentFrame.buttonCreate(btnEliminarJugador, panel_1, parentFrame.colorRed);
 		
 		btnEliminarTodos = new JButton("Eliminar Todos");
-		panel_1.add(btnEliminarTodos);
-		btnEliminarTodos.addActionListener(this);
+		parentFrame.buttonCreate(btnEliminarTodos, panel_1, parentFrame.colorRed);
 		
 		btnGuardarCambios = new JButton("Guardar Cambios");
-		panel_1.add(btnGuardarCambios);
-		btnGuardarCambios.addActionListener(this);
+		parentFrame.buttonCreate(btnGuardarCambios, panel_1, parentFrame.colorBlue);
 		
 		panel_2 = new JPanel();
 		PanelListJugadores.add(panel_2, BorderLayout.CENTER);

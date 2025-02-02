@@ -108,6 +108,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 	private main parentFrame;
  	private int jornadaSelect = 1;
 	private int userType;
+	private JButton btnDatosdePrueba;
  
  
 
@@ -267,12 +268,20 @@ public class PanelInicio extends JPanel implements ActionListener {
         parentFrame.buttonCreate(btnFinalizarJornada, buttonPanel, parentFrame.colorRed);
         parentFrame.buttonCreate(btnExportXml, buttonPanel, parentFrame.colorBlue);
         parentFrame.buttonCreate(btnExportPdf, buttonPanel, parentFrame.colorBlue);
-
+        
+        btnDatosdePrueba = new JButton("Test");
+        if (userType < 2) {
+        	btnDatosdePrueba.setVisible(false);
+        	btnExportPdf.setVisible(false);
+        }
+        parentFrame.buttonCreate(btnDatosdePrueba, buttonPanel, parentFrame.colorGreen);
+        
         // cambio el actionlistener de los botones a el de esta clase
  
         btnFinalizarJornada.addActionListener(this);
         btnExportXml.addActionListener(this);
         btnExportPdf.addActionListener(this);
+        btnDatosdePrueba.addActionListener(this);
 
 
 		// Inicializar PanelClasificacion
@@ -796,6 +805,75 @@ public class PanelInicio extends JPanel implements ActionListener {
             e.printStackTrace();
         }
     }
+    
+    public void CargarDatosDeTemporada() {
+        TemporadaSeleccionada = (Temporada) comboBox.getSelectedItem();
+        listJornadas = TemporadaSeleccionada.getListJornadas();
+        
+        int[] puntuacionLoc = { 3,3,2,3,2,3,3,2,3,3,3,2,3,3,3,3,3,3,3,2,3,3,3,3,3,3,2,3,2,3 };
+        int[] puntuacionVis = { 1,0,3,1,3,0,1,3,2,0,1,3,0,2,0,1,2,0,2,3,0,0,1,0,2,0,3,1,3,0 };
+        int[] idLocal = {0, 1, 2, 5, 4, 0, 1, 2, 3, 5, 0, 1, 2, 3, 4, 5, 4, 3, 3, 2, 1, 5, 0, 4, 4, 3, 2, 5, 1, 0};
+        int[] idVisit = {5, 4, 3, 3, 2, 1, 5, 0, 4, 4, 3, 2, 5, 1, 0, 0, 1, 2, 5, 4, 0, 1, 2, 3, 5, 0, 1, 2, 3, 4};
+
+        // Reiniciar estadísticas de todos los equipos
+//        for (Equipo equipo : nombre) {
+//            equipo.resetEstadisticas(); // Suponiendo que tienes un método que reinicia victorias, derrotas y puntos.
+//        }
+
+        for (int jornadaID = 0; jornadaID < listJornadas.size(); jornadaID++) {
+            Jornada jornadaActual = listJornadas.get(jornadaID);
+            partidos = jornadaActual.getListPartidos();
+
+            for (int counter = 0; counter < partidos.size(); counter++) {
+                Partido partido = partidos.get(counter);
+
+                int index = (jornadaID * 3) + counter;
+
+                partido.setpuntuajeLoc(puntuacionLoc[index]);
+                partido.setpuntuajeVis(puntuacionVis[index]);
+                partido.setJugado(true);
+
+                int idEquipoLocal = idLocal[index];
+                int idEquipoVisitante = idVisit[index];
+
+                if (puntuacionLoc[index] < puntuacionVis[index]) {
+                    partido.setGanadorVis(true);
+
+                    for (Equipo equipo : nombre) {
+                        if (equipo.getId() == idEquipoLocal) {
+                            equipo.incrementarPartidosPerdido();
+                            equipo.incrementarPartidosTotales();
+                            equipo.addPuntosTotal(1); // Perdedor obtiene 1 punto
+                        } else if (equipo.getId() == idEquipoVisitante) {
+                            equipo.incrementarPartidosGanados();
+                            equipo.incrementarPartidosTotales();
+                            equipo.addPuntosTotal(3); // Ganador obtiene 3 puntos
+                        }
+                    }
+                } else {
+                    partido.setGanadorLoc(true);
+
+                    for (Equipo equipo : nombre) {
+                        if (equipo.getId() == idEquipoLocal) {
+                            equipo.incrementarPartidosGanados();
+                            equipo.incrementarPartidosTotales();
+                            equipo.addPuntosTotal(3); // Ganador obtiene 3 puntos
+                        } else if (equipo.getId() == idEquipoVisitante) {
+                            equipo.incrementarPartidosPerdido();
+                            equipo.incrementarPartidosTotales();
+                            equipo.addPuntosTotal(1); // Perdedor obtiene 1 punto
+                        }
+                    }
+                }
+            }
+        }
+
+		parentFrame.changes = true;
+        actualizarTabla();
+		guardarDatos();
+    }
+
+    
 	@Override
  	public void actionPerformed(ActionEvent ae) {
 		Object o = ae.getSource();
@@ -879,7 +957,9 @@ public class PanelInicio extends JPanel implements ActionListener {
 		} else if (o == btnExportPdf) {
 			exportacionPdf(table);
 		}
-
+		else if (o == btnDatosdePrueba) {
+			CargarDatosDeTemporada();
+		}
 	}
 
 }
