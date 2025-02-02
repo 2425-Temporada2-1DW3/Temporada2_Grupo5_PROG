@@ -159,8 +159,8 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	        switch (columnIndex) {
 	            case 0: return temporada.getIdTemporada();  // ID
 	            case 1: return temporada.getNombre();  // Nombre
-	            case 2: return temporada.isIniciado() ? "Sí" : "No";  // Iniciado
-	            case 3: return temporada.isFinalizado() ? "Sí" : "No";  // Finalizado
+	            case 2: return temporada.isIniciado();  // Iniciado
+	            case 3: return temporada.isFinalizado();  // Finalizado
 	            case 4: return temporada.getCantidadEquipos();  // Cantidad Equipos
 	            case 5: return temporada.getCantidadJornadas();  // Cantidad Jornadas
 	            case 6: { // Cantidad Partidos

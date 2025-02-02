@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.JTableHeader;
 
 import com.logic.Log;
+import com.logic.Usuario;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -20,6 +21,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.awt.BorderLayout;
 import java.awt.Color;
 
@@ -28,6 +30,9 @@ import javax.swing.JButton;
 import java.awt.FlowLayout;
 
 public class main extends JFrame implements ActionListener {
+    
+	
+	private login loginInstance; // Agrega una variable de login
 
 	private static final long serialVersionUID = 1L;
 
@@ -66,16 +71,25 @@ public class main extends JFrame implements ActionListener {
 	private JPanel contentPane = new JPanel(), LayoutPanel_1 = new JPanel(), LayoutPanel = new JPanel();
     public JLabel lblMensaje = new JLabel();
 
- 
+    private ArrayList<Usuario> users;  // Asegurar que la variable users existe
+
     
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    int userType = 4; // Tipo de usuario por defecto si no recibe un valor (
+                    
+                	int userType = 2; // Tipo de usuario por defecto si no recibe un valor (
                     String userName = "Anonimo"; // Nombre de usuario por defecto
                     
-                    main frame = new main(userType,userName); // Pasa usertype y username a la main
+                    // Crear una instancia de login antes de pasarla a main
+                    login loginInstance = new login();
+                    
+//                    loginInstance.setVisible(true);  // Mostrar la ventana de login
+                    
+                    // Pasar loginInstance a main (!importante para la lista de usuarios)
+                    main frame = new main(userType,userName,loginInstance); // Pasa usertype y username a la main
+                    
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -86,16 +100,22 @@ public class main extends JFrame implements ActionListener {
 
 
  
-    public main(int userType, String userName) {
-     	// coje las variables de la clase login y la pasa a una variable definida en la clase main
+    public main(int userType, String userName, login loginInstance) {
         this.userType = userType;
-        this.userName = userName; 
-	    File jarDir = new File(System.getProperty("user.dir"));
-	    this.resourcesFolder = new File(jarDir, "resources");
-	    this.userFile = new File(resourcesFolder, "usuario.ser");
-	    this.temporadasFile = new File(resourcesFolder, "temporada.ser");
+        this.userName = userName;
+        this.loginInstance = loginInstance; // ✅ Ahora se inicializa correctamente
 
-        
+        File jarDir = new File(System.getProperty("user.dir"));
+        this.resourcesFolder = new File(jarDir, "resources");
+        this.userFile = new File(resourcesFolder, "usuario.ser");
+        this.temporadasFile = new File(resourcesFolder, "temporada.ser");
+
+        // Evitar NullPointerException al acceder a usuarios
+        if (loginInstance != null) {
+            this.users = loginInstance.getUsers();  // ✅ Se obtiene correctamente la lista de usuarios
+        } else {
+            this.users = new ArrayList<>(); // ❗ Evitar NullPointerException si no se pasó la instancia
+        }
         
         // Cosas por defecto del Jframe
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -220,7 +240,7 @@ public class main extends JFrame implements ActionListener {
             lblMensaje.setForeground(colorYellow);
             log.add("Usuario " +userName+": [lblMensaje] "+msg,1);
 
-            msg = "AVISO :" + msg;
+            msg = "AVISO : " + msg;
 
         	
         } else if (color ==2) {
@@ -289,6 +309,26 @@ public class main extends JFrame implements ActionListener {
 	    SwingUtilities.updateComponentTreeUI(this);
 	    
     }
+    
+    
+    //PASO DE LIST USUARIOS
+
+    public void setLoginInstance(login loginInstance) {
+        this.loginInstance = loginInstance;
+    }
+
+    // Permite que otros accedan a la lista de usuarios desde login
+    public ArrayList<Usuario> getUsers() {
+        if (loginInstance != null) {
+            return loginInstance.getUsers();
+        } else {
+            return new ArrayList<>(); // ❗ Evitar NullPointerException
+        }
+    }
+    public void setUsers(ArrayList<Usuario> users) {
+        loginInstance.setUsers(users);
+    }
+
     
     @Override
      public void actionPerformed(ActionEvent ae) {

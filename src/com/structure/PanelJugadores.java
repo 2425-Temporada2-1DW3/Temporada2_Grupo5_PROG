@@ -395,6 +395,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		    if (selectedItem != null) {
 		        actualizarComboBoxEquipo(selectedItem.toString(), listTemporadas);
 		        actualizarTabla();
+		        actualizarEstadoBotones();
 		    }
 		});
 		
@@ -420,6 +421,23 @@ public class PanelJugadores extends JPanel implements ActionListener {
 	}
 	
 	
+	//BLOQUEAR BOTONES SI LA TEMPORADA ESTA INICIADA
+	private void actualizarEstadoBotones() {
+	    int selectedIndex = combxFiltrarTempo.getSelectedIndex();
+	    
+	    if (selectedIndex >= 0 && !listTemporadas.isEmpty()) {
+	        Temporada temporadaSeleccionada = listTemporadas.get(selectedIndex);
+	        
+	        boolean temporadaIniciada = temporadaSeleccionada.isIniciado();
+			btnGuardarCambios.setVisible(!temporadaIniciada);
+			btnEliminarJugador.setEnabled(!temporadaIniciada);
+			btnEliminarTodos.setEnabled(!temporadaIniciada);
+			btnModificarJugador.setEnabled(!temporadaIniciada);
+			btnCrearJugador.setEnabled(!temporadaIniciada);
+			btnCambiarFoto.setEnabled(!temporadaIniciada);
+	    }
+	}
+
 	
     // Clase interna para el modelo de la tabla de jugadores
     class JugadorTableModel extends AbstractTableModel {
@@ -541,13 +559,13 @@ public class PanelJugadores extends JPanel implements ActionListener {
                 combxPosicion.setSelectedItem(jugadorSeleccionado.getPosicion());
 
                 // **Construir la ruta de la imagen basada en la carpeta externa**
-                String rutaImagen = System.getProperty("user.dir") + "/jugadores/" + jugadorSeleccionado.getIdFoto() + ".png";
+                String rutaImagen = System.getProperty("user.dir") + "/imagenes/jugadores/" + jugadorSeleccionado.getIdFoto() + ".png";
 
                 // Cargar la imagen del jugador o usar una imagen por defecto si no existe
                 File archivoImagen = new File(rutaImagen);
                 if (!archivoImagen.exists()) {
                     System.err.println("⚠️ Imagen no encontrada: " + rutaImagen);
-                    archivoImagen = new File(System.getProperty("user.dir") + "/jugadores/idFotodefault.png");
+                    archivoImagen = new File(System.getProperty("user.dir") + "/imagenes/jugadores/idFotodefault.png");
                 }
 
                 // Verificar si la imagen existe y cargarla
@@ -593,7 +611,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
         Jugador jugadorSeleccionado = equipoSeleccionado.getListJugadores().get(rowIndex);
 
         // **Nueva ruta fuera del JAR**
-        String rutaBase = System.getProperty("user.dir") + "/jugadores/";
+        String rutaBase = System.getProperty("user.dir") + "/imagenes/jugadores/";
         File directorio = new File(rutaBase);
         if (!directorio.exists()) {
             directorio.mkdirs(); // Crea la carpeta si no existe

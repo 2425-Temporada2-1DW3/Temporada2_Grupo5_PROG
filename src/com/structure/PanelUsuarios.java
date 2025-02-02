@@ -10,13 +10,14 @@ import java.io.*;
 import java.util.ArrayList;
 
 import com.logic.Usuario;
+import javax.swing.table.AbstractTableModel;
+import java.util.ArrayList;
 
 public class PanelUsuarios extends JPanel implements ActionListener {
 
     private static final long serialVersionUID = 1L;
 
     private DefaultListModel<Usuario> listModel;
-    private JList<Usuario> userList;
     private JTextField txtUsername;
     private JPasswordField txtPassword;
     private JComboBox<String> cmbUserType;
@@ -27,11 +28,91 @@ public class PanelUsuarios extends JPanel implements ActionListener {
     private JButton btnModify = new JButton("Modificar Usuario");
     private JLabel lblTitle = new JLabel("GESTION DE USUARIOS");
     private JLabel lblUsername = new JLabel("Usuario:"); 
-
 	private int userType;
- 
 	private main parentFrame;
+	private Color colorbg;
+	private Color colortxt;
+	private String userName;
+	
+	private ArrayList<Usuario> listUsers;
+	private JTable userTable;
+	private UserTableModel tableModel;
+	
+	public class UserTableModel extends AbstractTableModel {
+	    private final String[] columnNames = { "Usuario", "Contraseña", "Tipo de Usuario" };
+	    private ArrayList<Usuario> users;
 
+	    public UserTableModel(ArrayList<Usuario> users) {
+	        this.users = users;
+	    }
+
+	    @Override
+	    public int getRowCount() {
+	        return users.size();
+	    }
+
+	    @Override
+	    public int getColumnCount() {
+	        return columnNames.length;
+	    }
+
+	    @Override
+	    public Object getValueAt(int rowIndex, int columnIndex) {
+	        Usuario user = users.get(rowIndex);
+	        switch (columnIndex) {
+	            case 0: return user.getUser();
+	            case 1: return "********"; // Para ocultar la contraseña en la tabla
+	            case 2: 
+	                switch (user.getType()) {
+	                    case 0: return "Usuario";
+	                    case 1: return "Árbitro";
+	                    case 2: return "Gestor";
+	                    case 4: return "Director";
+	                    default: return "Desconocido";
+	                }
+	            default: return null;
+	        }
+	    }
+
+	    @Override
+	    public String getColumnName(int column) {
+	        return columnNames[column];
+	    }
+
+	    @Override
+	    public boolean isCellEditable(int rowIndex, int columnIndex) {
+	        return false; // No editable desde la tabla
+	    }
+
+	    public Usuario getUserAt(int rowIndex) {
+	        return users.get(rowIndex);
+	    }
+
+	    public void addUser(Usuario user) {
+	        users.add(user);
+	        fireTableRowsInserted(users.size() - 1, users.size() - 1);
+	    }
+
+	    public void removeUser(int rowIndex) {
+	        users.remove(rowIndex);
+	        fireTableRowsDeleted(rowIndex, rowIndex);
+	    }
+
+	    public void updateUser(int rowIndex, Usuario user) {
+	        users.set(rowIndex, user);
+	        fireTableRowsUpdated(rowIndex, rowIndex);
+	    }
+	    
+	    public void setUsers(ArrayList<Usuario> users) {
+	        this.users = users;
+	        fireTableDataChanged();
+	    }
+	    public void removeAllUsers() {
+	        users.clear();
+	        fireTableDataChanged();
+	    }
+	}
+	
 	/**
 	 * Create the panel.
 	 */
@@ -40,7 +121,16 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 
 		this.parentFrame = parentFrame;
 	    userType = parentFrame.userType;
+	    
+	    colorbg = parentFrame.colorbg;
+	    colortxt = parentFrame.colortxt;
+	    userName = parentFrame.userName;
+	    
+		// Cambia color del Jpanel
+		setBackground(colorbg);
  
+	    //LISTA USERS
+	    this.listUsers = parentFrame.getUsers(); // Ahora obtiene la lista desde login a través de main
 
 
         // Configura el panel principal
@@ -105,102 +195,153 @@ public class PanelUsuarios extends JPanel implements ActionListener {
     }
 
     private JPanel createUserListPanel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout(10, 10));
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
 
         JLabel lblListTitle = new JLabel("Lista de Usuarios");
         lblListTitle.setHorizontalAlignment(SwingConstants.CENTER);
         panel.add(lblListTitle, BorderLayout.NORTH);
 
-        // Crear lista de usuarios
-        listModel = new DefaultListModel<>();
-        userList = new JList<>(listModel);
-        userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        cargarUsuarios();
-        userList.addListSelectionListener(new ListSelectionListener() {
+        // Obtener la lista de usuarios desde login.java
+        listUsers = parentFrame.getUsers();
+
+        // Crear el modelo de la tabla
+        tableModel = new UserTableModel(listUsers);
+        userTable = new JTable(tableModel);
+        userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		// Formatear la tabla si tienes un método para eso (opcional)
+		parentFrame.formatearTabla(userTable); 
+
+
+        // Agregar listener para seleccionar usuario
+        userTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                // Solo se ejecuta si el usuario realmente cambia
                 if (!e.getValueIsAdjusting()) {
-                    Usuario selectedUser = userList.getSelectedValue();
-                    if (selectedUser != null) {
-                        // Cargar los datos del usuario en los campos
-	                	if (selectedUser.getType() ==4 && userType == 4) {
-	                		// Seleciono superusuario y soy superusuario
-	                    	btnModify.setEnabled(true);                        	
-	                        txtUsername.setText(selectedUser.getUser());
-	                        txtPassword.setText(selectedUser.getPass());                            
-	                    	cmbUserType.setEnabled(false);
-	                        cmbUserType.setSelectedIndex(0);
-	                    	
-	                    } else if (selectedUser.getType() == 4) {
-	                    	// Seleciono superusuario y no soy superusuario
-	                    	btnModify.setEnabled(false);                        	
-	                        txtUsername.setText("");
-	                        txtPassword.setText("");                            
-	                        cmbUserType.setSelectedIndex(0);
-	                    	cmbUserType.setEnabled(false);
-	
-	
-	                    } else if (selectedUser.getType() == 2 && userType == 2) {
-	                    	// Seleciono admin siendo admin
-	                    	btnModify.setEnabled(false);                        	
-	                        txtUsername.setText("");
-	                        txtPassword.setText("");                            
-	                        cmbUserType.setSelectedIndex(0);
-	                    	cmbUserType.setEnabled(false);
-	
-	                    } else {
-	                    	// Seleciono cualquier otra cosa
-	                    	btnModify.setEnabled(true);    
-	                        txtUsername.setText(selectedUser.getUser());
-	                        txtPassword.setText(selectedUser.getPass());                        	
-	                    	cmbUserType.setEnabled(true);
-	                        cmbUserType.setSelectedIndex(selectedUser.getType());
-	
-	                    }
+                    int selectedRow = userTable.getSelectedRow();
+                    if (selectedRow != -1) {
+                        Usuario selectedUser = tableModel.getUserAt(selectedRow);
+                        txtUsername.setText(selectedUser.getUser());
+                        txtPassword.setText(selectedUser.getPass());
+
+                     // Convertir el tipo de usuario en un índice válido en el JComboBox
+                        int selectedIndex = 0; // Por defecto "Usuario"
+
+                        if (selectedUser.getType() == 1) {
+                            selectedIndex = 1; // "Árbitro"
+                        } else if (selectedUser.getType() == 2 && userType == 4) {
+                            selectedIndex = 2; // "Gestor" (solo visible para el Director)
+                        }
+
+                        // Evitar IndexOutOfBoundsException
+                        if (selectedIndex < cmbUserType.getItemCount()) {
+                            cmbUserType.setSelectedIndex(selectedIndex);
+                        } else {
+                            cmbUserType.setSelectedIndex(0); // Valor por defecto
+                        }
+                        // Deshabilitar el JComboBox si el usuario seleccionado es de tipo 4
+                        cmbUserType.setEnabled(selectedUser.getType() != 4);
+
+
+
+                        btnModify.setEnabled(true);
+                        btnDelete.setEnabled(true);
                     }
                 }
             }
         });
-        JScrollPane scrollPane = new JScrollPane(userList);
-        parentFrame.formatearScrollPane(scrollPane);
-
-
+        
+        
+        JScrollPane scrollPane = new JScrollPane(userTable);
+        scrollPane.getViewport().setBackground(colorbg);
         panel.add(scrollPane, BorderLayout.CENTER);
+        
+        userTable.getParent().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                userTable.clearSelection();
+            }
+        });
 
+        
         // Panel para botones
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
-        // Botones
-        
         parentFrame.buttonCreate(btnDelete, buttonPanel, parentFrame.colorRed);
         parentFrame.buttonCreate(btnDeleteAll, buttonPanel, parentFrame.colorRed);
         parentFrame.buttonCreate(btnSaveChanges, buttonPanel, parentFrame.colorBlue);
- 
-        // cambio el actionlistener de los botones a el de esta clase
- 
+
         btnDelete.addActionListener(this);
         btnDeleteAll.addActionListener(this);
         btnSaveChanges.addActionListener(this);
 
-        
-        
-
-
         panel.add(buttonPanel, BorderLayout.SOUTH);
         return panel;
     }
+    
+    private boolean validarPassword(String password) {
+        for (Usuario user : listUsers) {
+            if (user.checkUser(userName, password)) {
+                return true; // Contraseña correcta
+            }
+        }
+        return false; // Contraseña incorrecta
+    }
 
+    private boolean validarCredenciales(String u, String p) {
+        // Recorrer la lista de usuarios para verificar credenciales
+        for (Usuario user : listUsers) {
+            if (user.checkUser(u, p)) {
+                return true; // Contraseña correcta
+            }
+        }
+        return false; // Contraseña incorrecta
+    }
 
     
+    private void confirmarGuardado() {
+        // Pedir nombre de usuario y contraseña
+        JTextField txtUser = new JTextField();
+        JPasswordField txtPass = new JPasswordField();
+        Object[] message = {
+            "Usuario:", txtUser,
+            "Contraseña:", txtPass
+        };
+
+        int option = JOptionPane.showConfirmDialog(
+            this, 
+            message, 
+            "Confirmar Guardado", 
+            JOptionPane.OK_CANCEL_OPTION
+        );
+
+        if (option == JOptionPane.OK_OPTION) {
+            String inputUser = txtUser.getText().trim();
+            String inputPass = new String(txtPass.getPassword());
+
+            // Verificar usuario y contraseña
+            if (validarCredenciales(inputUser, inputPass)) {
+        	    parentFrame.changes = true;
+                actualizarArchivo();  // Solo guarda si las credenciales son correctas
+            } else {
+                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object o =e.getSource();
 		if (o == btnSaveChanges) {
-			actualizarArchivo();
+			if(parentFrame.changes == true) {
+				confirmarGuardado();
+			}
+			else {
+				parentFrame.mensaje("No hay cambios registrados", 1);
+			}
+//			actualizarArchivo();
 		}
 		else if(o == btnDeleteAll) {
 			eliminarTodosUsuarios();
@@ -213,117 +354,133 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 		}
 		
 	}
+	
 	private void crearUsuario() {
-		
-        String username = txtUsername.getText().trim();
-        int userType = cmbUserType.getSelectedIndex();
-        char[] passwordChars = txtPassword.getPassword();
-        String pass = new String(passwordChars);
-        
-        if (username.isEmpty() || pass.isEmpty()) {
-            parentFrame.mensaje("Por favor, ingrese un nombre de usuario válido",0);
-            return;
-        }
+	    String username = txtUsername.getText().trim();
+	    int userType = cmbUserType.getSelectedIndex();
+	    char[] passwordChars = txtPassword.getPassword();
+	    String pass = new String(passwordChars);
 
-        // Check if the user already exists
-        boolean userExists = false;
-        for (int i = 0; i < listModel.size(); i++) {
-            Usuario existingUser = listModel.getElementAt(i);
-            if (existingUser.getUser().equalsIgnoreCase(username)) {
-                userExists = true;
-                break;
-            }
-        }
+	    if (username.isEmpty() || pass.isEmpty()) {
+	        parentFrame.mensaje("Por favor, ingrese un nombre de usuario válido", 0);
+	        return;
+	    }
 
-        if (userExists) {
-            parentFrame.mensaje("El usuario ya existe. Por favor, elija otro nombre de usuario",0);
-        } else {
-            // Create a new user
-            Usuario user = new Usuario(username, userType, pass);
-            listModel.addElement(user);
-            
-            txtUsername.setText("");
-            txtPassword.setText("");
-            parentFrame.changes = true;
-            parentFrame.mensaje("Usuario "+username+", ha sido creado exitosamente",2);
-        }
-        
-	}
-	private void eliminarUsuario() {
-		 int selectedIndex = userList.getSelectedIndex();
-		 if(selectedIndex != -1 && listModel.elementAt(selectedIndex).getType() == 4 ) {
-			 parentFrame.mensaje("El usuario del Director no se puede eliminar",1);
- 
-		 } else if (selectedIndex != -1) {
-        	 parentFrame.mensaje("Usuario "+listModel.elementAt(selectedIndex).getUser()+", ha sido eliminado",2);
+	    // Verificar si el usuario ya existe
+	    for (Usuario user : listUsers) {
+	        if (user.getUser().equalsIgnoreCase(username)) {
+	            parentFrame.mensaje("El usuario ya existe. Por favor, elija otro nombre de usuario", 0);
+	            return;
+	        }
+	    }
 
-             listModel.remove(selectedIndex);
-             parentFrame.changes = true;
-         } else {
-        	 parentFrame.mensaje("Por favor, seleccione un usuario para eliminar",2);
-         }
+	    // Crear y agregar usuario
+	    Usuario newUser = new Usuario(username, userType, pass);
+	    listUsers.add(newUser);
+//	    tableModel.addUser(newUser);
+	    parentFrame.setUsers(listUsers); // ACTUALIZA LA LISTA GLOBAL EN LOGIN
+	    parentFrame.changes = true;
+	    actualizarArchivo();
+	    actualizarUsuarios();
+	    parentFrame.mensaje("Usuario creado correctamente", 2);
 	}
 	
-	private void eliminarTodosUsuarios() {
-		if (!listModel.isEmpty()) {
-            int confirmation = JOptionPane.showConfirmDialog(
-                    null,
-                    "¿Está seguro de que desea eliminar todos los usuarios?",
-                    "Confirmación",
-                    JOptionPane.YES_NO_OPTION
-            );
-            if (confirmation == JOptionPane.YES_OPTION) {
-                Usuario superuser = null;
-                
-                // Iterate through the list and find the superuser
-                for (int i = 0; i < listModel.size(); i++) {
-                    if (listModel.get(i).getType() == 4) {
-                        superuser = listModel.get(i);
-                        break;  // Exit the loop as we found the superuser
-                    }else {
-                    	parentFrame.changes = true; 
-                	}
-                }
-                
-                // Clear the list
-                listModel.removeAllElements();
-                
-                // If there was a superuser, add it back
-                if (superuser != null) {
-                    listModel.addElement(superuser);
-                
-                
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "No hay usuarios para eliminar.");
-        }
-            }
+	private void actualizarUsuarios() {
+	    // Refrescar el modelo de la tabla con la nueva lista de usuarios
+	    tableModel.setUsers(listUsers);
+	    tableModel.fireTableDataChanged();
 	}
+	
+	private void eliminarUsuario() {
+	    int selectedRow = userTable.getSelectedRow();
+	    if (selectedRow != -1) {
+	        Usuario userToDelete = tableModel.getUserAt(selectedRow);
+	        if (userToDelete.getType() == 4) {
+	            parentFrame.mensaje("No se puede eliminar al Director", 1);
+	            return;
+	        }
+
+	        tableModel.removeUser(selectedRow);
+	        actualizarUsuarios();
+	        parentFrame.mensaje("Usuario eliminado correctamente", 2);
+	    } else {
+	        parentFrame.mensaje("Seleccione un usuario para eliminar", 0);
+	    }
+	}
+
+	private void eliminarTodosUsuarios() {
+	    int confirmation = JOptionPane.showConfirmDialog(
+	            null,
+	            "¿Está seguro de que desea eliminar todos los usuarios?",
+	            "Confirmación",
+	            JOptionPane.YES_NO_OPTION
+	    );
+
+	    if (confirmation == JOptionPane.YES_OPTION) {
+	    	listUsers.removeIf(user -> user.getType() != 4);
+	        tableModel.removeAllUsers();
+
+	        // Agregar de nuevo el Director
+	        for (Usuario user : listUsers) {
+	            if (user.getType() == 4) {
+	                tableModel.addUser(user);
+	                break;
+	            }
+	        }
+
+	        actualizarUsuarios();
+	        parentFrame.mensaje("Todos los usuarios eliminados excepto el Director", 2);
+	    }
+	}
+
+	private void modificarUsuario() {
+	    int selectedRow = userTable.getSelectedRow();
+	    if (selectedRow == -1) {
+	        parentFrame.mensaje("Seleccione un usuario para modificar", 0);
+	        return;
+	    }
+
+	    Usuario selectedUser = tableModel.getUserAt(selectedRow);
+	    String newUsername = txtUsername.getText().trim();
+	    char[] newPasswordChars = txtPassword.getPassword();
+	    String newPass = new String(newPasswordChars);
+	    int newUserType = cmbUserType.getSelectedIndex();
+
+	    if (newUsername.isEmpty() || newPass.isEmpty()) {
+	        parentFrame.mensaje("Ingrese un usuario y contraseña válidos", 0);
+	        return;
+	    }
+
+	    selectedUser.setUser(newUsername);
+	    selectedUser.setPass(newPass);
+	    selectedUser.setType(newUserType);
+
+	    tableModel.updateUser(selectedRow, selectedUser);
+	    actualizarUsuarios();
+	    parentFrame.mensaje("Usuario modificado correctamente", 2);
+	}
+
 	
 	private void actualizarArchivo() {
-    	if (parentFrame.changes == true) {
+	    if (parentFrame.changes) {
+	        try (FileOutputStream fos = new FileOutputStream(parentFrame.userFile);
+	             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+	            
+	            for (Usuario user : listUsers) {
+	                oos.writeObject(user);
+	            }
 
-    		try (FileOutputStream fos = new FileOutputStream(parentFrame.userFile);
-                    ObjectOutputStream oos = new ObjectOutputStream(fos)){
-        		int length =listModel.getSize();
-        		int counter = 0;
-        		while (counter <length) {
-        			oos.writeObject(listModel.getElementAt(counter));
-        			counter ++;
-        		}
-        		parentFrame.mensaje("Cambios guardados",2);
-        		parentFrame.changes = false;
-    			
-    		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}
-    	}
-    	else {
-    		parentFrame.mensaje("No hay cambios",1);
-    	}
-    	
-    }
+	            parentFrame.mensaje("Cambios guardados", 2);
+	            parentFrame.changes = false;
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            parentFrame.mensaje("Error al guardar los usuarios", 0);
+	        }
+	    } else {
+	        parentFrame.mensaje("No hay cambios", 1);
+	    }
+	}
+
 	
 	private void cargarUsuarios() {
 
@@ -342,61 +499,6 @@ public class PanelUsuarios extends JPanel implements ActionListener {
         } catch (IOException | ClassNotFoundException ex) {
         	parentFrame.mensaje("Error al cargar usuarios: " + ex.getMessage(),0);
         }
-	}
-	
-	private void modificarUsuario() {
-	    // Obtener el índice del usuario seleccionado en la lista
-	    int selectedIndex = userList.getSelectedIndex();
-	
-	    // Verificar si hay un usuario seleccionado
-	    if (selectedIndex == -1) {
-	        parentFrame.mensaje("Por favor, seleccione un usuario para modificar",0);
-	        return;
-	    }
-	
-	    // Obtener el usuario seleccionado
-	    Usuario selectedUser = listModel.getElementAt(selectedIndex);
-	
-	    // Obtener los nuevos valores desde los campos de texto
-	    String newUsername = txtUsername.getText().trim();
-	    char[] newPasswordChars = txtPassword.getPassword();
-	    String newPass = new String(newPasswordChars);
-	    int newUserType = cmbUserType.getSelectedIndex();
-	    
-	    // Validar los nuevos valores ingresados
-	    if (newUsername.isEmpty() && newPass.isEmpty()) {
-	        parentFrame.mensaje("Por favor, ingrese un nombre de usuario y contraseña válidos",0);
-	        return;
-	    } else if (newUsername.isEmpty()) {
-	        parentFrame.mensaje("Por favor, ingrese un nombre de usuario válido",0);
-	        return;
-	    } else if (newPass.isEmpty()) {
-	        parentFrame.mensaje("Por favor, ingrese una contraseña válida",0);
-	        return;
-	    } 
-	    Usuario selectedUserChanges = new Usuario (newUsername,newUserType,newPass);
-	    
-	    if (selectedUser.equals(selectedUserChanges)) {
-	        parentFrame.mensaje("No hay cambios",1);
-	        return;	
-	    }
-	    // Modificar los atributos del usuario seleccionado
-	    selectedUser.setUser(newUsername); 
-	    selectedUser.setPass(newPass);
-	    if (selectedUser.getType() != 4) {
-		    selectedUser.setType(newUserType);
-	    }
-	
-	    // Actualizar el modelo de la lista con el usuario modificado
-	    parentFrame.changes = true;
-
-	    listModel.setElementAt(selectedUser, selectedIndex);
-	
-	    // Opcional: actualizar la vista
-	    userList.repaint();
-	
-	    // Mostrar un mensaje de éxito
-	    parentFrame.mensaje("Usuario modificado correctamente",2);
 	}
 
 }
