@@ -16,9 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.URL;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -82,7 +80,6 @@ public class PanelEquipos extends JPanel implements ActionListener {
 	private JPanel panel_4;
 	private JComboBox<Temporada> combxFiltrarTempo;
 //	private JComboBox<String> combFiltrarJugador;
-	private JButton btnBuscarJugador;
 	JLabel labelImagen;
 	ImageIcon icon;
 
@@ -272,6 +269,7 @@ public class PanelEquipos extends JPanel implements ActionListener {
 		    Object selectedItem = combxFiltrarTempo.getSelectedItem();
 		    if (selectedItem != null) {
 		        actualizarTabla();
+		        actualizarEstadoBotones();
 		    }
 		});
 		
@@ -289,9 +287,24 @@ public class PanelEquipos extends JPanel implements ActionListener {
 		for (int i = 0; i < panelFormat.length; i++) {
 		    panelFormat[i].setBackground(colorbg);
 		}
+		
 		CrearJugadoresPrueba();
 	}
 	
+	
+	private void actualizarEstadoBotones() {
+	    int selectedIndex = combxFiltrarTempo.getSelectedIndex();
+	    
+	    if (selectedIndex >= 0 && !listTemporadas.isEmpty()) {
+	        Temporada temporadaSeleccionada = listTemporadas.get(selectedIndex);
+	        
+	        boolean temporadaIniciada = temporadaSeleccionada.isIniciado();
+	        btnGuardarCambios.setVisible(!temporadaIniciada);
+	        btnCambiarFoto.setEnabled(!temporadaIniciada);
+	        btnModificarEquipo.setEnabled(!temporadaIniciada);
+	    }
+	}
+
 	
     // Clase interna para el modelo de la tabla de EQUIPOS
     class EquiposTableModel extends AbstractTableModel {
@@ -371,6 +384,7 @@ public class PanelEquipos extends JPanel implements ActionListener {
         // Obtener el índice de la fila seleccionada en la tabla
         int rowIndex = table.getSelectedRow();  // Obtiene la fila seleccionada de la tabla
 
+        
         // Verificar si se ha seleccionado una fila válida
         if (rowIndex != -1) {
             try {
@@ -384,15 +398,15 @@ public class PanelEquipos extends JPanel implements ActionListener {
                 txtEntrenador.setText(EquipoSeleccionado.getEntrenador());
                 txtFechaFundacion.setText(Integer.toString(EquipoSeleccionado.getFechaFundEq()));
 
-
+                
              // **Construir la ruta de la imagen basada en la carpeta externa**
-                String rutaImagen = System.getProperty("user.dir") + "/equipos/" + EquipoSeleccionado.getIdFoto() + ".png";
+                String rutaImagen = System.getProperty("user.dir") + "/imagenes/equipos/" + EquipoSeleccionado.getIdFoto() + ".png";
 
                 // Cargar la imagen del jugador o usar una imagen por defecto si no existe
                 File archivoImagen = new File(rutaImagen);
                 if (!archivoImagen.exists()) {
                     System.err.println("⚠️ Imagen no encontrada: " + rutaImagen);
-                    archivoImagen = new File(System.getProperty("user.dir") + "/equipos/idFotodefault.png");
+                    archivoImagen = new File(System.getProperty("user.dir") + "/imagenes/equipos/idFotodefault.png");
                 }
 
                 // Verificar si la imagen existe y cargarla
@@ -408,7 +422,7 @@ public class PanelEquipos extends JPanel implements ActionListener {
                 } else {
                     System.err.println("❌ ERROR: No se pudo cargar la imagen por defecto.");
                 }
-
+                
 
             } catch (IOException e) {
                 System.err.println("❌ ERROR al cargar la imagen: " + e.getMessage());
@@ -515,7 +529,7 @@ public class PanelEquipos extends JPanel implements ActionListener {
         Equipo equipoSeleccionado = temporadaSeleccionada.getListEquipos().get(rowIndex);
 
         // **Nueva ruta para equipos fuera del JAR**
-        String rutaBase = System.getProperty("user.dir") + "/equipos/";
+        String rutaBase = System.getProperty("user.dir") + "/imagenes/equipos/";
         File directorio = new File(rutaBase);
         if (!directorio.exists()) {
             directorio.mkdirs(); // Crea la carpeta si no existe

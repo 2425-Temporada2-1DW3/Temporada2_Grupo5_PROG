@@ -217,7 +217,8 @@ public class login extends JFrame implements ActionListener {
 
 			} else if (userPassCheck(gui_user, gui_pass)) {
 				Point location = getLocation();
-				main mainFrame = new main(userType, gui_user);
+				main mainFrame = new main(userType, gui_user, this);
+			    mainFrame.setLoginInstance(this); // Pasa la instancia de login a main
 				mainFrame.setLocation(location);
 				mainFrame.setVisible(true);
 				log.add("Intento de login exitoso, Usuario : " + gui_user + " Tipo de usuario: " + userType
@@ -232,7 +233,8 @@ public class login extends JFrame implements ActionListener {
 			}
 		} else if (o == btnLoginAnonimo) {
 			Point location = getLocation();
-			main mainFrame = new main(0, "Anonimo");
+			main mainFrame = new main(0, "Anonimo", this);
+//		    mainFrame.setLoginInstance(this); // Pasa la instancia de login a main
 			mainFrame.setLocation(location);
 			mainFrame.setVisible(true);
 			dispose();
@@ -294,6 +296,11 @@ public class login extends JFrame implements ActionListener {
 
  
 	}
-
-
+	// Getters y Setters de lista de usuarios para la Gestion en PanelUsuarios
+	public ArrayList<Usuario> getUsers(){
+		return users;
+	}
+	public void setUsers(ArrayList<Usuario> updateUsers){
+		this.users = updateUsers;
+	}
 }
