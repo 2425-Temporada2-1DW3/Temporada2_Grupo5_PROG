@@ -128,12 +128,10 @@ public class PanelEquipos extends JPanel implements ActionListener {
 
 		// Botón "Modificar Jugador"
 		btnModificarEquipo = new JButton("Modificar Datos");
-		panel.add(btnModificarEquipo);
-		btnModificarEquipo.addActionListener(this);
+		parentFrame.buttonCreate(btnModificarEquipo, panel, parentFrame.colorBlue);
 
 		btnCambiarFoto = new JButton("Cambiar Fotografía");
-		panel.add(btnCambiarFoto);
-		btnCambiarFoto.addActionListener(this);
+		parentFrame.buttonCreate(btnCambiarFoto, panel, parentFrame.colorYellow);
 		
 		PanelContenidoJugador = new JPanel();
 		PanelContenidoJugador.setPreferredSize(new Dimension(600, 600)); // Tamaño deseado
@@ -178,7 +176,7 @@ public class PanelEquipos extends JPanel implements ActionListener {
 		txtFechaFundacion.setColumns(10);
 		PanelContenidoJugador.add(txtFechaFundacion, "cell 2 4,growx,aligny top");
 		
-		icon = new ImageIcon("media.jugadores/idFotodefault.png");
+		icon = new ImageIcon("imagenes/equipos/idFotodefault.png");
 		Image image = icon.getImage();
 		Image newImage = image.getScaledInstance(79, 93, Image.SCALE_SMOOTH);
 		icon = new ImageIcon(newImage);
@@ -207,8 +205,7 @@ public class PanelEquipos extends JPanel implements ActionListener {
 		PanelListEquipos.add(panel_1, BorderLayout.SOUTH);
 		
 		btnGuardarCambios = new JButton("Guardar Cambios");
-		panel_1.add(btnGuardarCambios);
-		btnGuardarCambios.addActionListener(this);
+		parentFrame.buttonCreate(btnGuardarCambios, panel_1, parentFrame.colorBlue);
 		
 		panel_2 = new JPanel();
 		PanelListEquipos.add(panel_2, BorderLayout.CENTER);

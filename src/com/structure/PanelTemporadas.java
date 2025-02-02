@@ -98,7 +98,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
         if(parentFrame.userType == 4) {
             parentFrame.buttonCreate(btnEliminarTemporada, buttonPanel, parentFrame.colorRed);
         }
-        parentFrame.buttonCreate(btnAnadirEquipo, 		buttonPanel, parentFrame.colorBlue);
+//        parentFrame.buttonCreate(btnAnadirEquipo, 		buttonPanel, parentFrame.colorBlue);
 //        parentFrame.buttonCreate(btnGestionEquipos, 	buttonPanel, parentFrame.colorBlue);
         parentFrame.buttonCreate(btnIniciarTemporada, 	buttonPanel, parentFrame.colorYellow);
         parentFrame.buttonCreate(btnFinalizarTemporada, buttonPanel, parentFrame.colorRed);
