@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import com.structure.main;
 
@@ -89,78 +90,126 @@ public class GeneradorTemporada {
 		        return;
 		    }
 
-		    // Crear ventana emergente
-		    JDialog dialog = new JDialog(parentFrame, "Ingresar Nombre de Equipos", true);
+		 // Crear ventana emergente
+		    JDialog dialog = new JDialog(parentFrame, "Ingresar Datos de Equipos", true);
 		    dialog.setLayout(new BorderLayout());
 
-		    // Panel para contener los campos dinámicos
+		    // Panel principal para los campos
 		    JPanel panelEquipos = new JPanel(new GridBagLayout());
 		    GridBagConstraints gbc = new GridBagConstraints();
 		    gbc.insets = new Insets(5, 5, 5, 5);
 		    gbc.fill = GridBagConstraints.HORIZONTAL;
 
 		    // Lista para almacenar los JTextFields
-		    ArrayList<JTextField> camposTexto = new ArrayList<>();
+		    ArrayList<JTextField> textFieldsNomEqui = new ArrayList<>();
+		    ArrayList<JTextField> textFieldsNomEntre = new ArrayList<>();
+		    ArrayList<JTextField> textFieldsFechaFun = new ArrayList<>();
 
-		    // Crear dinámicamente las etiquetas y los campos de texto
-		    for (int i = 0; i < numEquipos; i++) {
-		        JLabel label = new JLabel("Equipo " + (i + 1) + ":");
-		        JTextField textField = new JTextField(15);
-		        camposTexto.add(textField);
-
-		        // Añadir etiqueta
-		        gbc.gridx = 0;
-		        gbc.gridy = i;
-		        panelEquipos.add(label, gbc);
-
-		        // Añadir campo de texto
-		        gbc.gridx = 1;
-		        panelEquipos.add(textField, gbc);
+		    // Encabezados
+		    String[] headers = {"Equipo", "Nombre del Equipo", "Entrenador", "Año de Fundación"};
+		    for (int i = 0; i < headers.length; i++) {
+		        gbc.gridx = i;
+		        gbc.gridy = 0;
+		        JLabel labelHeader = new JLabel(headers[i], SwingConstants.CENTER);
+		        panelEquipos.add(labelHeader, gbc);
 		    }
 
-		    // Botón para guardar
+		    // Crear dinámicamente las filas de equipos
+		    for (int i = 0; i < numEquipos; i++) {
+		        // Generar ID de equipo y Foto ID (A1, B1, C1...)
+		        char idChar = (char) ('A' + i);
+		        String idEquipo = idChar + "1"; 
+
+		        // 1️⃣ ID del equipo (Label)
+		        gbc.gridx = 0;
+		        gbc.gridy = i + 1;
+		        JLabel labelID = new JLabel("Equipo" + Integer.toString(i+1)+": ", SwingConstants.CENTER);
+		        panelEquipos.add(labelID, gbc);
+
+		        // 2️⃣ Nombre del Equipo
+		        gbc.gridx = 1;
+		        JTextField textFieldNomEqui = new JTextField(15);
+		        textFieldsNomEqui.add(textFieldNomEqui);
+		        panelEquipos.add(textFieldNomEqui, gbc);
+
+		        // 3️⃣ Nombre del Entrenador
+		        gbc.gridx = 2;
+		        JTextField textFieldNomEntre = new JTextField(15);
+		        textFieldsNomEntre.add(textFieldNomEntre);
+		        panelEquipos.add(textFieldNomEntre, gbc);
+
+		        // 4️⃣ Año de Fundación
+		        gbc.gridx = 3;
+		        JTextField textFieldFechaFun = new JTextField(4);
+		        textFieldsFechaFun.add(textFieldFechaFun);
+		        panelEquipos.add(textFieldFechaFun, gbc);
+
+//		        // 5️⃣ Foto ID (Label)
+//		        gbc.gridx = 4;
+//		        JLabel labelFotoID = new JLabel(idEquipo, SwingConstants.CENTER);
+//		        panelEquipos.add(labelFotoID, gbc);
+		    }
+
+		    // Botón para guardar los datos
 		    JButton btnGuardar = new JButton("Guardar Datos");
 		    btnGuardar.addActionListener(e -> {
 		        ArrayList<Equipo> temporalListEquipos = new ArrayList<>();
-		        for (int i = 0; i < camposTexto.size(); i++) {
-		            String texto = camposTexto.get(i).getText().trim();
-		            if (texto.isEmpty()) {
+		        
+		        for (int i = 0; i < numEquipos; i++) {
+		            String nombre = textFieldsNomEqui.get(i).getText().trim();
+		            String entrenador = textFieldsNomEntre.get(i).getText().trim();
+		            String fechaTexto = textFieldsFechaFun.get(i).getText().trim();
+		            String idEquipo = (char) ('A' + i) + "1"; // A1, B1, C1...
+		            
+		            // Validación de datos
+		            if (nombre.isEmpty() || entrenador.isEmpty() || fechaTexto.isEmpty()) {
 		                JOptionPane.showMessageDialog(dialog, "Todos los campos deben estar llenos.", "Error", JOptionPane.ERROR_MESSAGE);
 		                return;
 		            }
-		            // Crear objeto Equipo
-		            Equipo equipo = new Equipo(i , texto); // ID comienza en 1
+
+		            int fechaFundacion;
+		            try {
+		                fechaFundacion = Integer.parseInt(fechaTexto);
+		            } catch (NumberFormatException ex) {
+		                JOptionPane.showMessageDialog(dialog, "El año de fundación debe ser un número.", "Error", JOptionPane.ERROR_MESSAGE);
+		                return;
+		            }
+
+		            // Crear objeto Equipo y añadirlo a la lista
+		            Equipo equipo = new Equipo(i, nombre, entrenador, fechaFundacion, idEquipo);
 		            temporalListEquipos.add(equipo);
 		        }
 
-		        // Imprimir los equipos creados en la consola (puedes procesarlos según necesites)
+		        // Imprimir los equipos creados en la consola
 		        for (Equipo equipo : temporalListEquipos) {
-		            System.out.println("ID: " + equipo.getId() + ", Nombre: " + equipo.getNombre());
+		            System.out.println("ID: " + equipo.getId() + ", Nombre: " + equipo.getNombre() +
+		                               ", Entrenador: " + equipo.getEntrenador() + 
+		                               ", Año: " + equipo.getFechaFundEq() + 
+		                               ", FotoID: " + equipo.getIdFoto());
 		        }
-
 		        // Agregar los equipos a la lista de la temporada
 		        temporada.setListEquipos(temporalListEquipos);
-		        JOptionPane.showMessageDialog(dialog, "Equipos guardados correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+		        JOptionPane.showMessageDialog(dialog, "✅ Equipos guardados correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 		        dialog.dispose();
 		    });
 
 		    // Panel para el botón
 		    JPanel panelBoton = new JPanel();
-		    panelBoton.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5)); // Alineación central, 5px de espacio horizontal y vertical
-
+		    panelBoton.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		    panelBoton.add(btnGuardar);
 
-		    // Scroll si hay muchos equipos
+		    // Scroll en caso de muchos equipos
 		    JScrollPane scrollPane = new JScrollPane(panelEquipos);
 
 		    // Agregar componentes al diálogo
 		    dialog.add(scrollPane, BorderLayout.CENTER);
 		    dialog.add(panelBoton, BorderLayout.SOUTH);
 
-		    // Configurar tamaño y mostrar
-		    dialog.setSize(400, Math.min(600, 50 * numEquipos));
+		    // Configurar tamaño y mostrar ventana
+		    dialog.setSize(600, Math.min(600, 50 * numEquipos));
 		    dialog.setLocationRelativeTo(null);
 		    dialog.setVisible(true);
+
 		}
 
 
