@@ -396,9 +396,8 @@ public class PanelJugadores extends JPanel implements ActionListener {
  
 
 
-	    CrearJugadoresPrueba();
-		
-		
+	    
+	    actualizarArchivo();
 	}
 	
 	
@@ -982,6 +981,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
             new Jugador("1006-6011K", "Raul Perez", 28, "Central", "Venezuela", 2.01, 91, 14, 2, 1992, 5, "F11"),
             new Jugador("1006-6012L", "Ivan Martinez", 30, "Libero", "Bolivia", 1.79, 80, 5, 8, 1995, 5, "F12")
         };
+       
 
      // Asignar 12 jugadores a cada equipo de forma secuencial en 6 equipos
         int jugadorIndex = 0; // Índice global de jugadores
