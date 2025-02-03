@@ -742,7 +742,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 	                    XML.add(Integer.toString(equipo.getPuntosTotales()), true, 4);
 	                    XML.add("puntosTotales", false, 3);
 	                    XML.add("jugadores", false, 3);
-	                    System.out.println(equipo);
+	                    
 	                    for (Jugador jugador : equipo.getListJugadores()) {
 	                        XML.add("jugador", false, 4);
 	                        XML.add("nombre", false, 5);
@@ -776,7 +776,7 @@ public class PanelInicio extends JPanel implements ActionListener {
     private void exportacionPdf(JTable jTable) {
         Document document = new Document();
         String nombreTemporada = comboBox.getSelectedItem().toString();
-        System.out.println("exportacion");
+        
         try {
             String filePath = "clasificacion_"+nombreTemporada+".pdf";
             PdfWriter.getInstance(document, new FileOutputStream(filePath));
