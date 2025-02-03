@@ -12,6 +12,8 @@ import java.awt.BorderLayout;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 import com.logic.CreadorXML;
@@ -39,74 +41,77 @@ import java.util.Map;
 import java.awt.event.ActionEvent;
 import javax.swing.BoxLayout;
 import java.awt.GridLayout;
-import com.itextpdf.*;
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 
 public class PanelInicio extends JPanel implements ActionListener {
+ 	private static final long serialVersionUID = 1L;
+
 	// creamos los maps para hacer que el contenido de la pagina sea dinamico
 	private Map<String, JLabel> labelsMap = new HashMap<>();
 	private Map<String, JTextField> textFieldMap = new HashMap<>();
-	private static final long serialVersionUID = 1L;
-	private int userType;
-	private Color colorbg;
-	private Color colortxt;
-	JPanel PanelJornadas;
-	JPanel PanelClasificacion;
+
+	// Panels
+	private JPanel PanelJornadas;
+	private JPanel PanelClasificacion;
 	private JPanel PanelTituloJornadas;
-	private JLabel lblNewLabel_1;
 	private JPanel PanelContenidoPartidos;
 	private JPanel PanelSelectTemporada;
 	private JPanel PanelTitulo;
 	private JPanel PanelMostrarPartidos;
 	private JPanel PanelPartido1;
-	private JLabel partidoELoc0;
-	//private JTextField partido1LocPoints;
 	private JPanel PanelPartido3;
-	//private JTextField partido3LocPoints;
-	private JPanel PanelBotones;
-	private JTable table;
-	private JLabel partidoEVis0;
+	private JPanel buttonPanel;
+	private JPanel PanelContenedor;
+	private JPanel PanelContenido;
+	private JPanel panelMoverJornadas;
+	private JPanel panelPartido2;
 
-	private JTextField pointsELoc0,pointsEVis0 ;
-	private int jornadaSelect = 1;
-	private JButton btnSave;
-	private JButton btnUpdateApp;
+	// Labels
+	private JLabel lblJornadas = new JLabel("Jornadas");
+	private JLabel partidoELoc0;
+	private JLabel partidoEVis0;
+	private JLabel partidoELoc1;
+	private JLabel partidoEVis1;
+	private JLabel partidoELoc2;
+	private JLabel partidoEVis2;
+	private JLabel numJornada;
+	private JLabel lblTitulo = new JLabel("CLASIFICACION");
+
+	// Text Fields
+	private JTextField pointsELoc0;
+	private JTextField pointsEVis0;
+	private JTextField pointsELoc1;
+	private JTextField pointsEVis1;
+	private JTextField pointsELoc2;
+	private JTextField pointsEVis2;
+
+	// Buttons
+ 
+	private JButton prevButton;
+	private JButton nextButton;
+	private JButton btnFinalizarJornada = new JButton("Finalizar Jornada");
+ 	private JButton btnExportXml = 		  new JButton("Exportar XML");
+	private JButton btnExportPdf = 		  new JButton("Exportar PDF");
+
+
+	// Otros 
+	private JTable table;
 	private DefaultTableModel modelClasificacion;
 	private ArrayList<Partido> partidos;
 	private ArrayList<Temporada> listTemporadas;
 	private ArrayList<Jornada> listJornadas;
 	private ArrayList<Equipo> nombre;
-	private JComboBox<Temporada> comboBox;
 	private ArrayList<Equipo> Clasificacion;
+	private JComboBox<Temporada> comboBox;
 	private Temporada TemporadaSeleccionada;
 	private main parentFrame;
-	private JPanel PanelContenedor;
-	private JLabel lblNewLabel;
-	private JPanel PanelContenido;
-	private JPanel panelMoverJornadas;
-	private JButton prevButton;
-	private JLabel numJornada;
-	private JButton nextButton;
-	private JPanel panelPartido2;
-	private JLabel partidoELoc1;
-	private JTextField pointsELoc1;
-	private JLabel partidoEVis1;
-	private JTextField pointsEVis1;
-	private JLabel partidoELoc2;
-	private JTextField pointsELoc2;
-	private JLabel partidoEVis2;
-	private JTextField pointsEVis2;
-	private JButton btnExport;
-	private JButton btnPrintPdf;
-	private Log log = new Log();
+ 	private int jornadaSelect = 1;
+	private int userType;
+	private JButton btnDatosdePrueba;
+ 
+ 
 
-	
 	/**
 	 * Create the panel.
 	 */
@@ -116,15 +121,13 @@ public class PanelInicio extends JPanel implements ActionListener {
 		// sitio
 		this.parentFrame = parentFrame;
 		userType = parentFrame.userType;
-		colorbg = parentFrame.colorbg;
-		colortxt = parentFrame.colortxt;
+ 
 		this.listTemporadas = new ArrayList<>();
 		this.listJornadas = new ArrayList<>();
 		cargarTemporadasDesdeArchivo();
 
 		// Cambia color del JPanel
-		setBackground(colorbg);
-		setLayout(new BorderLayout(0, 0));
+ 		setLayout(new BorderLayout(0, 0));
 
 		
 		PanelContenedor = new JPanel();
@@ -134,10 +137,9 @@ public class PanelInicio extends JPanel implements ActionListener {
 		PanelTitulo = new JPanel();
 		PanelContenedor.add(PanelTitulo, BorderLayout.NORTH);
 		
-		lblNewLabel = new JLabel("CLASIFICACION");
-		lblNewLabel.setForeground(Color.WHITE);
-		lblNewLabel.setFont(parentFrame.fuenteHeader);
-		PanelTitulo.add(lblNewLabel);
+ 		lblTitulo.setForeground(Color.WHITE);
+		lblTitulo.setFont(parentFrame.fuenteHeader);
+		PanelTitulo.add(lblTitulo);
 		
 		PanelContenido = new JPanel();
 		PanelContenedor.add(PanelContenido, BorderLayout.SOUTH);
@@ -152,9 +154,9 @@ public class PanelInicio extends JPanel implements ActionListener {
 		PanelTituloJornadas = new JPanel();
 		PanelJornadas.add(PanelTituloJornadas, BorderLayout.NORTH);
 
-		lblNewLabel_1 = new JLabel("Jornadas");
+		
 
-		PanelTituloJornadas.add(lblNewLabel_1);
+		PanelTituloJornadas.add(lblJornadas);
 
 		PanelContenidoPartidos = new JPanel();
 		PanelJornadas.add(PanelContenidoPartidos, BorderLayout.CENTER);
@@ -172,6 +174,10 @@ public class PanelInicio extends JPanel implements ActionListener {
 		PanelContenidoPartidos.add(PanelMostrarPartidos, BorderLayout.CENTER);
 		PanelMostrarPartidos.setLayout(new GridLayout(0, 1, 0, 0));
 
+		PanelPartido1 = new JPanel();
+		PanelMostrarPartidos.add(PanelPartido1);
+
+		// Inicializar campos para Partido 1
 		PanelPartido1 = new JPanel();
 		PanelMostrarPartidos.add(PanelPartido1);
 
@@ -240,7 +246,6 @@ public class PanelInicio extends JPanel implements ActionListener {
 		textFieldMap.put("pointsEVis2", pointsEVis2);
 		pointsEVis2.setColumns(10);
 		PanelPartido3.add(pointsEVis2);
-		
 		panelMoverJornadas = new JPanel();
 		PanelContenidoPartidos.add(panelMoverJornadas, BorderLayout.SOUTH);
 		
@@ -255,33 +260,29 @@ public class PanelInicio extends JPanel implements ActionListener {
 		panelMoverJornadas.add(nextButton);
 		nextButton.addActionListener(this);
 		
-		PanelBotones = new JPanel();
-		PanelJornadas.add(PanelBotones, BorderLayout.SOUTH);
+		buttonPanel = new JPanel();
+		PanelJornadas.add(buttonPanel, BorderLayout.SOUTH);
 		
+
     
-		btnSave = new JButton("Finalizar Jornada");
+        parentFrame.buttonCreate(btnFinalizarJornada, buttonPanel, parentFrame.colorRed);
+        parentFrame.buttonCreate(btnExportXml, buttonPanel, parentFrame.colorBlue);
+        parentFrame.buttonCreate(btnExportPdf, buttonPanel, parentFrame.colorBlue);
+        
+        btnDatosdePrueba = new JButton("Test");
+        if (userType < 2) {
+        	btnDatosdePrueba.setVisible(false);
+        	btnExportPdf.setVisible(false);
+        }
+        parentFrame.buttonCreate(btnDatosdePrueba, buttonPanel, parentFrame.colorGreen);
+        
+        // cambio el actionlistener de los botones a el de esta clase
+ 
+        btnFinalizarJornada.addActionListener(this);
+        btnExportXml.addActionListener(this);
+        btnExportPdf.addActionListener(this);
+        btnDatosdePrueba.addActionListener(this);
 
-		btnSave.addActionListener(this);
-		PanelBotones.add(btnSave);
-
-		btnUpdateApp = new JButton("Aplicar cambios");
-
-		btnUpdateApp.addActionListener(this);
-		PanelBotones.add(btnUpdateApp);
-		
-		btnExport = new JButton("Exportar");
-		PanelBotones.add(btnExport);
-		btnExport.setBackground(colorbg);
-		btnExport.setForeground(colortxt);
-		btnExport.setFont(parentFrame.fuenteDefecto);
-		btnExport.addActionListener(this);
-
-		btnPrintPdf = new JButton("Imprimir PDF");
-		PanelBotones.add(btnPrintPdf);
-		btnPrintPdf.setBackground(colorbg);
-		btnPrintPdf.setForeground(colortxt);
-		btnPrintPdf.setFont(parentFrame.fuenteDefecto);
-		btnPrintPdf.addActionListener(this);
 
 		// Inicializar PanelClasificacion
 		PanelClasificacion = new JPanel();
@@ -305,25 +306,9 @@ public class PanelInicio extends JPanel implements ActionListener {
 		// Agregar JScrollPane
 		JScrollPane scrollPane = new JScrollPane(table);
 		PanelClasificacion.add(scrollPane);
-
-		JComponent labelFormat[] = { partidoELoc0, pointsELoc0, partidoEVis0, pointsEVis0, partidoELoc1, pointsELoc1,
-				partidoEVis1, pointsEVis1, partidoELoc2, pointsELoc2, partidoEVis2, pointsEVis2, lblNewLabel_1,
-				comboBox, prevButton, numJornada, nextButton, btnSave, btnUpdateApp, };
-		JComponent panelFormat[] = { PanelTitulo, PanelContenido, PanelJornadas, PanelClasificacion, PanelTituloJornadas, PanelContenidoPartidos, PanelSelectTemporada, PanelMostrarPartidos, PanelPartido1, PanelPartido3,
-				panelPartido2, PanelPartido3, PanelBotones, panelMoverJornadas };
-
-		for (int i = 0; i < labelFormat.length; i++) {
-			labelFormat[i].setBackground(colorbg);
-			labelFormat[i].setForeground(colortxt);
-			labelFormat[i].setFont(parentFrame.fuenteDefecto);
-		}
-
-		// Loop through panelFormat and apply properties
-		for (int i = 0; i < panelFormat.length; i++) {
-			panelFormat[i].setBackground(colorbg);
-		}
-		parentFrame.formatearTabla(table);
-		scrollPane.getViewport().setBackground(colorbg);
+  
+	    parentFrame.formatearTabla(table);
+        parentFrame.formatearScrollPane(scrollPane);
 
 		SwichDatosJornada();
 		cargarTabla();
@@ -597,11 +582,9 @@ public class PanelInicio extends JPanel implements ActionListener {
 		TemporadaSeleccionada = (Temporada) comboBox.getSelectedItem();
 		if (TemporadaSeleccionada.isIniciado() == false
 				|| (TemporadaSeleccionada.isIniciado() && TemporadaSeleccionada.isFinalizado())) {
-			btnSave.setVisible(false);
-			btnUpdateApp.setVisible(false);
+			btnFinalizarJornada.setVisible(false);
 		} else {
-			btnSave.setVisible(true);
-			btnUpdateApp.setVisible(true);
+			btnFinalizarJornada.setVisible(true);
 		}
 
 	}
@@ -822,6 +805,75 @@ public class PanelInicio extends JPanel implements ActionListener {
             e.printStackTrace();
         }
     }
+    
+    public void CargarDatosDeTemporada() {
+        TemporadaSeleccionada = (Temporada) comboBox.getSelectedItem();
+        listJornadas = TemporadaSeleccionada.getListJornadas();
+        
+        int[] puntuacionLoc = { 3,3,2,3,2,3,3,2,3,3,3,2,3,3,3,3,3,3,3,2,3,3,3,3,3,3,2,3,2,3 };
+        int[] puntuacionVis = { 1,0,3,1,3,0,1,3,2,0,1,3,0,2,0,1,2,0,2,3,0,0,1,0,2,0,3,1,3,0 };
+        int[] idLocal = {0, 1, 2, 5, 4, 0, 1, 2, 3, 5, 0, 1, 2, 3, 4, 5, 4, 3, 3, 2, 1, 5, 0, 4, 4, 3, 2, 5, 1, 0};
+        int[] idVisit = {5, 4, 3, 3, 2, 1, 5, 0, 4, 4, 3, 2, 5, 1, 0, 0, 1, 2, 5, 4, 0, 1, 2, 3, 5, 0, 1, 2, 3, 4};
+
+        // Reiniciar estadísticas de todos los equipos
+//        for (Equipo equipo : nombre) {
+//            equipo.resetEstadisticas(); // Suponiendo que tienes un método que reinicia victorias, derrotas y puntos.
+//        }
+
+        for (int jornadaID = 0; jornadaID < listJornadas.size(); jornadaID++) {
+            Jornada jornadaActual = listJornadas.get(jornadaID);
+            partidos = jornadaActual.getListPartidos();
+
+            for (int counter = 0; counter < partidos.size(); counter++) {
+                Partido partido = partidos.get(counter);
+
+                int index = (jornadaID * 3) + counter;
+
+                partido.setpuntuajeLoc(puntuacionLoc[index]);
+                partido.setpuntuajeVis(puntuacionVis[index]);
+                partido.setJugado(true);
+
+                int idEquipoLocal = idLocal[index];
+                int idEquipoVisitante = idVisit[index];
+
+                if (puntuacionLoc[index] < puntuacionVis[index]) {
+                    partido.setGanadorVis(true);
+
+                    for (Equipo equipo : nombre) {
+                        if (equipo.getId() == idEquipoLocal) {
+                            equipo.incrementarPartidosPerdido();
+                            equipo.incrementarPartidosTotales();
+                            equipo.addPuntosTotal(1); // Perdedor obtiene 1 punto
+                        } else if (equipo.getId() == idEquipoVisitante) {
+                            equipo.incrementarPartidosGanados();
+                            equipo.incrementarPartidosTotales();
+                            equipo.addPuntosTotal(3); // Ganador obtiene 3 puntos
+                        }
+                    }
+                } else {
+                    partido.setGanadorLoc(true);
+
+                    for (Equipo equipo : nombre) {
+                        if (equipo.getId() == idEquipoLocal) {
+                            equipo.incrementarPartidosGanados();
+                            equipo.incrementarPartidosTotales();
+                            equipo.addPuntosTotal(3); // Ganador obtiene 3 puntos
+                        } else if (equipo.getId() == idEquipoVisitante) {
+                            equipo.incrementarPartidosPerdido();
+                            equipo.incrementarPartidosTotales();
+                            equipo.addPuntosTotal(1); // Perdedor obtiene 1 punto
+                        }
+                    }
+                }
+            }
+        }
+
+		parentFrame.changes = true;
+        actualizarTabla();
+		guardarDatos();
+    }
+
+    
 	@Override
  	public void actionPerformed(ActionEvent ae) {
 		Object o = ae.getSource();
@@ -852,7 +904,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 				parentFrame.mensaje("No hay jornadas anteriores", 1);
 			}
 
-		} else if (o == btnSave) {
+		} else if (o == btnFinalizarJornada) {
 			if (pointsELoc0.getText().isEmpty() && pointsEVis0.getText().isEmpty() && pointsELoc1.getText().isEmpty()
 					&& pointsEVis1.getText().isEmpty() && pointsELoc2.getText().isEmpty()
 					&& pointsEVis2.getText().isEmpty()) {
@@ -873,6 +925,9 @@ public class PanelInicio extends JPanel implements ActionListener {
 						ActualizarPuntuaciones(); // Si el usuario selecciona "Sí", ejecuta el método
 						cambioEstadoTextFields();
 						actualizarTabla();
+						parentFrame.changes = true;		
+						guardarDatos();
+
 					}
 				} else {
 					int seleccion = JOptionPane.showConfirmDialog(null, "¿Deseas guardar la jornada?", // Mensaje que se
@@ -890,19 +945,21 @@ public class PanelInicio extends JPanel implements ActionListener {
 						ActualizarPuntuaciones(); // Si el usuario selecciona "Sí", ejecuta el método
 						cambioEstadoTextFields();
 						actualizarTabla();
+						parentFrame.changes = true;		
+						guardarDatos();
 					}
 				}
 			}
 
-		} else if (o == btnUpdateApp) {
-			guardarDatos();
-		}else if(o== btnExport) {
+		} else if (o == btnExportXml) {
 			exportacion();
 
-		}else if (o == btnPrintPdf) {
+		} else if (o == btnExportPdf) {
 			exportacionPdf(table);
 		}
-
+		else if (o == btnDatosdePrueba) {
+			CargarDatosDeTemporada();
+		}
 	}
 
 }
