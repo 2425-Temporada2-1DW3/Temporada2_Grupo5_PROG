@@ -5,3 +5,4 @@ consoleLog.log
 resources/temporada.ser
 resources/usuario.ser
 *.ser
+*.pdf
