@@ -526,7 +526,7 @@ public class PanelEquipos extends JPanel implements ActionListener {
         Equipo equipoSeleccionado = temporadaSeleccionada.getListEquipos().get(rowIndex);
 
         // **Nueva ruta para equipos fuera del JAR**
-        String rutaBase = System.getProperty("user.dir") + "/imagenes/equipos/";
+        String rutaBase = "C:\\xampp\\htdocs\\imagenes\\equipos";
         File directorio = new File(rutaBase);
         if (!directorio.exists()) {
             directorio.mkdirs(); // Crea la carpeta si no existe

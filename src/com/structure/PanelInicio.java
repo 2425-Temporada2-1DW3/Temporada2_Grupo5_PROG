@@ -732,6 +732,9 @@ public class PanelInicio extends JPanel implements ActionListener {
 	                for (int i = 0; i < clasificacion.size(); i++) {
 	                    Equipo equipo = clasificacion.get(i);
 	                    XML.add("equipo", false, 2);
+	                    XML.add("idFotoEquipo", false, 3);
+	                    XML.add(equipo.getIdFoto(), true, 4);
+	                    XML.add("idFotoEquipo", false, 3);
 	                    XML.add("posicion", false, 3);
 	                    XML.add(Integer.toString(i + 1), true, 4);
 	                    XML.add("posicion", false, 3);

@@ -591,7 +591,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
         Jugador jugadorSeleccionado = equipoSeleccionado.getListJugadores().get(rowIndex);
 
         // **Nueva ruta fuera del JAR**
-        String rutaBase = System.getProperty("user.dir") + "/imagenes/jugadores/";
+        String rutaBase = "C:\\xampp\\htdocs\\imagenes\\jugadores";
         File directorio = new File(rutaBase);
         if (!directorio.exists()) {
             directorio.mkdirs(); // Crea la carpeta si no existe
