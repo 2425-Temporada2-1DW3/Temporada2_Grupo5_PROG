@@ -159,12 +159,24 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 
         txtUsername = new JTextField();
         panel.add(txtUsername);
+        txtUsername.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                txtUsername.selectAll(); // Selecciona todo el texto cuando se hace clic
+            }
+        });
 
         JLabel lblPassword = new JLabel("Contraseña:");
         panel.add(lblPassword);
 
         txtPassword = new JPasswordField();
         panel.add(txtPassword);
+        txtPassword.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                txtPassword.selectAll(); // Selecciona todo el texto cuando se hace clic
+            }
+        });
 
         JLabel lblUserType = new JLabel("Tipo de Usuario:");
         panel.add(lblUserType);
@@ -419,20 +431,17 @@ public class PanelUsuarios extends JPanel implements ActionListener {
 	    if (confirmation == JOptionPane.YES_OPTION) {
 	    	listUsers.removeIf(user -> user.getType() != 4);
 	        tableModel.removeAllUsers();
+	        
+	        Usuario userDir = new Usuario("director", 4, "director");
+            tableModel.addUser(userDir);
 
-	        // Agregar de nuevo el Director
-	        for (Usuario user : listUsers) {
-	            if (user.getType() == 4) {
-	                tableModel.addUser(user);
-	                break;
-	            }
-	        }
-
-	        actualizarUsuarios();
 	        parentFrame.mensaje("Todos los usuarios eliminados excepto el Director", 2);
 	    }
+	    parentFrame.changes = true;
+	    actualizarUsuarios();
+	    actualizarArchivo();
 	}
-
+	
 	private void modificarUsuario() {
 	    int selectedRow = userTable.getSelectedRow();
 	    if (selectedRow == -1) {
