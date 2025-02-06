@@ -19,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 import com.logic.CreadorXML;
 import com.logic.Equipo;
 import com.logic.Jornada;
+import com.logic.Jugador;
 import com.logic.Log;
 import com.logic.Partido;
 import com.logic.Temporada;
@@ -673,7 +674,6 @@ public class PanelInicio extends JPanel implements ActionListener {
 	            XML.add("finalizado", false, 1);
 	            XML.add("jornadas", false, 1);
 
-	            // Validación: Usar listJornadas.size() en lugar de temporada.getCantidadJornadas()
 	            for (int i = 0; i < listJornadas.size(); i++) {
 	                Jornada jornada = listJornadas.get(i);
 	                XML.add("jornada", false, 2);
@@ -689,7 +689,6 @@ public class PanelInicio extends JPanel implements ActionListener {
 	                    XML.add("NombreLocal", false, 7);
 
 	                    int idLocal = partido.getEquipoLoc();
-	                    // Validación: Verificar que idLocal esté dentro del rango de la lista nombre
 	                    if (idLocal >= 0 && idLocal < nombre.size()) {
 	                        XML.add(nombre.get(idLocal).getNombre(), true, 8);
 	                    } else {
@@ -706,7 +705,6 @@ public class PanelInicio extends JPanel implements ActionListener {
 	                    int idVis = partido.getEquipoVis();
 	                    XML.add("nombreVisitante", false, 7);
 
-	                    // Validación: Verificar que idVis esté dentro del rango de la lista nombre
 	                    if (idVis >= 0 && idVis < nombre.size()) {
 	                        XML.add(nombre.get(idVis).getNombre(), true, 8);
 	                    } else {
@@ -727,17 +725,18 @@ public class PanelInicio extends JPanel implements ActionListener {
 	            }
 	            XML.add("jornadas", false, 1);
 
-	            // Añadir la clasificación de la temporada
 	            ArrayList<Equipo> clasificacion = temporada.getClasificacion();
 	            XML.add("clasificacion", false, 1);
 
-	            // Validación: Asegurar que clasificacion no sea null
-	            if (clasificacion != null) {
+	            //if (clasificacion != null) {
 	                for (int i = 0; i < clasificacion.size(); i++) {
 	                    Equipo equipo = clasificacion.get(i);
 	                    XML.add("equipo", false, 2);
+	                    XML.add("idFotoEquipo", false, 3);
+	                    XML.add(equipo.getIdFoto(), true, 4);
+	                    XML.add("idFotoEquipo", false, 3);
 	                    XML.add("posicion", false, 3);
-	                    XML.add(Integer.toString(i + 1), true, 4); // La posición es i + 1
+	                    XML.add(Integer.toString(i + 1), true, 4);
 	                    XML.add("posicion", false, 3);
 	                    XML.add("nombre", false, 3);
 	                    XML.add(equipo.getNombre(), true, 4);
@@ -745,15 +744,32 @@ public class PanelInicio extends JPanel implements ActionListener {
 	                    XML.add("puntosTotales", false, 3);
 	                    XML.add(Integer.toString(equipo.getPuntosTotales()), true, 4);
 	                    XML.add("puntosTotales", false, 3);
+	                    XML.add("jugadores", false, 3);
+	                    
+	                    for (Jugador jugador : equipo.getListJugadores()) {
+	                        XML.add("jugador", false, 4);
+	                        XML.add("nombre", false, 5);
+	                        XML.add(jugador.getNombre(), true, 6);
+	                        XML.add("nombre", false, 5);
+	                        XML.add("edad", false, 5);
+	                        XML.add(Integer.toString(jugador.getEdad()), true, 6);
+	                        XML.add("edad", false, 5);
+	                        XML.add("posicion", false, 5);
+	                        XML.add(jugador.getPosicion(), true, 6);
+	                        XML.add("posicion", false, 5);
+	                        XML.add("idFoto", false, 5);
+	                        XML.add(jugador.getIdFoto(), true, 6);
+	                        XML.add("idFoto", false, 5);
+	                        XML.add("jugador", false, 4);
+	                    }
+	                    
+	                    XML.add("jugadores", false, 3);
 	                    XML.add("equipo", false, 2);
-	                }
+	                //}
 	            }
 	            XML.add("clasificacion", false, 1);
-
 	            XML.add("temporada", false, 0);
 	        }
-
-	        // Crear un archivo para cada temporada en la ruta especificada
 	        XML.file(rutaBase + listTemporadas.get(t).getNombre());
 	    }
 	    parentFrame.mensaje("Exportacion ejecutada con exito", 2);
@@ -763,7 +779,7 @@ public class PanelInicio extends JPanel implements ActionListener {
     private void exportacionPdf(JTable jTable) {
         Document document = new Document();
         String nombreTemporada = comboBox.getSelectedItem().toString();
-        System.out.println("exportacion");
+        
         try {
             String filePath = "clasificacion_"+nombreTemporada+".pdf";
             PdfWriter.getInstance(document, new FileOutputStream(filePath));
