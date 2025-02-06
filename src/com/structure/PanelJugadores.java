@@ -161,6 +161,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		// Botón "Modificar Jugador"
 		btnModificarJugador = new JButton("Modificar Jugador");
 		parentFrame.buttonCreate(btnModificarJugador, panel, parentFrame.colorBlue);
+		btnModificarJugador.addActionListener(this);
 		GridBagConstraints gbc_btnModificarJugador = new GridBagConstraints();
 		gbc_btnModificarJugador.anchor = GridBagConstraints.NORTHWEST;
 		gbc_btnModificarJugador.insets = new Insets(0, 10, 5, 5); // Margen izquierdo de 10px
@@ -171,6 +172,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		// Botón "Añadir Jugador"
 		btnCrearJugador = new JButton("Crear Jugador");
 		parentFrame.buttonCreate(btnCrearJugador, panel, parentFrame.colorGreen);
+		btnCrearJugador.addActionListener(this);
 		GridBagConstraints gbc_btnCrearJugador = new GridBagConstraints();
 		gbc_btnCrearJugador.anchor = GridBagConstraints.NORTHWEST;
 		gbc_btnCrearJugador.insets = new Insets(0, 0, 5, 0); // Sin margen adicional
@@ -181,6 +183,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		// Botón "Cambiar Fotografía"
 		btnCambiarFoto = new JButton("Cambiar Fotografía");
 		parentFrame.buttonCreate(btnCambiarFoto, panel, parentFrame.colorYellow);
+		btnCambiarFoto.addActionListener(this);
 		GridBagConstraints gbc_btnCambiarFoto = new GridBagConstraints();
 		gbc_btnCambiarFoto.anchor = GridBagConstraints.NORTH;
 		gbc_btnCambiarFoto.gridwidth = 2; // El botón ocupa 2 columnas
@@ -265,7 +268,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		combxEquipo.setEditable(true);
 		PanelContenidoJugador.add(combxEquipo, "cell 1 9,growx,aligny top");
 		
-		icon = new ImageIcon("imagenes/jugadores/idFotodefault.png");
+		icon = new ImageIcon("C:/xampp/htdocs/imagenes/jugadores/idFotodefault.png");
 		Image image = icon.getImage();
 		Image newImage = image.getScaledInstance(79, 93, Image.SCALE_SMOOTH);
 		icon = new ImageIcon(newImage);
@@ -306,12 +309,15 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		
 		btnEliminarJugador = new JButton("Eliminar Jugador");
 		parentFrame.buttonCreate(btnEliminarJugador, panel_1, parentFrame.colorRed);
+		btnEliminarJugador.setEnabled(false);
 		
 		btnEliminarTodos = new JButton("Eliminar Todos");
 		parentFrame.buttonCreate(btnEliminarTodos, panel_1, parentFrame.colorRed);
+		btnEliminarTodos.setEnabled(false);
 		
 		btnGuardarCambios = new JButton("Guardar Cambios");
 		parentFrame.buttonCreate(btnGuardarCambios, panel_1, parentFrame.colorBlue);
+		btnGuardarCambios.setEnabled(false);
 		
 		panel_2 = new JPanel();
 		PanelListJugadores.add(panel_2, BorderLayout.CENTER);
@@ -540,13 +546,13 @@ public class PanelJugadores extends JPanel implements ActionListener {
                 combxPosicion.setSelectedItem(jugadorSeleccionado.getPosicion());
 
                 // **Construir la ruta de la imagen basada en la carpeta externa**
-                String rutaImagen = System.getProperty("user.dir") + "/imagenes/jugadores/" + jugadorSeleccionado.getIdFoto() + ".png";
+                String rutaImagen = "C:/xampp/htdocs/imagenes/jugadores/" + jugadorSeleccionado.getIdFoto() + ".png";
 
                 // Cargar la imagen del jugador o usar una imagen por defecto si no existe
                 File archivoImagen = new File(rutaImagen);
                 if (!archivoImagen.exists()) {
                     System.err.println("⚠️ Imagen no encontrada: " + rutaImagen);
-                    archivoImagen = new File(System.getProperty("user.dir") + "/imagenes/jugadores/idFotodefault.png");
+                    archivoImagen = new File("C:/xampp/htdocs/imagenes/jugadores/idFotodefault.png");
                 }
 
                 // Verificar si la imagen existe y cargarla
@@ -592,7 +598,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
         Jugador jugadorSeleccionado = equipoSeleccionado.getListJugadores().get(rowIndex);
 
         // **Nueva ruta fuera del JAR**
-        String rutaBase = System.getProperty("user.dir") + "/imagenes/jugadores/";
+        String rutaBase ="C:/xampp/htdocs/imagenes/jugadores/";
         File directorio = new File(rutaBase);
         if (!directorio.exists()) {
             directorio.mkdirs(); // Crea la carpeta si no existe
@@ -996,6 +1002,9 @@ public class PanelJugadores extends JPanel implements ActionListener {
         }
 
         parentFrame.mensaje("Jugadores creados y distribuidos en 6 equipos.", 1);
+
+	    parentFrame.changes = true;
+	    actualizarArchivo();
     }
 
     

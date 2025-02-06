@@ -176,7 +176,7 @@ public class PanelEquipos extends JPanel implements ActionListener {
 		txtFechaFundacion.setColumns(10);
 		PanelContenidoJugador.add(txtFechaFundacion, "cell 2 4,growx,aligny top");
 		
-		icon = new ImageIcon("imagenes/equipos/idFotodefault.png");
+		icon = new ImageIcon("C:/xampp/htdocs/imagenes/equipos/idFotodefault.png");
 		Image image = icon.getImage();
 		Image newImage = image.getScaledInstance(79, 93, Image.SCALE_SMOOTH);
 		icon = new ImageIcon(newImage);
@@ -397,13 +397,13 @@ public class PanelEquipos extends JPanel implements ActionListener {
 
                 
              // **Construir la ruta de la imagen basada en la carpeta externa**
-                String rutaImagen = System.getProperty("user.dir") + "/imagenes/equipos/" + EquipoSeleccionado.getIdFoto() + ".png";
+                String rutaImagen = "C:/xampp/htdocs/imagenes/equipos/" + EquipoSeleccionado.getIdFoto() + ".png";
 
                 // Cargar la imagen del jugador o usar una imagen por defecto si no existe
                 File archivoImagen = new File(rutaImagen);
                 if (!archivoImagen.exists()) {
                     System.err.println("⚠️ Imagen no encontrada: " + rutaImagen);
-                    archivoImagen = new File(System.getProperty("user.dir") + "/imagenes/equipos/idFotodefault.png");
+                    archivoImagen = new File("C:/xampp/htdocs/imagenes/equipos/idFotodefault.png");
                 }
 
                 // Verificar si la imagen existe y cargarla
@@ -526,7 +526,7 @@ public class PanelEquipos extends JPanel implements ActionListener {
         Equipo equipoSeleccionado = temporadaSeleccionada.getListEquipos().get(rowIndex);
 
         // **Nueva ruta para equipos fuera del JAR**
-        String rutaBase = System.getProperty("user.dir") + "/imagenes/equipos/";
+        String rutaBase = "C:/xampp/htdocs/imagenes/equipos/";
         File directorio = new File(rutaBase);
         if (!directorio.exists()) {
             directorio.mkdirs(); // Crea la carpeta si no existe
