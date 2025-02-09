@@ -44,6 +44,12 @@ import javax.swing.BoxLayout;
 import java.awt.GridLayout;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import javax.swing.SwingConstants;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
+import javax.swing.SpringLayout;
 
 public class PanelInicio extends JPanel implements ActionListener {
  	private static final long serialVersionUID = 1L;
@@ -61,6 +67,7 @@ public class PanelInicio extends JPanel implements ActionListener {
 	private JPanel PanelTitulo;
 	private JPanel PanelMostrarPartidos;
 	private JPanel PanelPartido1;
+	private JPanel PanelPartido1_1;
 	private JPanel PanelPartido3;
 	private JPanel buttonPanel;
 	private JPanel PanelContenedor;
@@ -179,73 +186,126 @@ public class PanelInicio extends JPanel implements ActionListener {
 		PanelMostrarPartidos.add(PanelPartido1);
 
 		// Inicializar campos para Partido 1
-		PanelPartido1 = new JPanel();
-		PanelMostrarPartidos.add(PanelPartido1);
+		PanelPartido1_1 = new JPanel();
+		PanelMostrarPartidos.add(PanelPartido1_1);
+		SpringLayout sl_panelPartido1 = new SpringLayout();
+		PanelPartido1_1.setLayout(sl_panelPartido1);
 
 		// Inicializar campos para Partido 1
 		partidoELoc0 = new JLabel();
+		sl_panelPartido1.putConstraint(SpringLayout.NORTH, partidoELoc0, 10, SpringLayout.NORTH, PanelPartido1_1);
+		sl_panelPartido1.putConstraint(SpringLayout.WEST, partidoELoc0, 91, SpringLayout.WEST, PanelPartido1_1);
+		sl_panelPartido1.putConstraint(SpringLayout.SOUTH, partidoELoc0, 29, SpringLayout.NORTH, PanelPartido1_1);
+		sl_panelPartido1.putConstraint(SpringLayout.EAST, partidoELoc0, 201, SpringLayout.WEST, PanelPartido1_1);
+		partidoELoc0.setHorizontalAlignment(SwingConstants.RIGHT);
+		partidoELoc0.setText("Equipo1");
 
 		labelsMap.put("partidoELoc0", partidoELoc0);
-		PanelPartido1.add(partidoELoc0);
+		PanelPartido1_1.add(partidoELoc0);
 
 		pointsELoc0 = new JTextField();
+		sl_panelPartido1.putConstraint(SpringLayout.NORTH, pointsELoc0, 10, SpringLayout.NORTH, PanelPartido1_1);
+		sl_panelPartido1.putConstraint(SpringLayout.WEST, pointsELoc0, 211, SpringLayout.WEST, PanelPartido1_1);
 
 		textFieldMap.put("pointsELoc0", pointsELoc0);
-		PanelPartido1.add(pointsELoc0);
-		pointsELoc0.setColumns(10);
+		PanelPartido1_1.add(pointsELoc0);
+		pointsELoc0.setColumns(4);
 
 		partidoEVis0 = new JLabel();
+		sl_panelPartido1.putConstraint(SpringLayout.NORTH, partidoEVis0, 10, SpringLayout.NORTH, PanelPartido1_1);
+		sl_panelPartido1.putConstraint(SpringLayout.WEST, partidoEVis0, 311, SpringLayout.WEST, PanelPartido1_1);
+		sl_panelPartido1.putConstraint(SpringLayout.SOUTH, partidoEVis0, 29, SpringLayout.NORTH, PanelPartido1_1);
+		sl_panelPartido1.putConstraint(SpringLayout.EAST, partidoEVis0, 421, SpringLayout.WEST, PanelPartido1_1);
+		partidoEVis0.setText("Equipo6");
+		partidoEVis0.setHorizontalAlignment(SwingConstants.LEFT);
 		labelsMap.put("partidoEVis0", partidoEVis0);
-		PanelPartido1.add(partidoEVis0);
+		PanelPartido1_1.add(partidoEVis0);
 
 		pointsEVis0 = new JTextField();
+		sl_panelPartido1.putConstraint(SpringLayout.NORTH, pointsEVis0, 10, SpringLayout.NORTH, PanelPartido1_1);
+		sl_panelPartido1.putConstraint(SpringLayout.WEST, pointsEVis0, 259, SpringLayout.WEST, PanelPartido1_1);
 
 		textFieldMap.put("pointsEVis0", pointsEVis0);
-		PanelPartido1.add(pointsEVis0);
-		pointsEVis0.setColumns(10);
+		PanelPartido1_1.add(pointsEVis0);
+		pointsEVis0.setColumns(4);
 
 		
 		panelPartido2 = new JPanel();
 		PanelMostrarPartidos.add(panelPartido2);
+		SpringLayout sl_panelPartido2 = new SpringLayout();
+		panelPartido2.setLayout(sl_panelPartido2);
 		
 		partidoELoc1 = new JLabel();
+		sl_panelPartido2.putConstraint(SpringLayout.NORTH, partidoELoc1, 10, SpringLayout.NORTH, panelPartido2);
+		sl_panelPartido2.putConstraint(SpringLayout.WEST, partidoELoc1, 87, SpringLayout.WEST, panelPartido2);
+		sl_panelPartido2.putConstraint(SpringLayout.SOUTH, partidoELoc1, 29, SpringLayout.NORTH, panelPartido2);
+		sl_panelPartido2.putConstraint(SpringLayout.EAST, partidoELoc1, 197, SpringLayout.WEST, panelPartido2);
+		partidoELoc1.setText("Equipo2");
+		partidoELoc1.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelsMap.put("partidoELoc1", partidoELoc1);
 		panelPartido2.add(partidoELoc1);
 		
 		pointsELoc1 = new JTextField();
+		sl_panelPartido2.putConstraint(SpringLayout.NORTH, pointsELoc1, 10, SpringLayout.NORTH, panelPartido2);
+		sl_panelPartido2.putConstraint(SpringLayout.WEST, pointsELoc1, 207, SpringLayout.WEST, panelPartido2);
 		textFieldMap.put("pointsELoc1", pointsELoc1);
-		pointsELoc1.setColumns(10);
+		pointsELoc1.setColumns(4);
 		panelPartido2.add(pointsELoc1);
 		
 		partidoEVis1 = new JLabel();
+		sl_panelPartido2.putConstraint(SpringLayout.NORTH, partidoEVis1, 10, SpringLayout.NORTH, panelPartido2);
+		sl_panelPartido2.putConstraint(SpringLayout.WEST, partidoEVis1, 311, SpringLayout.WEST, panelPartido2);
+		sl_panelPartido2.putConstraint(SpringLayout.SOUTH, partidoEVis1, 29, SpringLayout.NORTH, panelPartido2);
+		sl_panelPartido2.putConstraint(SpringLayout.EAST, partidoEVis1, 421, SpringLayout.WEST, panelPartido2);
+		partidoEVis1.setText("Equipo5");
+		partidoEVis1.setHorizontalAlignment(SwingConstants.LEFT);
 		labelsMap.put("partidoEVis1", partidoEVis1);
 		panelPartido2.add(partidoEVis1);
 		
 		pointsEVis1 = new JTextField();
+		sl_panelPartido2.putConstraint(SpringLayout.NORTH, pointsEVis1, 10, SpringLayout.NORTH, panelPartido2);
+		sl_panelPartido2.putConstraint(SpringLayout.WEST, pointsEVis1, 259, SpringLayout.WEST, panelPartido2);
 		textFieldMap.put("pointsEVis1", pointsEVis1);
-		pointsEVis1.setColumns(10);
+		pointsEVis1.setColumns(4);
 		panelPartido2.add(pointsEVis1);
 
 		PanelPartido3 = new JPanel();
 		PanelMostrarPartidos.add(PanelPartido3);
-		PanelPartido3.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		SpringLayout sl_panelPartido3 = new SpringLayout();
+		PanelPartido3.setLayout(sl_panelPartido3);
 		
 		partidoELoc2 = new JLabel();
+		sl_panelPartido3.putConstraint(SpringLayout.NORTH, partidoELoc2, 10, SpringLayout.NORTH, PanelPartido3);
+		sl_panelPartido3.putConstraint(SpringLayout.WEST, partidoELoc2, 87, SpringLayout.WEST, PanelPartido3);
+		sl_panelPartido3.putConstraint(SpringLayout.SOUTH, partidoELoc2, 29, SpringLayout.NORTH, PanelPartido3);
+		sl_panelPartido3.putConstraint(SpringLayout.EAST, partidoELoc2, 197, SpringLayout.WEST, PanelPartido3);
+		partidoELoc2.setText("Equipo3");
+		partidoELoc2.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelsMap.put("partidoELoc2", partidoELoc2);
 		PanelPartido3.add(partidoELoc2);
 		
 		pointsELoc2 = new JTextField();
+		sl_panelPartido3.putConstraint(SpringLayout.NORTH, pointsELoc2, 10, SpringLayout.NORTH, PanelPartido3);
+		sl_panelPartido3.putConstraint(SpringLayout.WEST, pointsELoc2, 207, SpringLayout.WEST, PanelPartido3);
 		textFieldMap.put("pointsELoc2", pointsELoc2);
-		pointsELoc2.setColumns(10);
+		pointsELoc2.setColumns(4);
 		PanelPartido3.add(pointsELoc2);
 		
 		partidoEVis2 = new JLabel();
+		sl_panelPartido3.putConstraint(SpringLayout.NORTH, partidoEVis2, 10, SpringLayout.NORTH, PanelPartido3);
+		sl_panelPartido3.putConstraint(SpringLayout.WEST, partidoEVis2, 311, SpringLayout.WEST, PanelPartido3);
+		sl_panelPartido3.putConstraint(SpringLayout.SOUTH, partidoEVis2, 29, SpringLayout.NORTH, PanelPartido3);
+		sl_panelPartido3.putConstraint(SpringLayout.EAST, partidoEVis2, 421, SpringLayout.WEST, PanelPartido3);
+		partidoEVis2.setText("Equipo4");
+		partidoEVis2.setHorizontalAlignment(SwingConstants.LEFT);
 		labelsMap.put("partidoEVis2", partidoEVis2);
 		PanelPartido3.add(partidoEVis2);
 		
 		pointsEVis2 = new JTextField();
+		sl_panelPartido3.putConstraint(SpringLayout.NORTH, pointsEVis2, 10, SpringLayout.NORTH, PanelPartido3);
+		sl_panelPartido3.putConstraint(SpringLayout.WEST, pointsEVis2, 259, SpringLayout.WEST, PanelPartido3);
 		textFieldMap.put("pointsEVis2", pointsEVis2);
-		pointsEVis2.setColumns(10);
+		pointsEVis2.setColumns(4);
 		PanelPartido3.add(pointsEVis2);
 		panelMoverJornadas = new JPanel();
 		PanelContenidoPartidos.add(panelMoverJornadas, BorderLayout.SOUTH);
@@ -271,9 +331,11 @@ public class PanelInicio extends JPanel implements ActionListener {
         parentFrame.buttonCreate(btnExportPdf, buttonPanel, parentFrame.colorBlue);
         
         btnDatosdePrueba = new JButton("Test");
+    	btnDatosdePrueba.setVisible(false);
         if (userType < 2) {
         	btnDatosdePrueba.setVisible(false);
-        	btnExportPdf.setVisible(false);
+//        	btnExportPdf.setVisible(false);
+        	btnExportXml.setVisible(false);
         }
         parentFrame.buttonCreate(btnDatosdePrueba, buttonPanel, parentFrame.colorGreen);
         

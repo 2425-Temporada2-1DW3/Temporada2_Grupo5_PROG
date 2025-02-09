@@ -78,19 +78,23 @@ public class main extends JFrame implements ActionListener {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    
-                	int userType = 2; // Tipo de usuario por defecto si no recibe un valor (
-                    String userName = "Anonimo"; // Nombre de usuario por defecto
+                    //POR SI QUIERO INGRESAR SIN LOGIN
+//                	int userType = 2; // Tipo de usuario por defecto si no recibe un valor (
+//                    String userName = "Anonimo"; // Nombre de usuario por defecto
                     
                     // Crear una instancia de login antes de pasarla a main
                     login loginInstance = new login();
                     
-//                    loginInstance.setVisible(true);  // Mostrar la ventana de login
+                    loginInstance.setVisible(true);  // Mostrar la ventana de login
+                    
                     
                     // Pasar loginInstance a main (!importante para la lista de usuarios)
-                    main frame = new main(userType,userName,loginInstance); // Pasa usertype y username a la main
+//                    main frame = new main(userType,userName,loginInstance); // Pasa usertype y username a la main
                     
-                    frame.setVisible(true);
+//                    frame.setVisible(true);        
+                    // Centrar la ventana en la pantalla
+                    loginInstance.setLocationRelativeTo(null);  // null indica que la ventana debe centrarse en la pantalla
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -369,6 +373,8 @@ public class main extends JFrame implements ActionListener {
                     Point location = getLocation(); // Obtener la posición actual
                     login loginFrame = new login(); // Crear el nuevo frame y pasa la variable userType para saber que funcionalidad podra usar cada usuario
                     loginFrame.setLocation(location); // Posicionar el nuevo frame en la misma ubicación
+                    // Centrar la ventana en la pantalla
+                    loginFrame.setLocationRelativeTo(null);  // null indica que la ventana debe centrarse en la pantalla
                     loginFrame.setVisible(true); // Mostrar el nuevo frame
                     dispose(); // Cerrar el frame actual (login)
                 }

@@ -39,6 +39,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 
 	
 	private ArrayList <Temporada> listTemporadas = new ArrayList<Temporada>();
+	private ArrayList <Temporada> listEquiposGlobal = new ArrayList<Temporada>();
 	private DefaultListModel<Temporada> dlm = new DefaultListModel<>();
 	private JButton btnCrearTemporada = 	new JButton("Crear Temporada");
     private JButton btnAnadirEquipo = 		new JButton("Añadir Equipo");

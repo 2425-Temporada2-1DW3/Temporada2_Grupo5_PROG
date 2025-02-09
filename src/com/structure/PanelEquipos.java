@@ -288,7 +288,7 @@ public class PanelEquipos extends JPanel implements ActionListener {
 		    panelFormat[i].setBackground(colorbg);
 		}
 		
-		CrearJugadoresPrueba();
+//		CrearJugadoresPrueba();
 	}
 	
 	
@@ -528,14 +528,12 @@ public class PanelEquipos extends JPanel implements ActionListener {
         Temporada temporadaSeleccionada = listTemporadas.get(idTemporada);
         Equipo equipoSeleccionado = temporadaSeleccionada.getListEquipos().get(rowIndex);
 
-        // **Nueva ruta para equipos fuera del JAR**
+        // Nueva ruta para equipos fuera del JAR
         String rutaBase = "C:/xampp/htdocs/imagenes/equipos/";
         File directorio = new File(rutaBase);
         if (!directorio.exists()) {
             directorio.mkdirs(); // Crea la carpeta si no existe
         }
-
-        String idFoto = equipoSeleccionado.getIdFoto(); // ID de la imagen basado en el equipo
 
         // Abrir JFileChooser para seleccionar una nueva imagen
         JFileChooser fileChooser = new JFileChooser();
@@ -547,41 +545,53 @@ public class PanelEquipos extends JPanel implements ActionListener {
         if (seleccion == JFileChooser.APPROVE_OPTION) {
             File archivoSeleccionado = fileChooser.getSelectedFile();
             
-            // **Definir la ruta de destino con extensión PNG**
-            File archivoDestino = new File(rutaBase + idFoto + ".png");
+            // Obtener el nombre del archivo original (sin la extensión)
+            String nombreArchivoCompleto = archivoSeleccionado.getName();
+            String nombreBase = nombreArchivoCompleto.substring(0, nombreArchivoCompleto.lastIndexOf('.'));
+
+            // Definir la ruta de destino utilizando el nombre base (sin extensión)
+            File archivoDestino = new File(rutaBase + nombreBase + ".png"); // Aquí guardamos con extensión .png
 
             try {
-                // **Leer la imagen seleccionada y convertirla a PNG**
+                // Leer la imagen seleccionada
                 BufferedImage imagenOriginal = ImageIO.read(archivoSeleccionado);
                 if (imagenOriginal == null) {
                     JOptionPane.showMessageDialog(this, "Error al leer la imagen.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                // **Eliminar la imagen antigua antes de guardar la nueva**
+                // Eliminar la imagen antigua (si existe) antes de guardar la nueva
                 if (archivoDestino.exists()) {
                     archivoDestino.delete();
                 }
 
-                // **Guardar la imagen en formato PNG**
+                // Guardar la nueva imagen con su nombre base (sin cambiar la extensión)
                 ImageIO.write(imagenOriginal, "png", archivoDestino);
 
-                // **Forzar la recarga de la imagen para evitar caché**
+                // Actualizar el idFoto del equipo con el nombre base de la imagen (sin extensión)
+                equipoSeleccionado.setIdFoto(nombreBase);  // Aquí actualizas el ID con el nuevo nombre sin extensión
+
+                // Forzar la recarga de la imagen para evitar caché
                 BufferedImage bufferedImage = ImageIO.read(archivoDestino);
                 Image newImage = bufferedImage.getScaledInstance(79, 93, Image.SCALE_SMOOTH);
                 ImageIcon icon = new ImageIcon(newImage);
                 labelImagen.setIcon(icon);
 
-                // **Refrescar el JLabel para asegurar que la imagen se actualiza**
+                // Refrescar el JLabel para asegurar que la imagen se actualiza
                 labelImagen.revalidate();
                 labelImagen.repaint();
 
                 JOptionPane.showMessageDialog(this, "Fotografía del equipo guardada correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                
+                // Actualizar el indicador de cambios en el parentFrame
+                parentFrame.changes = true;
+
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(this, "Error al guardar la imagen: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
+
 
 
     
@@ -669,7 +679,7 @@ public class PanelEquipos extends JPanel implements ActionListener {
 
         // Lista de jugadores de prueba (puedes expandirla)
         Jugador[] jugadores = {
-                    new Jugador("1001-1001A", "Carlos Lopez", 13, "Armador", "Argentina", 1.85, 82, 12, 11, 1995, 0, "A1"),
+        	new Jugador("1001-1001A", "Carlos Lopez", 13, "Armador", "Argentina", 1.85, 82, 12, 11, 1995, 0, "A1"),
             new Jugador("1001-1002B", "Javier Torres", 5, "Opuesto", "Portugal", 1.98, 84, 26, 11, 1998, 0, "A2"),
             new Jugador("1001-1003C", "Luis Martinez", 1, "Receptor 1", "Brasil", 1.79, 97, 7, 1, 1990, 0, "A3"),
             new Jugador("1001-1004D", "Juan Perez", 19, "Receptor 2", "Colombia", 2.05, 88, 10, 3, 1995, 0, "A4"),
