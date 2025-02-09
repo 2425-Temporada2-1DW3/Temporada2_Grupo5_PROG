@@ -473,111 +473,99 @@ public class PanelInicio extends JPanel implements ActionListener {
 	}
 
 	private void ActualizarPuntuaciones() {
-		// variables para almacenar los id de el map
-		String locales;
-		String visitantes;
-		String localesNom;
-		String visitanteNom;
-		// variables para almacenar los puntos de el partido
-		int puntuacionLoc;
-		int puntuacionVis;
-		Partido partido;
-		// cada vez que se ejecuta el for pasa al siguiente partido
-		for (int counter = 0; counter < partidos.size(); counter++) {
-			// id de los map
-			locales = "pointsELoc" + counter;
-			visitantes = "pointsEVis" + counter;
-			localesNom = "partidoELoc" + counter;
-			visitanteNom = "partidoEVis" + counter;
-			// rescatamos el partido de el array
-			partido = partidos.get(counter);
-			// rescatamos el id de el equipo local
-			int idLocal = partido.getEquipoLoc();
-			// guardamos el nombre de el equipo local
-			localesNom = nombre.get(idLocal).getNombre();
-			// rescatamos el id de el equipo Visitante
-			int idVisitante = partido.getEquipoVis();
-			// guardamos el nombre de el equipo visitante
-			visitanteNom = nombre.get(idVisitante).getNombre();
-			// verifiacamos que contenga la id y que este vacio para asignarle un valor nulo
-			if (textFieldMap.containsKey(locales) && textFieldMap.get(locales).getText().isEmpty()) {
-				puntuacionLoc = -1;
+	    String locales;
+	    String visitantes;
+	    String localesNom;
+	    String visitanteNom;
+	    int puntuacionLoc;
+	    int puntuacionVis;
+	    Partido partido;
+	    boolean cambiosRealizados = false; // Nueva variable para controlar los cambios
 
-				partido.setpuntuajeLoc(puntuacionLoc);
+	    for (int counter = 0; counter < partidos.size(); counter++) {
+	        locales = "pointsELoc" + counter;
+	        visitantes = "pointsEVis" + counter;
+	        localesNom = "partidoELoc" + counter;
+	        visitanteNom = "partidoEVis" + counter;
 
-			} else {
-				// guardamos la puntuacion si es valida
-				puntuacionLoc = Integer.parseInt(textFieldMap.get(locales).getText());
+	        partido = partidos.get(counter);
+	        int idLocal = partido.getEquipoLoc();
+	        localesNom = nombre.get(idLocal).getNombre();
+	        int idVisitante = partido.getEquipoVis();
+	        visitanteNom = nombre.get(idVisitante).getNombre();
 
-				partido.setpuntuajeLoc(puntuacionLoc);
-			}
-			// verifiacamos que contenga la id y que este vacio para asignarle un valor nulo
-			if (textFieldMap.containsKey(visitantes) && textFieldMap.get(visitantes).getText().isEmpty()) {
-				puntuacionVis = -1;
+	        // Validamos y asignamos puntuaciones locales
+	        if (textFieldMap.containsKey(locales) && textFieldMap.get(locales).getText().isEmpty()) {
+	            parentFrame.mensaje("Error: No puede haber ningún campo vacío.", 0);
+	            return; // Detiene la ejecución de la función sin hacer cambios
+	        } else {
+	            puntuacionLoc = Integer.parseInt(textFieldMap.get(locales).getText());
+	        }
 
-				partido.setpuntuajeVis(puntuacionVis);
+	        // Validamos y asignamos puntuaciones visitantes
+	        if (textFieldMap.containsKey(visitantes) && textFieldMap.get(visitantes).getText().isEmpty()) {
+	            parentFrame.mensaje("Error: No puede haber ningún campo vacío.", 0);
+	            return; // Detiene la ejecución de la función sin hacer cambios
+	        } else {
+	            puntuacionVis = Integer.parseInt(textFieldMap.get(visitantes).getText());
+	        }
 
-			} else {
-				// guardamos la puntuacion si es valida
-				puntuacionVis = Integer.parseInt(textFieldMap.get(visitantes).getText());
+	        // Validación de puntuaciones
+	        if (puntuacionLoc < 0 || puntuacionLoc > 3 || puntuacionVis < 0 || puntuacionVis > 3) {
+	            parentFrame.mensaje("Error: Las puntuaciones deben estar entre 0 y 3.", 0);
+	            return; // Detiene la ejecución sin realizar cambios
+	        }
 
-				partido.setpuntuajeVis(puntuacionVis);
-				partido.setJugado(true);
-			}
+	        if (puntuacionLoc == puntuacionVis) {
+	            parentFrame.mensaje("Error: Las puntuaciones del equipo local y visitante deben ser diferentes.", 0);
+	            return; // Detiene la ejecución sin realizar cambios
+	        }
 
-			// sistema para añadir los diferentes puntuajes
-			if (puntuacionLoc < puntuacionVis) {
-				// asignamos quien ha ganado el partido en el objeto de partido
-				partido.setGanadorVis(true);
+	        // Si todas las validaciones pasan, realizamos cambios
+	        partido.setpuntuajeLoc(puntuacionLoc);
+	        partido.setpuntuajeVis(puntuacionVis);
+	        partido.setJugado(true);
+	        cambiosRealizados = true; // Marcamos que se hicieron cambios
 
-				// recorremos la lista de equipos de la temporada buscando el nombre
-				for (int contador = 0; contador < nombre.size(); contador++) {
-					// comparacion para ver que coincide el nombre
-					if (localesNom.equals(nombre.get(contador).getNombre())) {
-						// funcion para que agrege el total de partidos perdidos
-						nombre.get(contador).incrementarPartidosPerdido();
-						// funcion para que agrege el total de partidos
-						nombre.get(contador).incrementarPartidosTotales();
-						nombre.get(contador).addPuntosTotal(1);
-					}
-				}
-				for (int contador = 0; contador < nombre.size(); contador++) {
-					if (visitanteNom.equals(nombre.get(contador).getNombre())) {
-						// funcion para que agrege el total de partidos Ganados
-						nombre.get(contador).incrementarPartidosGanados();
-						// funcion para que agrege el total de partidos
-						nombre.get(contador).incrementarPartidosTotales();
-						nombre.get(contador).addPuntosTotal(3);
-					}
-				}
+	        // Sistema de asignación de puntos
+	        if (puntuacionLoc < puntuacionVis) {
+	            partido.setGanadorVis(true);
+	            for (int i = 0; i < nombre.size(); i++) {
+	                if (localesNom.equals(nombre.get(i).getNombre())) {
+	                    nombre.get(i).incrementarPartidosPerdido();
+	                    nombre.get(i).incrementarPartidosTotales();
+	                    nombre.get(i).addPuntosTotal(1);
+	                }
+	                if (visitanteNom.equals(nombre.get(i).getNombre())) {
+	                    nombre.get(i).incrementarPartidosGanados();
+	                    nombre.get(i).incrementarPartidosTotales();
+	                    nombre.get(i).addPuntosTotal(3);
+	                }
+	            }
+	        } else {
+	            partido.setGanadorLoc(true);
+	            for (int i = 0; i < nombre.size(); i++) {
+	                if (localesNom.equals(nombre.get(i).getNombre())) {
+	                    nombre.get(i).incrementarPartidosGanados();
+	                    nombre.get(i).incrementarPartidosTotales();
+	                    nombre.get(i).addPuntosTotal(3);
+	                }
+	                if (visitanteNom.equals(nombre.get(i).getNombre())) {
+	                    nombre.get(i).incrementarPartidosPerdido();
+	                    nombre.get(i).incrementarPartidosTotales();
+	                    nombre.get(i).addPuntosTotal(1);
+	                }
+	            }
+	        }
+	    }
 
-				// este codigo implementa lo mismo que el de arriba invertido
-			} else {
-
-				partido.setGanadorLoc(true);
-
-				for (int contador = 0; contador < nombre.size(); contador++) {
-					if (localesNom.equals(nombre.get(contador).getNombre())) {
-						nombre.get(contador).incrementarPartidosGanados();
-						nombre.get(contador).incrementarPartidosTotales();
-						nombre.get(contador).addPuntosTotal(3);
-					}
-				}
-				for (int contador = 0; contador < nombre.size(); contador++) {
-					if (visitanteNom.equals(nombre.get(contador).getNombre())) {
-						nombre.get(contador).incrementarPartidosPerdido();
-						nombre.get(contador).incrementarPartidosTotales();
-						nombre.get(contador).addPuntosTotal(1);
-					}
-				}
-
-			}
-
-			parentFrame.changes = true;
-
-		}
-
+	    // Solo si hubo cambios, marcamos que hubo modificaciones en el frame
+	    if (cambiosRealizados) {
+	        parentFrame.changes = true;
+	    }
 	}
+
+
 
 	private void TemporadasIniciadas() {
 		TemporadaSeleccionada = (Temporada) comboBox.getSelectedItem();
@@ -921,51 +909,73 @@ public class PanelInicio extends JPanel implements ActionListener {
 			}
 
 		} else if (o == btnFinalizarJornada) {
-			if (pointsELoc0.getText().isEmpty() && pointsEVis0.getText().isEmpty() && pointsELoc1.getText().isEmpty()
-					&& pointsEVis1.getText().isEmpty() && pointsELoc2.getText().isEmpty()
-					&& pointsEVis2.getText().isEmpty()) {
-				parentFrame.mensaje("No puede haber ningun campo vacio", 1);
+		    // Validar si hay campos vacíos
+		    if (pointsELoc0.getText().isEmpty() || pointsEVis0.getText().isEmpty() || 
+		        pointsELoc1.getText().isEmpty() || pointsEVis1.getText().isEmpty() || 
+		        pointsELoc2.getText().isEmpty() || pointsEVis2.getText().isEmpty()) {
+		        
+		        parentFrame.mensaje("No puede haber ningún campo vacío", 0);
+		        return; // Salimos de la función si hay algún campo vacío
+		    }
 
-			} else {
-				if (userType < 2) {
-					int seleccion = JOptionPane.showConfirmDialog(null,
-							// Mensaje que se mostrará en el cuadro de diálogo
-							"¿Deseas guardar la jornada? si lo hace la jornada y los partidos quedaran finalizados y no se podran editar a no ser de que los edite el administrador ",
-							"Confirmar Acción", // Título de la ventana
-							JOptionPane.YES_NO_OPTION, // Botones de Sí y No
-							JOptionPane.QUESTION_MESSAGE // Icono de pregunta
-					);
+		    // Convertir los valores de los textfields a enteros
+		    int puntuacionLoc0 = Integer.parseInt(pointsELoc0.getText());
+		    int puntuacionVis0 = Integer.parseInt(pointsEVis0.getText());
+		    int puntuacionLoc1 = Integer.parseInt(pointsELoc1.getText());
+		    int puntuacionVis1 = Integer.parseInt(pointsEVis1.getText());
+		    int puntuacionLoc2 = Integer.parseInt(pointsELoc2.getText());
+		    int puntuacionVis2 = Integer.parseInt(pointsEVis2.getText());
 
-					// Comprobar la opción seleccionada
-					if (seleccion == JOptionPane.YES_OPTION) {
-						ActualizarPuntuaciones(); // Si el usuario selecciona "Sí", ejecuta el método
-						cambioEstadoTextFields();
-						actualizarTabla();
-						parentFrame.changes = true;		
-						guardarDatos();
+		    // Validar que los valores estén entre 0 y 3
+		    if ((puntuacionLoc0 < 0 || puntuacionLoc0 > 3 || puntuacionVis0 < 0 || puntuacionVis0 > 3) ||
+		        (puntuacionLoc1 < 0 || puntuacionLoc1 > 3 || puntuacionVis1 < 0 || puntuacionVis1 > 3) ||
+		        (puntuacionLoc2 < 0 || puntuacionLoc2 > 3 || puntuacionVis2 < 0 || puntuacionVis2 > 3)) {
+		        
+		        parentFrame.mensaje("Las puntuaciones deben estar entre 0 y 3.", 0);
+		        return; // Salimos de la función si hay puntuaciones fuera del rango permitido
+		    }
 
-					}
-				} else {
-					int seleccion = JOptionPane.showConfirmDialog(null, "¿Deseas guardar la jornada?", // Mensaje que se
-																										// mostrará en
-																										// el
-																										// cuadro de
-																										// diálogo
-							"Confirmar Acción", // Título de la ventana
-							JOptionPane.YES_NO_OPTION, // Botones de Sí y No
-							JOptionPane.QUESTION_MESSAGE // Icono de pregunta
-					);
+		    // Validar que los valores de ELoc y EVis no sean iguales
+		    if ((puntuacionLoc0 == puntuacionVis0) || 
+		        (puntuacionLoc1 == puntuacionVis1) || 
+		        (puntuacionLoc2 == puntuacionVis2)) {
+		        
+		        parentFrame.mensaje("Las puntuaciones del equipo local y visitante deben ser diferentes.", 0);
+		        return; // Salimos de la función si hay valores iguales
+		    }
 
-					// Comprobar la opción seleccionada
-					if (seleccion == JOptionPane.YES_OPTION) {
-						ActualizarPuntuaciones(); // Si el usuario selecciona "Sí", ejecuta el método
-						cambioEstadoTextFields();
-						actualizarTabla();
-						parentFrame.changes = true;		
-						guardarDatos();
-					}
-				}
-			}
+		    // Si todas las validaciones se cumplen, se muestra el cuadro de confirmación
+		    if (userType < 2) {
+		        int seleccion = JOptionPane.showConfirmDialog(null,
+		                "¿Deseas guardar la jornada? Si lo haces, la jornada y los partidos quedarán finalizados y no se podrán editar a no ser que los edite el administrador.",
+		                "Confirmar Acción",
+		                JOptionPane.YES_NO_OPTION,
+		                JOptionPane.QUESTION_MESSAGE
+		        );
+
+		        if (seleccion == JOptionPane.YES_OPTION) {
+		            ActualizarPuntuaciones();
+		            cambioEstadoTextFields();
+		            actualizarTabla();
+		            guardarDatos();
+		        }
+		    } else {
+		        int seleccion = JOptionPane.showConfirmDialog(null,
+		                "¿Deseas guardar la jornada?",
+		                "Confirmar Acción",
+		                JOptionPane.YES_NO_OPTION,
+		                JOptionPane.QUESTION_MESSAGE
+		        );
+
+		        if (seleccion == JOptionPane.YES_OPTION) {
+		            ActualizarPuntuaciones();
+		            cambioEstadoTextFields();
+		            actualizarTabla();
+		            guardarDatos();
+		        }
+		    }
+		
+
 
 		} else if (o == btnExportXml) {
 			exportacion();

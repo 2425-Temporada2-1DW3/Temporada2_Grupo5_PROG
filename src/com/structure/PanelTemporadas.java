@@ -193,6 +193,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	    try {
 	        // Buscar el ID más alto existente en la lista, Garantizando Unicidad
 	        int maxId = -1;
+	        int idTemporada = 2024;  // Cambiar a 2024 para que la primera temporada empiece con ese año
 	        for (Temporada t : listTemporadas) {
 	            if (t.getIdTemporada() > maxId) {
 	                maxId = t.getIdTemporada();
@@ -201,9 +202,8 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 
 	        // El nuevo ID será siempre mayor al más alto
 	        int id = maxId + 1;
-
 	        // Generar un nombre único basado en el ID
-	        String nombre = "Temporada" + (id+1);
+	        String nombre = "Temporada" + (idTemporada + id);  // Aquí se ajusta el nombre con el año
 
 	        // Validar la cantidad de equipos
 	        int cantidadEquipos = Integer.parseInt(txtCantidadEquipos.getText());
@@ -240,7 +240,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 	        // Guardar cambios en el archivo
 	        actualizarArchivo();
 	    } catch (NumberFormatException e) {
-	        parentFrame.mensaje("❌ Error: Introduce un número válido para la cantidad de equipos.", 0);
+	        parentFrame.mensaje("Error: Introduce un número válido para la cantidad de equipos.", 0);
 	    }
 	}
 
@@ -352,7 +352,7 @@ public class PanelTemporadas extends JPanel implements ActionListener {
 
 
 	        // Imprimir el ID de la temporada iniciada (puedes usarlo según sea necesario)
-	        System.out.println("Temporada iniciada. ID: " + idTemporada);
+//	        System.out.println("Temporada iniciada. ID: " + idTemporada);
 
 	        // Aquí puedes llamar a otro método con el ID, si es necesario
 	        // GenerarAlgoritmo(idTemporada);
