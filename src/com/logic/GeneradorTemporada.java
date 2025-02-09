@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
 
 import javax.swing.JButton;
@@ -33,6 +34,9 @@ public class GeneradorTemporada {
 	
 //--------------METODOS GENERAR TEMPORADA
     public void GenerarTemporada(Temporada nuevaTemporada) {
+    	if (nuevaTemporada.getCantidadEquipos() < 6) {
+            throw new IllegalArgumentException("El número de equipos debe ser al menos 6.");
+        }
         this.TOTAL_EQUIPOS = nuevaTemporada.getCantidadEquipos();
         this.TOTAL_JORNADAS = TOTAL_EQUIPOS - 1;
         this.TOTAL_PARTIDOS_X_JORNADA = TOTAL_EQUIPOS / 2;
@@ -154,18 +158,28 @@ public class GeneradorTemporada {
 		    JButton btnGuardar = new JButton("Guardar Datos");
 		    btnGuardar.addActionListener(e -> {
 		        ArrayList<Equipo> temporalListEquipos = new ArrayList<>();
+		        HashSet<String> nombresEquipos = new HashSet<>();  // Usamos un HashSet para verificar duplicados
+		        
 		        
 		        for (int i = 0; i < numEquipos; i++) {
 		            String nombre = textFieldsNomEqui.get(i).getText().trim();
 //		            String entrenador = textFieldsNomEntre.get(i).getText().trim();
 //		            String fechaTexto = textFieldsFechaFun.get(i).getText().trim();
-//		            String idEquipo = (char) ('A' + i) + "1"; // A1, B1, C1...
+		            String idFotoEquipo = (char) ('A' + i) + "1"; // A1, B1, C1...
 //		            
-		            // Validación de datos
+		         // Validación de campos vacíos
 		            if (nombre.isEmpty()) {
 		                JOptionPane.showMessageDialog(dialog, "Todos los campos deben estar llenos.", "Error", JOptionPane.ERROR_MESSAGE);
 		                return;
 		            }
+
+		            // Validación de nombres duplicados
+		            if (nombresEquipos.contains(nombre)) {
+		                JOptionPane.showMessageDialog(dialog, "El nombre del equipo '" + nombre + "' ya ha sido ingresado. Por favor, ingrese un nombre diferente.", "Error", JOptionPane.ERROR_MESSAGE);
+		                return;
+		            }
+		            // Añadir el nombre al conjunto para verificar duplicados
+		            nombresEquipos.add(nombre);
 
 //		            int fechaFundacion;
 //		            try {
@@ -176,7 +190,7 @@ public class GeneradorTemporada {
 //		            }
 
 		            // Crear objeto Equipo y añadirlo a la lista
-		            Equipo equipo = new Equipo(i, nombre);
+		            Equipo equipo = new Equipo(i, nombre, idFotoEquipo);
 		            temporalListEquipos.add(equipo);
 		        }
 

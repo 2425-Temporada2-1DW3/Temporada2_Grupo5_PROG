@@ -310,14 +310,17 @@ public class PanelJugadores extends JPanel implements ActionListener {
 		btnEliminarJugador = new JButton("Eliminar Jugador");
 		parentFrame.buttonCreate(btnEliminarJugador, panel_1, parentFrame.colorRed);
 		btnEliminarJugador.setEnabled(false);
+		btnEliminarJugador.addActionListener(this);
 		
 		btnEliminarTodos = new JButton("Eliminar Todos");
 		parentFrame.buttonCreate(btnEliminarTodos, panel_1, parentFrame.colorRed);
-		btnEliminarTodos.setEnabled(false);
+		btnEliminarTodos.setEnabled(true);
+		btnEliminarTodos.addActionListener(this);
 		
 		btnGuardarCambios = new JButton("Guardar Cambios");
 		parentFrame.buttonCreate(btnGuardarCambios, panel_1, parentFrame.colorBlue);
-		btnGuardarCambios.setEnabled(false);
+		btnGuardarCambios.setEnabled(true);
+		btnGuardarCambios.addActionListener(this);
 		
 		panel_2 = new JPanel();
 		PanelListJugadores.add(panel_2, BorderLayout.CENTER);
@@ -402,7 +405,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
  
 
 
-	    CrearJugadoresPrueba();
+//	    CrearJugadoresPrueba();
 		
 		
 	}
@@ -906,7 +909,7 @@ public class PanelJugadores extends JPanel implements ActionListener {
             return;
         }
 
-        Temporada temporadaSeleccionada = listTemporadas.get(0); // Seleccionamos la primera temporada
+        Temporada temporadaSeleccionada = listTemporadas.get(2); // Seleccionamos la primera temporada
 
         if (temporadaSeleccionada.getListEquipos().size() < 6) { 
             parentFrame.mensaje("No hay suficientes equipos disponibles", 0);
@@ -915,79 +918,80 @@ public class PanelJugadores extends JPanel implements ActionListener {
 
         // Lista de jugadores de prueba (puedes expandirla)
         Jugador[] jugadores = {
-            new Jugador("1001-1001A", "Carlos Lopez", 13, "Armador", "Argentina", 1.85, 82, 12, 11, 1995, 0, "A1"),
-            new Jugador("1001-1002B", "Javier Torres", 5, "Opuesto", "Portugal", 1.98, 84, 26, 11, 1998, 0, "A2"),
-            new Jugador("1001-1003C", "Luis Martinez", 1, "Receptor 1", "Brasil", 1.79, 97, 7, 1, 1990, 0, "A3"),
-            new Jugador("1001-1004D", "Juan Perez", 19, "Receptor 2", "Colombia", 2.05, 88, 10, 3, 1995, 0, "A4"),
-            new Jugador("1001-1005E", "Antonio Gomez", 20, "Central", "México", 1.79, 94, 15, 12, 1995, 0, "A5"),
-            new Jugador("1001-1006F", "Fernando Ruiz", 4, "Libero", "Argentina", 1.74, 83, 4, 8, 1996, 0, "A6"),
-            new Jugador("1001-1007G", "Manuel Diaz", 18, "Armador", "Chile", 2.01, 100, 16, 5, 1986, 0, "A7"),
-            new Jugador("1001-1008H", "Sergio Sanchez", 21, "Opuesto", "Perú", 1.74, 69, 8, 12, 1997, 0, "A8"),
-            new Jugador("1001-1009I", "David Hernandez", 29, "Receptor 1", "Bolivia", 1.96, 72, 8, 11, 1985, 0, "A9"),
-            new Jugador("1001-1010J", "Jorge Ramos", 22, "Receptor 2", "Paraguay", 1.99, 87, 4, 1, 1999, 0, "A10"),
-            new Jugador("1001-1011K", "Raul Fernandez", 11, "Central", "Ecuador", 2.00, 91, 14, 8, 1999, 0, "A11"),
-            new Jugador("1001-1012L", "Angel Gutierrez", 26, "Libero", "Venezuela", 1.85, 100, 23, 10, 1990, 0, "A12"),
-            new Jugador("1002-2001A", "Mario Lopez", 2, "Armador", "Argentina", 1.87, 81, 12, 1, 1995, 1, "B1"),
-            new Jugador("1002-2002B", "Pedro Garcia", 4, "Opuesto", "Brasil", 1.93, 88, 25, 5, 1998, 1, "B2"),
-            new Jugador("1002-2003C", "Juan Gomez", 5, "Receptor 1", "Chile", 1.96, 85, 17, 3, 1992, 1, "B3"),
-            new Jugador("1002-2004D", "Manuel Torres", 6, "Receptor 2", "Colombia", 1.98, 78, 21, 7, 1993, 1, "B4"),
-            new Jugador("1002-2005E", "Pablo Sanchez", 7, "Central", "Ecuador", 2.01, 90, 2, 10, 1991, 1, "B5"),
-            new Jugador("1002-2006F", "David Ruiz", 8, "Libero", "Perú", 1.75, 72, 18, 12, 1997, 1, "B6"),
-            new Jugador("1002-2007G", "Alberto Herrera", 10, "Armador", "Venezuela", 1.88, 87, 9, 9, 1994, 1, "B7"),
-            new Jugador("1002-2008H", "Rafael Moreno", 11, "Opuesto", "Paraguay", 1.89, 80, 6, 6, 1999, 1, "B8"),
-            new Jugador("1002-2009I", "Lucas Castro", 12, "Receptor 1", "Uruguay", 1.94, 84, 13, 11, 1990, 1, "B9"),
-            new Jugador("1002-2010J", "Andres Vega", 13, "Receptor 2", "Bolivia", 1.92, 79, 28, 2, 1996, 1, "B10"),
-            new Jugador("1002-2011K", "Carlos Rojas", 14, "Central", "México", 2.03, 88, 14, 4, 1993, 1, "B11"),
-            new Jugador("1002-2012L", "Victor Jimenez", 15, "Libero", "Argentina", 1.76, 74, 20, 8, 1995, 1, "B12"),
-            new Jugador("1003-3001A", "Sergio Navarro", 1, "Armador", "Brasil", 1.86, 83, 11, 4, 1994, 2, "C1"),
-            new Jugador("1003-3002B", "Adrian Perez", 3, "Opuesto", "Chile", 1.90, 86, 14, 6, 1996, 2, "C2"),
-            new Jugador("1003-3003C", "Jorge Medina", 9, "Receptor 1", "Colombia", 1.95, 89, 19, 12, 1993, 2, "C3"),
-            new Jugador("1003-3004D", "Luis Blanco", 17, "Receptor 2", "Ecuador", 1.97, 82, 21, 3, 1991, 2, "C4"),
-            new Jugador("1003-3005E", "Antonio Ortega", 18, "Central", "Paraguay", 2.00, 91, 31, 5, 1990, 2, "C5"),
-            new Jugador("1003-3006F", "Francisco Gil", 20, "Libero", "Perú", 1.73, 76, 16, 9, 1998, 2, "C6"),
-            new Jugador("1003-3007G", "Angel Marin", 22, "Armador", "Venezuela", 1.84, 80, 27, 11, 1995, 2, "C7"),
-            new Jugador("1003-3008H", "Miguel Serrano", 23, "Opuesto", "Bolivia", 1.92, 87, 9, 1, 1999, 2, "C8"),
-            new Jugador("1003-3009I", "Ricardo Romero", 24, "Receptor 1", "México", 1.96, 85, 4, 7, 1997, 2, "C9"),
-            new Jugador("1003-3010J", "Daniel Ponce", 25, "Receptor 2", "Argentina", 1.91, 83, 13, 10, 1998, 2, "C10"),
-            new Jugador("1003-3011K", "Ruben Campos", 26, "Central", "Brasil", 2.02, 89, 7, 2, 1996, 2, "C11"),
-            new Jugador("1003-3012L", "Ivan Alvarez", 28, "Libero", "Chile", 1.78, 78, 22, 3, 1995, 2, "C12"),
-            new Jugador("1004-4001A", "Oscar Vidal", 2, "Armador", "Uruguay", 1.87, 81, 1, 7, 1993, 3, "D1"),
-            new Jugador("1004-4002B", "Marcos Villa", 3, "Opuesto", "Perú", 1.93, 85, 15, 6, 1994, 3, "D2"),
-            new Jugador("1004-4003C", "Alejandro Moya", 4, "Receptor 1", "Paraguay", 1.92, 83, 29, 11, 1990, 3, "D3"),
-            new Jugador("1004-4004D", "Enrique Cano", 5, "Receptor 2", "Venezuela", 1.94, 86, 11, 12, 1995, 3, "D4"),
-            new Jugador("1004-4005E", "Hugo Cordero", 6, "Central", "Bolivia", 1.99, 92, 10, 9, 1997, 3, "D5"),
-            new Jugador("1004-4006F", "Diego Marin", 7, "Libero", "México", 1.74, 73, 18, 8, 1996, 3, "D6"),
-            new Jugador("1004-4007G", "Roberto Peña", 8, "Armador", "Argentina", 1.89, 85, 25, 2, 1991, 3, "D7"),
-            new Jugador("1004-4008H", "Victor Reyes", 9, "Opuesto", "Brasil", 1.91, 82, 15, 1, 1998, 3, "D8"),
-            new Jugador("1004-4009I", "Fernando Bravo", 10, "Receptor 1", "Chile", 1.95, 88, 23, 10, 1993, 3, "D9"),
-            new Jugador("1004-4010J", "Alfonso Sanchez", 11, "Receptor 2", "Colombia", 1.93, 87, 27, 3, 1999, 3, "D10"),
-            new Jugador("1004-4011K", "Cristian Leon", 12, "Central", "Ecuador", 2.01, 90, 30, 5, 1994, 3, "D11"),
-            new Jugador("1004-4012L", "Alfredo Campos", 13, "Libero", "Uruguay", 1.76, 75, 5, 8, 1992, 3, "D12"),
-            new Jugador("1005-5001A", "Jose Ortega", 1, "Armador", "Perú", 1.86, 80, 2, 4, 1993, 4, "E1"),
-            new Jugador("1005-5002B", "Carlos Molina", 3, "Opuesto", "Paraguay", 1.94, 88, 19, 7, 1995, 4, "E2"),
-            new Jugador("1005-5003C", "Luis Paredes", 5, "Receptor 1", "Venezuela", 1.92, 83, 21, 9, 1991, 4, "E3"),
-            new Jugador("1005-5004D", "Mario Velasco", 8, "Receptor 2", "Bolivia", 1.95, 86, 17, 2, 1996, 4, "E4"),
-            new Jugador("1005-5005E", "Ricardo Carrasco", 10, "Central", "México", 1.99, 92, 9, 3, 1998, 4, "E5"),
-            new Jugador("1005-5006F", "Manuel Vidal", 12, "Libero", "Argentina", 1.75, 74, 14, 6, 1994, 4, "E6"),
-            new Jugador("1005-5007G", "Diego Navarro", 15, "Armador", "Brasil", 1.87, 81, 11, 8, 1990, 4, "E7"),
-            new Jugador("1005-5008H", "Jorge Palacios", 18, "Opuesto", "Chile", 1.93, 86, 23, 11, 1997, 4, "E8"),
-            new Jugador("1005-5009I", "Adrian Dominguez", 20, "Receptor 1", "Colombia", 1.94, 85, 10, 1, 1999, 4, "E9"),
-            new Jugador("1005-5010J", "Victor Lopez", 23, "Receptor 2", "Ecuador", 1.96, 89, 31, 12, 1992, 4, "E10"),
-            new Jugador("1005-5011K", "Angel Rios", 25, "Central", "Uruguay", 2.02, 90, 19, 5, 1991, 4, "E11"),
-            new Jugador("1005-5012L", "Francisco Vargas", 27, "Libero", "Perú", 1.78, 76, 6, 10, 1996, 4, "E12"),
-            new Jugador("1006-6001A", "Alberto Guzman", 2, "Armador", "Paraguay", 1.89, 83, 15, 6, 1993, 5, "F1"),
-            new Jugador("1006-6002B", "Miguel Varela", 4, "Opuesto", "Venezuela", 1.92, 85, 19, 1, 1995, 5, "F2"),
-            new Jugador("1006-6003C", "Oscar Romero", 6, "Receptor 1", "Bolivia", 1.91, 84, 25, 11, 1992, 5, "F3"),
-            new Jugador("1006-6004D", "Ruben Nieto", 9, "Receptor 2", "México", 1.94, 87, 7, 5, 1994, 5, "F4"),
-            new Jugador("1006-6005E", "Andres Castaño", 11, "Central", "Argentina", 1.98, 90, 9, 9, 1996, 5, "F5"),
-            new Jugador("1006-6006F", "Hugo Santiago", 14, "Libero", "Brasil", 1.77, 78, 22, 7, 1990, 5, "F6"),
-            new Jugador("1006-6007G", "Pedro Vargas", 17, "Armador", "Chile", 1.88, 82, 29, 3, 1997, 5, "F7"),
-            new Jugador("1006-6008H", "Samuel Ruiz", 21, "Opuesto", "Colombia", 1.95, 88, 3, 10, 1999, 5, "F8"),
-            new Jugador("1006-6009I", "Felipe Peña", 24, "Receptor 1", "Ecuador", 1.97, 86, 18, 12, 1991, 5, "F9"),
-            new Jugador("1006-6010J", "Fernando Serrano", 26, "Receptor 2", "Paraguay", 1.93, 84, 27, 4, 1998, 5, "F10"),
-            new Jugador("1006-6011K", "Raul Perez", 28, "Central", "Venezuela", 2.01, 91, 14, 2, 1992, 5, "F11"),
-            new Jugador("1006-6012L", "Ivan Martinez", 30, "Libero", "Bolivia", 1.79, 80, 5, 8, 1995, 5, "F12")
+            new Jugador("1005-5001A", "Jose Ortega", 1, "Armador", "Perú", 1.86, 80, 2, 4, 1993, 4, "A1"),
+            new Jugador("1005-5002B", "Carlos Molina", 3, "Opuesto", "Paraguay", 1.94, 88, 19, 7, 1995, 4, "A2"),
+            new Jugador("1005-5003C", "Luis Paredes", 5, "Receptor 1", "Venezuela", 1.92, 83, 21, 9, 1991, 4, "A3"),
+            new Jugador("1005-5004D", "Mario Velasco", 8, "Receptor 2", "Bolivia", 1.95, 86, 17, 2, 1996, 4, "A4"),
+            new Jugador("1005-5005E", "Ricardo Carrasco", 10, "Central", "México", 1.99, 92, 9, 3, 1998, 4, "A5"),
+            new Jugador("1005-5006F", "Manuel Vidal", 12, "Libero", "Argentina", 1.75, 74, 14, 6, 1994, 4, "A6"),
+            new Jugador("1005-5007G", "Diego Navarro", 15, "Armador", "Brasil", 1.87, 81, 11, 8, 1990, 4, "A7"),
+            new Jugador("1005-5008H", "Jorge Palacios", 18, "Opuesto", "Chile", 1.93, 86, 23, 11, 1997, 4, "A8"),
+            new Jugador("1005-5009I", "Adrian Dominguez", 20, "Receptor 1", "Colombia", 1.94, 85, 10, 1, 1999, 4, "A9"),
+            new Jugador("1005-5010J", "Victor Lopez", 23, "Receptor 2", "Ecuador", 1.96, 89, 31, 12, 1992, 4, "A10"),
+            new Jugador("1005-5011K", "Angel Rios", 25, "Central", "Uruguay", 2.02, 90, 19, 5, 1991, 4, "A11"),
+            new Jugador("1005-5012L", "Francisco Vargas", 27, "Libero", "Perú", 1.78, 76, 6, 10, 1996, 4, "A12"),
+            new Jugador("1006-6001A", "Alberto Guzman", 2, "Armador", "Paraguay", 1.89, 83, 15, 6, 1993, 2, "B1"),
+            new Jugador("1006-6002B", "Miguel Varela", 4, "Opuesto", "Venezuela", 1.92, 85, 19, 1, 1995, 2, "B2"),
+            new Jugador("1006-6003C", "Oscar Romero", 6, "Receptor 1", "Bolivia", 1.91, 84, 25, 11, 1992, 2, "B3"),
+            new Jugador("1006-6004D", "Ruben Nieto", 9, "Receptor 2", "México", 1.94, 87, 7, 5, 1994, 2, "B4"),
+            new Jugador("1006-6005E", "Andres Castaño", 11, "Central", "Argentina", 1.98, 90, 9, 9, 1996, 2, "B5"),
+            new Jugador("1006-6006F", "Hugo Santiago", 14, "Libero", "Brasil", 1.77, 78, 22, 7, 1990, 2, "B6"),
+            new Jugador("1006-6007G", "Pedro Vargas", 17, "Armador", "Chile", 1.88, 82, 29, 3, 1997, 2, "B7"),
+            new Jugador("1006-6008H", "Samuel Ruiz", 21, "Opuesto", "Colombia", 1.95, 88, 3, 10, 1999, 2, "B8"),
+            new Jugador("1006-6009I", "Felipe Peña", 24, "Receptor 1", "Ecuador", 1.97, 86, 18, 12, 1991, 2, "B9"),
+            new Jugador("1006-6010J", "Fernando Serrano", 26, "Receptor 2", "Paraguay", 1.93, 84, 27, 4, 1998, 2, "B10"),
+            new Jugador("1006-6011K", "Raul Perez", 28, "Central", "Venezuela", 2.01, 91, 14, 2, 1992, 2, "B11"),
+            new Jugador("1006-6012L", "Ivan Martinez", 30, "Libero", "Bolivia", 1.79, 80, 5, 8, 1995, 2, "B12"),
+            new Jugador("1001-1001A", "Carlos Lopez", 13, "Armador", "Argentina", 1.85, 82, 12, 11, 1995, 3, "C1"),
+            new Jugador("1001-1002B", "Javier Torres", 5, "Opuesto", "Portugal", 1.98, 84, 26, 11, 1998, 3, "C2"),
+            new Jugador("1001-1003C", "Luis Martinez", 1, "Receptor 1", "Brasil", 1.79, 97, 7, 1, 1990, 3, "C3"),
+            new Jugador("1001-1004D", "Juan Perez", 19, "Receptor 2", "Colombia", 2.05, 88, 10, 3, 1995, 3, "C4"),
+            new Jugador("1001-1005E", "Antonio Gomez", 20, "Central", "México", 1.79, 94, 15, 12, 1995, 3, "C5"),
+            new Jugador("1001-1006F", "Fernando Ruiz", 4, "Libero", "Argentina", 1.74, 83, 4, 8, 1996, 3, "C6"),
+            new Jugador("1001-1007G", "Manuel Diaz", 18, "Armador", "Chile", 2.01, 100, 16, 5, 1986, 3, "C7"),
+            new Jugador("1001-1008H", "Sergio Sanchez", 21, "Opuesto", "Perú", 1.74, 69, 8, 12, 1997, 3, "C8"),
+            new Jugador("1001-1009I", "David Hernandez", 29, "Receptor 1", "Bolivia", 1.96, 72, 8, 11, 1985, 3, "C9"),
+            new Jugador("1001-1010J", "Jorge Ramos", 22, "Receptor 2", "Paraguay", 1.99, 87, 4, 1, 1999, 3, "C10"),
+            new Jugador("1001-1011K", "Raul Fernandez", 11, "Central", "Ecuador", 2.00, 91, 14, 8, 1999, 3, "C11"),
+            new Jugador("1001-1012L", "Angel Gutierrez", 26, "Libero", "Venezuela", 1.85, 100, 23, 10, 1990, 3, "C12"),
+            new Jugador("1002-2001A", "Mario Lopez", 2, "Armador", "Argentina", 1.87, 81, 12, 1, 1995, 5, "D1"),
+            new Jugador("1002-2002B", "Pedro Garcia", 4, "Opuesto", "Brasil", 1.93, 88, 25, 5, 1998, 5, "D2"),
+            new Jugador("1002-2003C", "Juan Gomez", 5, "Receptor 1", "Chile", 1.96, 85, 17, 3, 1992, 5, "D3"),
+            new Jugador("1002-2004D", "Manuel Torres", 6, "Receptor 2", "Colombia", 1.98, 78, 21, 7, 1993, 5, "D4"),
+            new Jugador("1002-2005E", "Pablo Sanchez", 7, "Central", "Ecuador", 2.01, 90, 2, 10, 1991, 5, "D5"),
+            new Jugador("1002-2006F", "David Ruiz", 8, "Libero", "Perú", 1.75, 72, 18, 12, 1997, 5, "D6"),
+            new Jugador("1002-2007G", "Alberto Herrera", 10, "Armador", "Venezuela", 1.88, 87, 9, 9, 1994, 5, "D7"),
+            new Jugador("1002-2008H", "Rafael Moreno", 11, "Opuesto", "Paraguay", 1.89, 80, 6, 6, 1999, 5, "D8"),
+            new Jugador("1002-2009I", "Lucas Castro", 12, "Receptor 1", "Uruguay", 1.94, 84, 13, 11, 1990, 5, "D9"),
+            new Jugador("1002-2010J", "Andres Vega", 13, "Receptor 2", "Bolivia", 1.92, 79, 28, 2, 1996, 5, "D10"),
+            new Jugador("1002-2011K", "Carlos Rojas", 14, "Central", "México", 2.03, 88, 14, 4, 1993, 5, "D11"),
+            new Jugador("1002-2012L", "Victor Jimenez", 15, "Libero", "Argentina", 1.76, 74, 20, 8, 1995, 5, "D12"),
+            new Jugador("1004-4001A", "Oscar Vidal", 2, "Armador", "Uruguay", 1.87, 81, 1, 7, 1993, 1, "E1"),
+            new Jugador("1004-4002B", "Marcos Villa", 3, "Opuesto", "Perú", 1.93, 85, 15, 6, 1994, 1, "E2"),
+            new Jugador("1004-4003C", "Alejandro Moya", 4, "Receptor 1", "Paraguay", 1.92, 83, 29, 11, 1990, 1, "E3"),
+            new Jugador("1004-4004D", "Enrique Cano", 5, "Receptor 2", "Venezuela", 1.94, 86, 11, 12, 1995, 1, "E4"),
+            new Jugador("1004-4005E", "Hugo Cordero", 6, "Central", "Bolivia", 1.99, 92, 10, 9, 1997, 1, "E5"),
+            new Jugador("1004-4006F", "Diego Marin", 7, "Libero", "México", 1.74, 73, 18, 8, 1996, 1, "E6"),
+            new Jugador("1004-4007G", "Roberto Peña", 8, "Armador", "Argentina", 1.89, 85, 25, 2, 1991, 1, "E7"),
+            new Jugador("1004-4008H", "Victor Reyes", 9, "Opuesto", "Brasil", 1.91, 82, 15, 1, 1998, 1, "E8"),
+            new Jugador("1004-4009I", "Fernando Bravo", 10, "Receptor 1", "Chile", 1.95, 88, 23, 10, 1993, 1, "E9"),
+            new Jugador("1004-4010J", "Alfonso Sanchez", 11, "Receptor 2", "Colombia", 1.93, 87, 27, 3, 1999, 1, "E10"),
+            new Jugador("1004-4011K", "Cristian Leon", 12, "Central", "Ecuador", 2.01, 90, 30, 5, 1994, 1, "E11"),
+            new Jugador("1004-4012L", "Alfredo Campos", 13, "Libero", "Uruguay", 1.76, 75, 5, 8, 1992, 1, "E12"),
+            new Jugador("1003-3001A", "Sergio Navarro", 1, "Armador", "Brasil", 1.86, 83, 11, 4, 1994, 0, "F1"),
+            new Jugador("1003-3002B", "Adrian Perez", 3, "Opuesto", "Chile", 1.90, 86, 14, 6, 1996, 0, "F2"),
+            new Jugador("1003-3003C", "Jorge Medina", 9, "Receptor 1", "Colombia", 1.95, 89, 19, 12, 1993, 0, "F3"),
+            new Jugador("1003-3004D", "Luis Blanco", 17, "Receptor 2", "Ecuador", 1.97, 82, 21, 3, 1991, 0, "F4"),
+            new Jugador("1003-3005E", "Antonio Ortega", 18, "Central", "Paraguay", 2.00, 91, 31, 5, 1990, 0, "F5"),
+            new Jugador("1003-3006F", "Francisco Gil", 20, "Libero", "Perú", 1.73, 76, 16, 9, 1998, 0, "F6"),
+            new Jugador("1003-3007G", "Angel Marin", 22, "Armador", "Venezuela", 1.84, 80, 27, 11, 1995, 0, "F7"),
+            new Jugador("1003-3008H", "Miguel Serrano", 23, "Opuesto", "Bolivia", 1.92, 87, 9, 1, 1999, 0, "F8"),
+            new Jugador("1003-3009I", "Ricardo Romero", 24, "Receptor 1", "México", 1.96, 85, 4, 7, 1997, 0, "F9"),
+            new Jugador("1003-3010J", "Daniel Ponce", 25, "Receptor 2", "Argentina", 1.91, 83, 13, 10, 1998, 0, "F10"),
+            new Jugador("1003-3011K", "Ruben Campos", 26, "Central", "Brasil", 2.02, 89, 7, 2, 1996, 0, "F11"),
+            new Jugador("1003-3012L", "Ivan Alvarez", 28, "Libero", "Chile", 1.78, 78, 22, 3, 1995, 0, "F12")
         };
+
 
      // Asignar 12 jugadores a cada equipo de forma secuencial en 6 equipos
         int jugadorIndex = 0; // Índice global de jugadores

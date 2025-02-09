@@ -27,6 +27,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import com.logic.Log;
 import com.logic.Usuario;
@@ -67,6 +69,9 @@ public class login extends JFrame implements ActionListener {
 				try {
 					login frame = new login();
 					frame.setVisible(true);
+					// Centrar la ventana en la pantalla
+                    frame.setLocationRelativeTo(null);  // null indica que la ventana debe centrarse en la pantalla
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -82,7 +87,7 @@ public class login extends JFrame implements ActionListener {
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 400, 300);
-		setResizable(false);
+        setResizable(false);
 		setTitle("Login de la Federacion de Voleivol");
 
 		contentPane = new JPanel();
@@ -122,7 +127,16 @@ public class login extends JFrame implements ActionListener {
 		txtPass.setBackground(new Color(50, 50, 50));
 		txtPass.setColumns(15);
 		panel_3.add(txtPass);
-
+		txtPass.addKeyListener(new KeyAdapter() {
+		    @Override
+		    public void keyPressed(KeyEvent e) {
+		        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+		            btnLogin.doClick(); // Simula un clic en el botón de login
+		        }
+		    }
+		});
+		
+		
 		panel_4 = new JPanel();
 		panel_4.setBackground(new Color(50, 50, 50));
 		panel_2.add(panel_4, BorderLayout.CENTER);
@@ -143,7 +157,15 @@ public class login extends JFrame implements ActionListener {
 		txtUser.setBackground(new Color(50, 50, 50));
 		panel_5.add(txtUser);
 		txtUser.setColumns(15);
-
+		txtUser.addKeyListener(new KeyAdapter() {
+		    @Override
+		    public void keyPressed(KeyEvent e) {
+		        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+		            btnLogin.doClick(); // Simula un clic en el botón de login
+		        }
+		    }
+		});
+		
 		panel_6 = new JPanel();
 		panel_6.setBackground(new Color(50, 50, 50));
 		panel_4.add(panel_6, BorderLayout.NORTH);
@@ -182,7 +204,7 @@ public class login extends JFrame implements ActionListener {
 		cargarUsuarios(); // Cargamos los usuarios desde el archivo
 	}
 
-	private boolean userPassCheck(String u, String p) {
+	public boolean userPassCheck(String u, String p) {
 		// Recorrimos el ArrayList con un foreach o utilizando el índice
 		for (Usuario user : users) {
 			if (user.checkUser(u, p)) {
@@ -220,6 +242,9 @@ public class login extends JFrame implements ActionListener {
 				main mainFrame = new main(userType, gui_user, this);
 			    mainFrame.setLoginInstance(this); // Pasa la instancia de login a main
 				mainFrame.setLocation(location);
+				// Centrar la ventana en la pantalla
+                mainFrame.setLocationRelativeTo(null);  // null indica que la ventana debe centrarse en la pantalla
+
 				mainFrame.setVisible(true);
 				log.add("Intento de login exitoso, Usuario : " + gui_user + " Tipo de usuario: " + userType
 						+ ". Abriendo ventana main", 1);
@@ -236,13 +261,16 @@ public class login extends JFrame implements ActionListener {
 			main mainFrame = new main(0, "Anonimo", this);
 //		    mainFrame.setLoginInstance(this); // Pasa la instancia de login a main
 			mainFrame.setLocation(location);
+			// Centrar la ventana en la pantalla
+            mainFrame.setLocationRelativeTo(null);  // null indica que la ventana debe centrarse en la pantalla
+
 			mainFrame.setVisible(true);
 			dispose();
 
 		}
 	}
 	
-	private void cargarUsuarios() {
+	public void cargarUsuarios() {
 	    // Determine file paths
 	    File jarDir = new File(System.getProperty("user.dir"));
 	    File resourcesFolder = new File(jarDir, "resources");
@@ -302,5 +330,8 @@ public class login extends JFrame implements ActionListener {
 	}
 	public void setUsers(ArrayList<Usuario> updateUsers){
 		this.users = updateUsers;
+	}
+	public String getLblErrorText() {
+	    return lblError.getText();
 	}
 }

@@ -105,6 +105,13 @@ public class Equipo implements Serializable {
 		this.idFoto = "idFotodefault";
 		
 	}
+	public Equipo (int ide, String nom, String idFoto) {
+		this.id= ide;
+		this.Nombre= nom;
+		this.listJugadores = new ArrayList<Jugador>();
+		this.idFoto = idFoto;
+		
+	}
 	public Equipo (int ide, String nom,String coach, int fecha, String idFoto) {
 		this.id= ide;
 		this.Nombre= nom;
