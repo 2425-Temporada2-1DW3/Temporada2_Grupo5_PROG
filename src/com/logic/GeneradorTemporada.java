@@ -47,7 +47,7 @@ public class GeneradorTemporada {
         nuevaTemporada.toString();
         
         // Imprimir los partidos y detalles de la temporada
-        mostrarPartidos(nuevaTemporada);
+//        mostrarPartidos(nuevaTemporada);
     }
 	
 	// Clase estática para representar un Partido con equipo local y visitante en el Sistema Round Robin
@@ -106,7 +106,7 @@ public class GeneradorTemporada {
 		    ArrayList<JTextField> textFieldsFechaFun = new ArrayList<>();
 
 		    // Encabezados
-		    String[] headers = {"Equipo", "Nombre del Equipo", "Entrenador", "Año de Fundación"};
+		    String[] headers = {"Equipo", "Nombre del Equipo"};
 		    for (int i = 0; i < headers.length; i++) {
 		        gbc.gridx = i;
 		        gbc.gridy = 0;
@@ -132,17 +132,17 @@ public class GeneradorTemporada {
 		        textFieldsNomEqui.add(textFieldNomEqui);
 		        panelEquipos.add(textFieldNomEqui, gbc);
 
-		        // 3️⃣ Nombre del Entrenador
-		        gbc.gridx = 2;
-		        JTextField textFieldNomEntre = new JTextField(15);
-		        textFieldsNomEntre.add(textFieldNomEntre);
-		        panelEquipos.add(textFieldNomEntre, gbc);
-
-		        // 4️⃣ Año de Fundación
-		        gbc.gridx = 3;
-		        JTextField textFieldFechaFun = new JTextField(4);
-		        textFieldsFechaFun.add(textFieldFechaFun);
-		        panelEquipos.add(textFieldFechaFun, gbc);
+//		        // 3️⃣ Nombre del Entrenador
+//		        gbc.gridx = 2;
+//		        JTextField textFieldNomEntre = new JTextField(15);
+//		        textFieldsNomEntre.add(textFieldNomEntre);
+//		        panelEquipos.add(textFieldNomEntre, gbc);
+//
+//		        // 4️⃣ Año de Fundación
+//		        gbc.gridx = 3;
+//		        JTextField textFieldFechaFun = new JTextField(4);
+//		        textFieldsFechaFun.add(textFieldFechaFun);
+//		        panelEquipos.add(textFieldFechaFun, gbc);
 
 //		        // 5️⃣ Foto ID (Label)
 //		        gbc.gridx = 4;
@@ -157,39 +157,39 @@ public class GeneradorTemporada {
 		        
 		        for (int i = 0; i < numEquipos; i++) {
 		            String nombre = textFieldsNomEqui.get(i).getText().trim();
-		            String entrenador = textFieldsNomEntre.get(i).getText().trim();
-		            String fechaTexto = textFieldsFechaFun.get(i).getText().trim();
-		            String idEquipo = (char) ('A' + i) + "1"; // A1, B1, C1...
-		            
+//		            String entrenador = textFieldsNomEntre.get(i).getText().trim();
+//		            String fechaTexto = textFieldsFechaFun.get(i).getText().trim();
+//		            String idEquipo = (char) ('A' + i) + "1"; // A1, B1, C1...
+//		            
 		            // Validación de datos
-		            if (nombre.isEmpty() || entrenador.isEmpty() || fechaTexto.isEmpty()) {
+		            if (nombre.isEmpty()) {
 		                JOptionPane.showMessageDialog(dialog, "Todos los campos deben estar llenos.", "Error", JOptionPane.ERROR_MESSAGE);
 		                return;
 		            }
 
-		            int fechaFundacion;
-		            try {
-		                fechaFundacion = Integer.parseInt(fechaTexto);
-		            } catch (NumberFormatException ex) {
-		                JOptionPane.showMessageDialog(dialog, "El año de fundación debe ser un número.", "Error", JOptionPane.ERROR_MESSAGE);
-		                return;
-		            }
+//		            int fechaFundacion;
+//		            try {
+////		                fechaFundacion = Integer.parseInt(fechaTexto);
+//		            } catch (NumberFormatException ex) {
+////		                JOptionPane.showMessageDialog(dialog, "El año de fundación debe ser un número.", "Error", JOptionPane.ERROR_MESSAGE);
+////		                return;
+//		            }
 
 		            // Crear objeto Equipo y añadirlo a la lista
-		            Equipo equipo = new Equipo(i, nombre, entrenador, fechaFundacion, idEquipo);
+		            Equipo equipo = new Equipo(i, nombre);
 		            temporalListEquipos.add(equipo);
 		        }
 
 		        // Imprimir los equipos creados en la consola
-		        for (Equipo equipo : temporalListEquipos) {
-		            System.out.println("ID: " + equipo.getId() + ", Nombre: " + equipo.getNombre() +
-		                               ", Entrenador: " + equipo.getEntrenador() + 
-		                               ", Año: " + equipo.getFechaFundEq() + 
-		                               ", FotoID: " + equipo.getIdFoto());
-		        }
+//		        for (Equipo equipo : temporalListEquipos) {
+//		            System.out.println("ID: " + equipo.getId() + ", Nombre: " + equipo.getNombre() +
+//		                               ", Entrenador: " + equipo.getEntrenador() + 
+//		                               ", Año: " + equipo.getFechaFundEq() + 
+//		                               ", FotoID: " + equipo.getIdFoto());
+//		        }
 		        // Agregar los equipos a la lista de la temporada
 		        temporada.setListEquipos(temporalListEquipos);
-		        JOptionPane.showMessageDialog(dialog, "✅ Equipos guardados correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+		        JOptionPane.showMessageDialog(dialog, " Equipos guardados correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 		        dialog.dispose();
 		    });
 

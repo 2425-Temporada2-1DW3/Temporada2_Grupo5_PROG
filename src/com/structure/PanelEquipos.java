@@ -129,9 +129,11 @@ public class PanelEquipos extends JPanel implements ActionListener {
 		// Botón "Modificar Jugador"
 		btnModificarEquipo = new JButton("Modificar Datos");
 		parentFrame.buttonCreate(btnModificarEquipo, panel, parentFrame.colorBlue);
-
+		btnModificarEquipo.addActionListener(this);
+		
 		btnCambiarFoto = new JButton("Cambiar Fotografía");
 		parentFrame.buttonCreate(btnCambiarFoto, panel, parentFrame.colorYellow);
+		btnCambiarFoto.addActionListener(this);
 		
 		PanelContenidoJugador = new JPanel();
 		PanelContenidoJugador.setPreferredSize(new Dimension(600, 600)); // Tamaño deseado
@@ -206,6 +208,7 @@ public class PanelEquipos extends JPanel implements ActionListener {
 		
 		btnGuardarCambios = new JButton("Guardar Cambios");
 		parentFrame.buttonCreate(btnGuardarCambios, panel_1, parentFrame.colorBlue);
+		btnGuardarCambios.addActionListener(this);
 		
 		panel_2 = new JPanel();
 		PanelListEquipos.add(panel_2, BorderLayout.CENTER);
