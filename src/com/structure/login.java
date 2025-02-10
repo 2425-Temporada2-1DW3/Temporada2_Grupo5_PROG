@@ -198,6 +198,7 @@ public class login extends JFrame implements ActionListener {
 		btnLoginAnonimo.setFont(new Font("SansSerif", Font.PLAIN, 13));
 		btnLoginAnonimo.setForeground(new Color(220, 220, 220));
 		btnLoginAnonimo.setBackground(new Color(50, 50, 50));
+		btnLoginAnonimo.setVisible(false);
 		panel_1.add(btnLoginAnonimo);
 
 		users = new ArrayList<>(); // Inicializamos el ArrayList de usuarios
